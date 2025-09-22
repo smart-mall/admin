@@ -35,8 +35,6 @@
 </template>
 
 <script>
-import SingleUpload from '../../../components/upload/singleUpload.vue'
-
 export default {
   data () {
     return {

@@ -1,11 +1,13 @@
 <script>
-import CategoryTree from '../common/category-tree.vue'
+import CategoryTree from '../common/category.vue'
 import AddOrUpdate from './attrgroup-add-or-update'
+import RelationUpdate from './attr-group-relation.vue'
 
 export default {
   components: {
     CategoryTree,
-    AddOrUpdate
+    AddOrUpdate,
+    RelationUpdate
   },
   data () {
     return {
@@ -19,7 +21,8 @@ export default {
       totalPage: 0,
       dataListLoading: false,
       dataListSelections: [],
-      addOrUpdateVisible: false
+      addOrUpdateVisible: false,
+      relationVisible: false
     }
   },
   activated () {
@@ -107,6 +110,18 @@ export default {
       }
       this.categoryId = data.catId
       this.getDataList()
+    },
+    // 查询全部
+    getAllDataList () {
+      this.categoryId = 0
+      this.getDataList()
+    },
+    // 关联函数
+    relationHandle (groupId) {
+      this.relationVisible = true
+      this.$nextTick(() => {
+        this.$refs.relationUpdate.init(groupId)
+      })
     }
   }
 }
@@ -128,6 +143,7 @@ export default {
           </el-form-item>
           <el-form-item>
             <el-button @click="getDataList()">查询</el-button>
+            <el-button type="success" @click="getAllDataList()">查询全部</el-button>
             <el-button type="primary" @click="addOrUpdateHandle()">新增</el-button>
             <el-button type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除
             </el-button>
@@ -188,6 +204,7 @@ export default {
             width="150"
             label="操作">
             <template slot-scope="scope">
+              <el-button type="text" size="small" @click="relationHandle(scope.row.attrGroupId)">关联</el-button>
               <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.attrGroupId)">修改</el-button>
               <el-button type="text" size="small" @click="deleteHandle(scope.row.attrGroupId)">删除</el-button>
             </template>
@@ -204,6 +221,9 @@ export default {
         </el-pagination>
         <!-- 弹窗, 新增 / 修改 -->
         <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
+
+        <relation-update v-if="relationVisible" ref="relationUpdate" @refreshData="getDataList"></relation-update>
+
       </div>
     </el-col>
   </el-row>

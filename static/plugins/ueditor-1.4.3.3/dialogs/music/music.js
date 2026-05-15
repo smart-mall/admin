@@ -15,7 +15,7 @@ function Music() {
             var me = this;
             domUtils.on($G("J_searchName"), "keyup", function (event) {
                 var e = window.event || event;
-                if (e.keyCode == 13) {
+                if (e.keyCode === 13) {
                     me.dosearch();
                 }
             });
@@ -34,15 +34,15 @@ function Music() {
             var me = this;
             selectedItem = null;
             var key = $G('J_searchName').value;
-            if (utils.trim(key) == "")return false;
+            if (utils.trim(key) === "")return false;
             key = encodeURIComponent(key);
             me._sent(key);
         },
         doselect:function (i) {
             var me = this;
-            if (typeof i == 'object') {
+            if (typeof i === 'object') {
                 selectedItem = i;
-            } else if (typeof i == 'number') {
+            } else if (typeof i === 'number') {
                 selectedItem = me.data[i];
             }
         },
@@ -58,7 +58,7 @@ function Music() {
         listenTest:function (elem) {
             var me = this,
                 view = $G('J_preview'),
-                is_play_action = (elem.className == 'm-try'),
+                is_play_action = (elem.className === 'm-try'),
                 old_trying = me._getTryingElem();
 
             if (old_trying) {
@@ -97,7 +97,7 @@ function Music() {
             var s = $G('J_listPanel').getElementsByTagName('span');
 
             for (var i = 0; i < s.length; i++) {
-                if (s[i].className == 'm-trying')
+                if (s[i].className === 'm-trying')
                     return s[i];
             }
             return null;
@@ -127,7 +127,7 @@ function Music() {
                 d = me.pageSize,
                 itembox;
             for (var i = 0; i < data.length; i++) {
-                if ((i + d) % d == 0) {
+                if ((i + d) % d === 0) {
                     itembox = [];
                     newData.push(itembox)
                 }
@@ -137,7 +137,7 @@ function Music() {
         },
         _renderTemplate:function (data) {
             var me = this;
-            if (data.length == 0)return '<div class="empty">' + lang.emptyTxt + '</div>';
+            if (data.length === 0)return '<div class="empty">' + lang.emptyTxt + '</div>';
             data = me._rebuildData(data);
             var s = [], p = [], t = [];
             s.push('<div id="J_listPanel" class="listPanel">');
@@ -145,9 +145,9 @@ function Music() {
             for (var i = 0, tmpList; tmpList = data[i++];) {
                 panels.push('panel' + i);
                 pages.push('page' + i);
-                if (i == 1) {
+                if (i === 1) {
                     s.push('<div id="panel' + i + '" class="panelon">');
-                    if (data.length != 1) {
+                    if (data.length !== 1) {
                         t.push('<div id="page' + i + '" onclick="music.onpageclick(' + i + ')" class="pageon">' + (i ) + '</div>');
                     }
                 } else {
@@ -177,7 +177,7 @@ function Music() {
         },
         exec:function () {
             var me = this;
-            if (selectedItem == null)   return;
+            if (selectedItem === null)   return;
             $G('J_preview').innerHTML = "";
             editor.execCommand('music', {
                 url:me._getUrl(false),

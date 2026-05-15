@@ -27,7 +27,7 @@ function clickHandler( tabHeads,tabBodys,obj ) {
     for ( var j = 0, length = tabBodys.length; j < length; j++ ) {
         var body = tabBodys[j],
             id = body.getAttribute( "id" );
-        if ( id != tabSrc ) {
+        if ( id !== tabSrc ) {
             body.style.zIndex = 1;
         } else {
             body.style.zIndex = 200;
@@ -125,7 +125,7 @@ $G("repalceBtn").onclick = function () {
     if (!findtxt) {
         return false;
     }
-    if (findtxt == replacetxt || (!getMatchCase("matchCase1") && findtxt.toLowerCase() == replacetxt.toLowerCase())) {
+    if (findtxt === replacetxt || (!getMatchCase("matchCase1") && findtxt.toLowerCase() === replacetxt.toLowerCase())) {
         return false;
     }
     obj = {
@@ -143,7 +143,7 @@ $G("repalceAllBtn").onclick = function () {
     if (!findtxt) {
         return false;
     }
-    if (findtxt == replacetxt || (!getMatchCase("matchCase1") && findtxt.toLowerCase() == replacetxt.toLowerCase())) {
+    if (findtxt === replacetxt || (!getMatchCase("matchCase1") && findtxt.toLowerCase() === replacetxt.toLowerCase())) {
         return false;
     }
     obj = {

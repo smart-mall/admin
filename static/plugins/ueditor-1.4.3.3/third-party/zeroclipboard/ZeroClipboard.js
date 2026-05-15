@@ -47,7 +47,7 @@
           }
           tmpJsPath = tmpJsPath.split("#")[0].split("?")[0];
           tmpJsPath = tmpJsPath.slice(0, tmpJsPath.lastIndexOf("/") + 1);
-          if (jsDir == null) {
+          if (jsDir === null) {
             jsDir = tmpJsPath;
           } else if (jsDir !== tmpJsPath) {
             jsDir = null;
@@ -222,7 +222,7 @@
     return info;
   };
   var _cacheBust = function(path, options) {
-    var cacheBust = options == null || options && options.cacheBust === true;
+    var cacheBust = options === null || options && options.cacheBust === true;
     if (cacheBust) {
       return (path.indexOf("?") === -1 ? "?" : "&") + "noCache=" + new Date().getTime();
     } else {
@@ -314,7 +314,7 @@
   var _extend = function() {
     var i, len, arg, prop, src, copy, target = arguments[0] || {};
     for (i = 1, len = arguments.length; i < len; i++) {
-      if ((arg = arguments[i]) != null) {
+      if ((arg = arguments[i]) !== null) {
         for (prop in arg) {
           if (arg.hasOwnProperty(prop)) {
             src = target[prop];
@@ -332,7 +332,7 @@
     return target;
   };
   var _extractDomain = function(originOrUrl) {
-    if (originOrUrl == null || originOrUrl === "") {
+    if (originOrUrl === null || originOrUrl === "") {
       return null;
     }
     originOrUrl = originOrUrl.replace(/^\s+|\s+$/g, "");
@@ -351,7 +351,7 @@
   var _determineScriptAccess = function() {
     var _extractAllDomains = function(origins, resultsArray) {
       var i, len, tmp;
-      if (origins == null || resultsArray[0] === "*") {
+      if (origins === null || resultsArray[0] === "*") {
         return;
       }
       if (typeof origins === "string") {
@@ -397,7 +397,7 @@
     };
   }();
   var _objectKeys = function(obj) {
-    if (obj == null) {
+    if (obj === null) {
       return [];
     }
     if (Object.keys) {

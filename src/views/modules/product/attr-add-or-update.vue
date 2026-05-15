@@ -38,8 +38,8 @@
             placeholder="请输入内容"
         ></el-select>
       </el-form-item>
-      <el-form-item label="属性图标" prop="icon">
-        <el-input v-model="dataForm.icon" placeholder="属性图标"></el-input>
+      <el-form-item label="属性图标" prop="logo">
+        <single-upload v-model="dataForm.icon"></single-upload>
       </el-form-item>
       <el-form-item label="所属分类" prop="catelogId">
         <category-cascader :catelogPath.sync="catelogPath"></category-cascader>
@@ -91,6 +91,7 @@
 
 <script>
 import CategoryCascader from '../common/category-cascader'
+import SingleUpload from '../../../components/upload/singleUpload.vue'
 
 export default {
   data () {
@@ -205,7 +206,7 @@ export default {
       }
     }
   },
-  components: {CategoryCascader},
+  components: {SingleUpload, CategoryCascader},
   methods: {
     init (id) {
       this.dataForm.attrId = id || 0

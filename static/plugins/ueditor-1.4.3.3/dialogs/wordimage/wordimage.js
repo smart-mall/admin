@@ -35,7 +35,7 @@ function addOkListener() {
 			var src = img.getAttribute("word_img");
 			if (!src) continue;
 			for (var j = 0,url; url = imageUrls[j++];) {
-				if (src.indexOf(url.original.replace(" ","")) != -1) {
+				if (src.indexOf(url.original.replace(" ","")) !== -1) {
 					img.src = urlPrefix + url.url;
 					img.setAttribute("_src", urlPrefix + url.url);  //同时修改"_src"属性
 					img.setAttribute("title",url.title);
@@ -67,7 +67,7 @@ function showLocalPath(id) {
     //单张编辑
     var img = editor.selection.getRange().getClosedNode();
     var images = editor.execCommand('wordimage');
-    if(images.length==1 || img && img.tagName == 'IMG'){
+    if(images.length==1 || img && img.tagName === 'IMG'){
         g(id).value = images[0];
         return;
     }

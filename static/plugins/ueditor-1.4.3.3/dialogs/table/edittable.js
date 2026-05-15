@@ -30,10 +30,10 @@
                     content:colorPiker
                 });
 
-            title.checked = editor.queryCommandState("inserttitle") == -1;
-            titleCol.checked = editor.queryCommandState("inserttitlecol") == -1;
-            caption.checked = editor.queryCommandState("insertcaption") == -1;
-            sorttable.checked = editor.queryCommandState("enablesort") == 1;
+            title.checked = editor.queryCommandState("inserttitle") === -1;
+            titleCol.checked = editor.queryCommandState("inserttitlecol") === -1;
+            caption.checked = editor.queryCommandState("insertcaption") === -1;
+            sorttable.checked = editor.queryCommandState("enablesort") === 1;
 
             var enablesortState = editor.queryCommandState("enablesort"),
                 disablesortState = editor.queryCommandState("disablesort");

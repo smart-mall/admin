@@ -31,7 +31,7 @@ function initEvtHandler( conId ) {
     var tabHeads = $G( conId );
     for ( var i = 0, j = 0; i < tabHeads.childNodes.length; i++ ) {
         var tabObj = tabHeads.childNodes[i];
-        if ( tabObj.nodeType == 1 ) {
+        if ( tabObj.nodeType === 1 ) {
             domUtils.on( tabObj, "click", (function ( index ) {
                 return function () {
                     switchTab( index );
@@ -58,7 +58,7 @@ function InsertSmiley( url, evt ) {
 function switchTab( index ) {
 
     autoHeight( index );
-    if ( emotion.tabExist[index] == 0 ) {
+    if ( emotion.tabExist[index] === 0 ) {
         emotion.tabExist[index] = 1;
         createTab( 'tab' + index );
     }
@@ -157,7 +157,7 @@ function createTab( tabName ) {
 function over( td, srcPath, posFlag ) {
     td.style.backgroundColor = "#ACCD3C";
     $G( 'faceReview' ).style.backgroundImage = "url(" + srcPath + ")";
-    if ( posFlag == 1 ) $G( "tabIconReview" ).className = "show";
+    if ( posFlag === 1 ) $G( "tabIconReview" ).className = "show";
     $G( "tabIconReview" ).style.display = 'block';
 }
 

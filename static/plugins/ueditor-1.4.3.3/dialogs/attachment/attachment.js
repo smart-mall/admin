@@ -34,7 +34,7 @@
         var i, bodyId, tabs = $G('tabhead').children;
         for (i = 0; i < tabs.length; i++) {
             bodyId = tabs[i].getAttribute('data-content-id')
-            if (bodyId == id) {
+            if (bodyId === id) {
                 domUtils.addClass(tabs[i], 'focus');
                 domUtils.addClass($G(bodyId), 'focus');
             } else {
@@ -85,7 +85,7 @@
 
     /* 上传附件 */
     function UploadFile(target) {
-        this.$wrap = target.constructor == String ? $('#' + target) : $(target);
+        this.$wrap = target.constructor === String ? $('#' + target) : $(target);
         this.init();
     }
     UploadFile.prototype = {
@@ -218,7 +218,7 @@
                     showError(file.statusText);
                 } else {
                     $wrap.text(lang.uploadPreview);
-                    if ('|png|jpg|jpeg|bmp|gif|'.indexOf('|'+file.ext.toLowerCase()+'|') == -1) {
+                    if ('|png|jpg|jpeg|bmp|gif|'.indexOf('|'+file.ext.toLowerCase()+'|') === -1) {
                         $wrap.empty().addClass('notimage').append('<i class="file-preview file-type-' + file.ext.toLowerCase() + '"></i>' +
                         '<span class="file-title" title="' + file.name + '">' + file.name + '</span>');
                     } else {
@@ -242,7 +242,7 @@
                     file.rotation = 0;
 
                     /* 检查文件格式 */
-                    if (!file.ext || acceptExtensions.indexOf(file.ext.toLowerCase()) == -1) {
+                    if (!file.ext || acceptExtensions.indexOf(file.ext.toLowerCase()) === -1) {
                         showError('not_allow_type');
                         uploader.removeFile(file);
                     }
@@ -340,7 +340,7 @@
 
             function setState(val, files) {
 
-                if (val != state) {
+                if (val !== state) {
 
                     var stats = uploader.getStats();
 
@@ -459,7 +459,7 @@
             });
 
             uploader.on('filesQueued', function (file) {
-                if (!uploader.isInProgress() && (state == 'pedding' || state == 'finish' || state == 'confirm' || state == 'ready')) {
+                if (!uploader.isInProgress() && (state === 'pedding' || state === 'finish' || state === 'confirm' || state === 'ready')) {
                     setState('ready');
                 }
                 updateTotalProgress();
@@ -473,7 +473,7 @@
                     case 'startUpload':
                         /* 添加额外的GET参数 */
                         var params = utils.serializeParam(editor.queryCommandValue('serverparam')) || '',
-                            url = utils.formatUrl(actionUrl + (actionUrl.indexOf('?') == -1 ? '?':'&') + 'encode=utf-8&' + params);
+                            url = utils.formatUrl(actionUrl + (actionUrl.indexOf('?') === -1 ? '?':'&') + 'encode=utf-8&' + params);
                         uploader.option('server', url);
                         setState('uploading', files);
                         break;
@@ -502,7 +502,7 @@
                 try {
                     var responseText = (ret._raw || ret),
                         json = utils.str2json(responseText);
-                    if (json.state == 'SUCCESS') {
+                    if (json.state === 'SUCCESS') {
                         _this.fileList.push(json);
                         $file.append('<span class="success"></span>');
                     } else {
@@ -516,7 +516,7 @@
             uploader.on('uploadError', function (file, code) {
             });
             uploader.on('error', function (code, file) {
-                if (code == 'Q_TYPE_DENIED' || code == 'F_EXCEED_SIZE') {
+                if (code === 'Q_TYPE_DENIED' || code === 'F_EXCEED_SIZE') {
                     addFile(file);
                 }
             });
@@ -544,7 +544,7 @@
             var file, i, status, readyFile = 0, files = this.uploader.getFiles();
             for (i = 0; file = files[i++]; ) {
                 status = file.getStatus();
-                if (status == 'queued' || status == 'uploading' || status == 'progress') readyFile++;
+                if (status === 'queued' || status === 'uploading' || status === 'progress') readyFile++;
             }
             return readyFile;
         },
@@ -603,7 +603,7 @@
                 var target = e.target || e.srcElement,
                     li = target.parentNode;
 
-                if (li.tagName.toLowerCase() == 'li') {
+                if (li.tagName.toLowerCase() === 'li') {
                     if (domUtils.hasClass(li, 'selected')) {
                         domUtils.removeClasses(li, 'selected');
                     } else {
@@ -640,7 +640,7 @@
                     onsuccess: function (r) {
                         try {
                             var json = eval('(' + r.responseText + ')');
-                            if (json.state == 'SUCCESS') {
+                            if (json.state === 'SUCCESS') {
                                 _this.pushData(json.list);
                                 _this.listIndex = parseInt(json.start) + parseInt(json.list.length);
                                 if(_this.listIndex >= json.total) {
@@ -649,7 +649,7 @@
                                 _this.isLoadingData = false;
                             }
                         } catch (e) {
-                            if(r.responseText.indexOf('ue_separate_ue') != -1) {
+                            if(r.responseText.indexOf('ue_separate_ue') !== -1) {
                                 var list = r.responseText.split(r.responseText);
                                 _this.pushData(list);
                                 _this.listIndex = parseInt(list.length);
@@ -674,7 +674,7 @@
                     icon = document.createElement('span');
                     filetype = list[i].url.substr(list[i].url.lastIndexOf('.') + 1);
 
-                    if ( "png|jpg|jpeg|gif|bmp".indexOf(filetype) != -1 ) {
+                    if ( "png|jpg|jpeg|gif|bmp".indexOf(filetype) !== -1 ) {
                         preview = document.createElement('img');
                         domUtils.on(preview, 'load', (function(image){
                             return function(){
@@ -682,7 +682,7 @@
                             };
                         })(preview));
                         preview.width = 113;
-                        preview.setAttribute('src', urlPrefix + list[i].url + (list[i].url.indexOf('?') == -1 ? '?noCache=':'&noCache=') + (+new Date()).toString(36) );
+                        preview.setAttribute('src', urlPrefix + list[i].url + (list[i].url.indexOf('?') === -1 ? '?noCache=':'&noCache=') + (+new Date()).toString(36) );
                     } else {
                         var ic = document.createElement('i'),
                             textSpan = document.createElement('span');
@@ -712,7 +712,7 @@
             var ow = img.width,
                 oh = img.height;
 
-            if (type == 'justify') {
+            if (type === 'justify') {
                 if (ow >= oh) {
                     img.width = w;
                     img.height = h * oh / ow;

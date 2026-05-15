@@ -38,7 +38,7 @@
           <el-table-column prop="attrId" header-align="center" align="center" label="id"></el-table-column>
           <el-table-column prop="attrName" header-align="center" align="center" label="属性名"></el-table-column>
           <el-table-column
-              v-if="attrtype == 1"
+              v-if="attrtype === 1"
               prop="searchType"
               header-align="center"
               align="center"
@@ -55,7 +55,18 @@
               <el-tag v-else>多选</el-tag>
             </template>
           </el-table-column>
-          <el-table-column prop="icon" header-align="center" align="center" label="图标"></el-table-column>
+          <el-table-column
+            prop="icon"
+            header-align="center"
+            align="center"
+            label="图标">
+            <template slot-scope="scope">
+              <img
+                :src="scope.row.icon"
+                style="width: 100px;"
+                alt="logo">
+            </template>
+          </el-table-column>
           <el-table-column prop="valueSelect" header-align="center" align="center" label="可选值">
             <template slot-scope="scope">
               <el-tooltip placement="top">
@@ -74,13 +85,13 @@
           </el-table-column>
           <el-table-column prop="catelogName" header-align="center" align="center" label="所属分类"></el-table-column>
           <el-table-column
-              v-if="attrtype == 1"
+              v-if="attrtype === 1"
               prop="groupName"
               header-align="center"
               align="center"
               label="所属分组"
           ></el-table-column>
-          <el-table-column v-if="attrtype == 1" prop="showDesc" header-align="center" align="center" label="快速展示">
+          <el-table-column v-if="attrtype === 1" prop="showDesc" header-align="center" align="center" label="快速展示">
             <template slot-scope="scope">
               <i class="el-icon-success" v-if="scope.row.showDesc==1"></i>
               <i class="el-icon-error" v-else></i>

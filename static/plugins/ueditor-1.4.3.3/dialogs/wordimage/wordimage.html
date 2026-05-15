@@ -49,7 +49,7 @@
 
         /* 添加额外的GET参数 */
         var params = utils.serializeParam(editor.queryCommandValue('serverparam')) || '',
-            urlWidthParams = optImageUrl + (optImageUrl.indexOf('?') == -1 ? '?':'&') + params;
+            urlWidthParams = optImageUrl + (optImageUrl.indexOf('?') === -1 ? '?':'&') + params;
 
         utils.domReady(function(){
             //创建Flash相关的参数集合

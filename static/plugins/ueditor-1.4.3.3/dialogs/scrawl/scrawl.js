@@ -55,8 +55,8 @@ var scrawl = function (options) {
             var tmp = null, arr = [];
             arr.push("<table id='J_colorList'>");
             for (var i = 0, color; color = colorList[i++];) {
-                if ((i - 1) % 5 == 0) {
-                    if (i != 1) {
+                if ((i - 1) % 5 === 0) {
+                    if (i !== 1) {
                         arr.push("</tr>");
                     }
                     arr.push("<tr>");
@@ -97,7 +97,7 @@ var scrawl = function (options) {
                         context.beginPath();
                         break;
                     case 'mousemove' :
-                        if (!flag && button == 0) {
+                        if (!flag && button === 0) {
                             return;
                         }
                         if (!flag && button) {
@@ -138,7 +138,7 @@ var scrawl = function (options) {
                     case 'mouseout':
                         flag = '';
                         buttonPress = 0;
-                        if (button == 1) return;
+                        if (button === 1) return;
                         context.closePath();
                         break;
                 }
@@ -152,7 +152,7 @@ var scrawl = function (options) {
                     context.clearRect(0, 0, context.canvas.width, context.canvas.height);
                     context.putImageData(drawStep[drawStepIndex - 1], 0, 0);
                     me.btn2Highlight("J_nextStep");
-                    drawStepIndex == 1 && me.btn2disable("J_previousStep");
+                    drawStepIndex === 1 && me.btn2disable("J_previousStep");
                 }
             });
             domUtils.on($G("J_nextStep"), "click", function () {
@@ -161,7 +161,7 @@ var scrawl = function (options) {
                     context.putImageData(drawStep[drawStepIndex], 0, 0);
                     drawStepIndex += 1;
                     me.btn2Highlight("J_previousStep");
-                    drawStepIndex == drawStep.length && me.btn2disable("J_nextStep");
+                    drawStepIndex === drawStep.length && me.btn2disable("J_nextStep");
                 }
             });
             domUtils.on($G("J_clearBoard"), "click", function () {
@@ -262,7 +262,7 @@ var scrawl = function (options) {
                         picBoard.appendChild(scale.init());
                         scale.startScale(img);
                     } else {
-                        if (scaleCon.style.visibility == "visible") {
+                        if (scaleCon.style.visibility === "visible") {
                             scaleCon.style.visibility = "hidden";
                             picBoard.style.position = "";
                             picBoard.style.zIndex = "";
@@ -311,7 +311,7 @@ var scrawl = function (options) {
         _originalColorSelect:function (title) {
             var colorList = $G("J_colorList").getElementsByTagName("td");
             for (var j = 0, cell; cell = colorList[j++];) {
-                if (cell.children[0].title.toLowerCase() == title) {
+                if (cell.children[0].title.toLowerCase() === title) {
                     cell.children[0].style.opacity = 1;
                 }
             }
@@ -319,9 +319,9 @@ var scrawl = function (options) {
         _originalBrushSelect:function (text) {
             var brushList = $G("J_brushBar").children;
             for (var i = 0, ele; ele = brushList[i++];) {
-                if (ele.tagName.toLowerCase() == "a") {
+                if (ele.tagName.toLowerCase() === "a") {
                     var size = browser.ie ? ele.innerText : ele.text;
-                    if (size.toLowerCase() == text) {
+                    if (size.toLowerCase() === text) {
                         ele.style.opacity = 1;
                     }
                 }
@@ -337,16 +337,16 @@ var scrawl = function (options) {
                 cell.children[0].style.opacity = 0.3;
             }
             for (var k = 0, ele; ele = brushList[k++];) {
-                if (ele.tagName.toLowerCase() == "a") {
+                if (ele.tagName.toLowerCase() === "a") {
                     ele.style.opacity = 0.3;
                     var size = browser.ie ? ele.innerText : ele.text;
-                    if (size.toLowerCase() == this.brushWidth) {
+                    if (size.toLowerCase() === this.brushWidth) {
                         ele.style.opacity = 1;
                     }
                 }
             }
             for (var j = 0, node; node = eraserList[j++];) {
-                if (node.tagName.toLowerCase() == "a") {
+                if (node.tagName.toLowerCase() === "a") {
                     node.style.opacity = 0.3;
                 }
             }
@@ -359,12 +359,12 @@ var scrawl = function (options) {
             var eraserList = $G("J_eraserBar").children;
 
             for (var i = 0, ele; ele = brushList[i++];) {
-                if (ele.tagName.toLowerCase() == "a") {
+                if (ele.tagName.toLowerCase() === "a") {
                     ele.style.opacity = 0.3;
                 }
             }
             for (var j = 0, node; node = eraserList[j++];) {
-                if (node.tagName.toLowerCase() == "a") {
+                if (node.tagName.toLowerCase() === "a") {
                     node.style.opacity = 0.3;
                 }
             }
@@ -377,7 +377,7 @@ var scrawl = function (options) {
                 img = picContainer.children[0];
             if (img) {
                 var x, y;
-                if (img.style.position == "absolute") {
+                if (img.style.position === "absolute") {
                     x = parseInt(img.style.left);
                     y = parseInt(img.style.top);
                 } else {
@@ -399,11 +399,11 @@ var scrawl = function (options) {
         },
         btn2Highlight:function (id) {
             var cur = $G(id);
-            cur.className.indexOf("H") == -1 && (cur.className += "H");
+            cur.className.indexOf("H") === -1 && (cur.className += "H");
         },
         btn2disable:function (id) {
             var cur = $G(id);
-            cur.className.indexOf("H") != -1 && (cur.className = cur.className.replace("H", ""));
+            cur.className.indexOf("H") !== -1 && (cur.className = cur.className.replace("H", ""));
         },
         getTarget:function (evt) {
             return evt.target || evt.srcElement;
@@ -474,7 +474,7 @@ var ScaleBoy = function () {
             domUtils.on(scale, 'mousedown', function (e) {
                 var target = e.target || e.srcElement;
                 me.start = {x:e.clientX, y:e.clientY};
-                if (target.className.indexOf('hand') != -1) {
+                if (target.className.indexOf('hand') !== -1) {
                     me.dir = target.className.replace('hand', '');
                 }
                 domUtils.on(document.body, 'mousemove', me.scaleMousemove);
@@ -504,8 +504,8 @@ var ScaleBoy = function () {
                 pos = objStyle.position,
                 size = objStyle.size;
             if (pos) {
-                typeof pos.x != 'undefined' && (cur.style.left = pos.x);
-                typeof pos.y != 'undefined' && (cur.style.top = pos.y);
+                typeof pos.x !== 'undefined' && (cur.style.left = pos.x);
+                typeof pos.y !== 'undefined' && (cur.style.top = pos.y);
             }
             if (size) {
                 size.w && (cur.style.width = size.w);
@@ -517,19 +517,19 @@ var ScaleBoy = function () {
                 dom = me.dom, tmp;
 
             rect['def'] = [1, 1, 0, 0];
-            if (rect[dir][0] != 0) {
+            if (rect[dir][0] !== 0) {
                 tmp = parseInt(dom.style.left) + offset.x;
                 dom.style.left = me._validScaledProp('left', tmp) + 'px';
             }
-            if (rect[dir][1] != 0) {
+            if (rect[dir][1] !== 0) {
                 tmp = parseInt(dom.style.top) + offset.y;
                 dom.style.top = me._validScaledProp('top', tmp) + 'px';
             }
-            if (rect[dir][2] != 0) {
+            if (rect[dir][2] !== 0) {
                 tmp = dom.clientWidth + rect[dir][2] * offset.x;
                 dom.style.width = me._validScaledProp('width', tmp) + 'px';
             }
-            if (rect[dir][3] != 0) {
+            if (rect[dir][3] !== 0) {
                 tmp = dom.clientHeight + rect[dir][3] * offset.y;
                 dom.style.height = me._validScaledProp('height', tmp) + 'px';
             }
@@ -595,7 +595,7 @@ function ue_callback(url, state) {
     //移除遮罩层
     removeMaskLayer();
     //状态响应
-    if (state == "SUCCESS") {
+    if (state === "SUCCESS") {
         picBorard.innerHTML = "";
         img.onload = function () {
             scale(this, 300);
@@ -637,7 +637,7 @@ function exec(scrawlObj) {
                     if (!scrawlObj.isCancelScrawl) {
                         var responseObj;
                         responseObj = eval("(" + xhr.responseText + ")");
-                        if (responseObj.state == "SUCCESS") {
+                        if (responseObj.state === "SUCCESS") {
                             var imgObj = {},
                                 url = editor.options.scrawlUrlPrefix + responseObj.url;
                             imgObj.src = url;
@@ -661,7 +661,7 @@ function exec(scrawlObj) {
 
             var actionUrl = editor.getActionUrl(editor.getOpt('scrawlActionName')),
                 params = utils.serializeParam(editor.queryCommandValue('serverparam')) || '',
-                url = utils.formatUrl(actionUrl + (actionUrl.indexOf('?') == -1 ? '?':'&') + params);
+                url = utils.formatUrl(actionUrl + (actionUrl.indexOf('?') === -1 ? '?':'&') + params);
             ajax.request(url, options);
         }
     } else {

@@ -36,7 +36,7 @@
       <el-table-column prop="status" header-align="center" align="center" label="启用状态">
         <template slot-scope="scope">
           <el-switch
-            v-model="scope.row.status" 
+            v-model="scope.row.status"
             active-color="#13ce66"
             inactive-color="#ff4949"
             :active-value="1"
@@ -67,12 +67,12 @@
 </template>
 
 <script>
-import AddOrUpdate from "./member-add-or-update";
+import AddOrUpdate from './member-add-or-update'
 export default {
-  data() {
+  data () {
     return {
       dataForm: {
-        key: ""
+        key: ''
       },
       dataList: [],
       pageIndex: 1,
@@ -81,21 +81,21 @@ export default {
       dataListLoading: false,
       dataListSelections: [],
       addOrUpdateVisible: false
-    };
+    }
   },
   components: {
     AddOrUpdate
   },
-  activated() {
-    this.getDataList();
+  activated () {
+    this.getDataList()
   },
   methods: {
     // 获取数据列表
-    getDataList() {
-      this.dataListLoading = true;
+    getDataList () {
+      this.dataListLoading = true
       this.$http({
-        url: this.$http.adornUrl("/member/member/list"),
-        method: "get",
+        url: this.$http.adornUrl('/member/member/list'),
+        method: 'get',
         params: this.$http.adornParams({
           page: this.pageIndex,
           limit: this.pageSize,
@@ -103,36 +103,36 @@ export default {
         })
       }).then(({ data }) => {
         if (data && data.code === 0) {
-          this.dataList = data.page.list;
-          this.totalPage = data.page.totalCount;
+          this.dataList = data.page.list
+          this.totalPage = data.page.totalCount
         } else {
-          this.dataList = [];
-          this.totalPage = 0;
+          this.dataList = []
+          this.totalPage = 0
         }
-        this.dataListLoading = false;
-      });
+        this.dataListLoading = false
+      })
     },
     // 每页数
-    sizeChangeHandle(val) {
-      this.pageSize = val;
-      this.pageIndex = 1;
-      this.getDataList();
+    sizeChangeHandle (val) {
+      this.pageSize = val
+      this.pageIndex = 1
+      this.getDataList()
     },
     // 当前页
-    currentChangeHandle(val) {
-      this.pageIndex = val;
-      this.getDataList();
+    currentChangeHandle (val) {
+      this.pageIndex = val
+      this.getDataList()
     },
     // 多选
-    selectionChangeHandle(val) {
-      this.dataListSelections = val;
+    selectionChangeHandle (val) {
+      this.dataListSelections = val
     },
     // 新增 / 修改
-    addOrUpdateHandle(id) {
-      this.addOrUpdateVisible = true;
+    addOrUpdateHandle (id) {
+      this.addOrUpdateVisible = true
       this.$nextTick(() => {
-        this.$refs.addOrUpdate.init(id);
-      });
+        this.$refs.addOrUpdate.init(id)
+      })
     }
     // 删除
     //   deleteHandle (id) {
@@ -165,5 +165,5 @@ export default {
     //     })
     //   }
   }
-};
+}
 </script>

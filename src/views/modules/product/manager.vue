@@ -93,6 +93,7 @@
 <script>
 import CategoryCascader from '../common/category-cascader'
 import BrandSelect from '../common/brand-select'
+import PubSub from 'pubsub-js'
 export default {
   data () {
     return {
@@ -132,7 +133,7 @@ export default {
     // 处理更多指令
     handleCommand (row, command) {
       console.log('~~~~~', row, command)
-      if (command == 'stockSettings') {
+      if (command === 'stockSettings') {
         this.$router.push({ path: '/ware-sku', query: { skuId: row.skuId } })
       }
     },

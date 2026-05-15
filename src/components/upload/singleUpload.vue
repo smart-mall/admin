@@ -40,7 +40,8 @@ export default {
       filename: null,
       objectName: null,
       dialogVisible: false,
-      uploadParams: null // 存储上传参数
+      uploadParams: null, // 存储上传参数
+      isValidFile: true  // 新增标志位
     }
   },
   methods: {
@@ -51,10 +52,12 @@ export default {
 
       if (!isJPG) {
         this.$message.error('只能上传jpg/png文件!')
+        this.isValidFile = false
         return false
       }
       if (!isLt10M) {
         this.$message.error('文件大小不能超过10MB!')
+        this.isValidFile = false
         return false
       }
 
@@ -63,7 +66,7 @@ export default {
         // 获取时间 格式2020-01-01
         const date = new Date().toLocaleDateString().replace(/\//g, '-')
         this.objectName = `${date}/${this.filename}`
-        const data = await putFile('text', this.objectName)
+        const data = await putFile('gulimall', this.objectName)
 
         if (data && data.code === 0) { // 增加data存在性检查
           this.uploadParams = data
@@ -78,8 +81,14 @@ export default {
       }
     },
     async customUpload (params) {
+      if (!this.isValidFile) {
+        params.onError()
+        return
+      }
+
       if (!this.uploadParams) {
         params.onError(new Error('未获取到上传参数'))
+        params.onError()
         return
       }
 
@@ -101,7 +110,7 @@ export default {
         await axios.put(url, file, { headers })
 
         // 上传成功后，获取文件路径
-        const filePathData = await getFilePath('text', this.objectName)
+        const filePathData = await getFilePath('gulimall', this.objectName)
         if (filePathData && filePathData.code === 0) {
           this.fileList = [{
             name: this.filename,

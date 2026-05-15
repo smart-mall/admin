@@ -29,7 +29,7 @@
         }
 
         var img = editor.selection.getRange().getClosedNode();
-        if (img && img.tagName && img.tagName.toLowerCase() == 'img') {
+        if (img && img.tagName && img.tagName.toLowerCase() === 'img') {
             setTabFocus('remote');
         } else {
             setTabFocus('upload');
@@ -42,7 +42,7 @@
         var i, bodyId, tabs = $G('tabhead').children;
         for (i = 0; i < tabs.length; i++) {
             bodyId = tabs[i].getAttribute('data-content-id');
-            if (bodyId == id) {
+            if (bodyId === id) {
                 domUtils.addClass(tabs[i], 'focus');
                 domUtils.addClass($G(bodyId), 'focus');
             } else {
@@ -116,7 +116,7 @@
         /* 点击align图标 */
         domUtils.on($G("alignIcon"), 'click', function(e){
             var target = e.target || e.srcElement;
-            if(target.className && target.className.indexOf('-align') != -1) {
+            if(target.className && target.className.indexOf('-align') !== -1) {
                 setAlign(target.getAttribute('data-align'));
             }
         });
@@ -127,7 +127,7 @@
         align = align || 'none';
         var aligns = $G("alignIcon").children;
         for(i = 0; i < aligns.length; i++){
-            if(aligns[i].getAttribute('data-align') == align) {
+            if(aligns[i].getAttribute('data-align') === align) {
                 domUtils.addClass(aligns[i], 'focus');
                 $G("align").value = aligns[i].getAttribute('data-align');
             } else {
@@ -138,7 +138,7 @@
     /* 获取对齐方式 */
     function getAlign(){
         var align = $G("align").value || 'none';
-        return align == 'none' ? '':align;
+        return align === 'none' ? '':align;
     }
 
 
@@ -207,7 +207,7 @@
             var width = $G('width').value,
                 height = $G('height').value,
                 locker = $G('lock');
-            if(width && height && width == parseInt(width) && height == parseInt(height)) {
+            if(width && height && width === parseInt(width) && height === parseInt(height)) {
                 locker.disabled = false;
                 locker.title = '';
             } else {
@@ -218,7 +218,7 @@
         },
         setImage: function(img){
             /* 不是正常的图片 */
-            if (!img.tagName || img.tagName.toLowerCase() != 'img' && !img.getAttribute("src") || !img.src) return;
+            if (!img.tagName || img.tagName.toLowerCase() !== 'img' && !img.getAttribute("src") || !img.src) return;
 
             var wordImgFlag = img.getAttribute("word_img"),
                 src = wordImgFlag ? wordImgFlag.replace("&amp;", "&") : (img.getAttribute('_src') || img.getAttribute("src", 2).replace("&amp;", "&")),
@@ -291,7 +291,7 @@
 
     /* 上传图片 */
     function UploadImage(target) {
-        this.$wrap = target.constructor == String ? $('#' + target) : $(target);
+        this.$wrap = target.constructor === String ? $('#' + target) : $(target);
         this.init();
     }
     UploadImage.prototype = {
@@ -460,7 +460,7 @@
                     file.rotation = 0;
 
                     /* 检查文件格式 */
-                    if (!file.ext || acceptExtensions.indexOf(file.ext.toLowerCase()) == -1) {
+                    if (!file.ext || acceptExtensions.indexOf(file.ext.toLowerCase()) === -1) {
                         showError('not_allow_type');
                         uploader.removeFile(file);
                     }
@@ -558,7 +558,7 @@
 
             function setState(val, files) {
 
-                if (val != state) {
+                if (val !== state) {
 
                     var stats = uploader.getStats();
 
@@ -677,7 +677,7 @@
             });
 
             uploader.on('filesQueued', function (file) {
-                if (!uploader.isInProgress() && (state == 'pedding' || state == 'finish' || state == 'confirm' || state == 'ready')) {
+                if (!uploader.isInProgress() && (state === 'pedding' || state === 'finish' || state === 'confirm' || state === 'ready')) {
                     setState('ready');
                 }
                 updateTotalProgress();
@@ -691,7 +691,7 @@
                     case 'startUpload':
                         /* 添加额外的GET参数 */
                         var params = utils.serializeParam(editor.queryCommandValue('serverparam')) || '',
-                            url = utils.formatUrl(actionUrl + (actionUrl.indexOf('?') == -1 ? '?':'&') + 'encode=utf-8&' + params);
+                            url = utils.formatUrl(actionUrl + (actionUrl.indexOf('?') === -1 ? '?':'&') + 'encode=utf-8&' + params);
                         uploader.option('server', url);
                         setState('uploading', files);
                         break;
@@ -720,7 +720,7 @@
                 try {
                     var responseText = (ret._raw || ret),
                         json = utils.str2json(responseText);
-                    if (json.state == 'SUCCESS') {
+                    if (json.state === 'SUCCESS') {
                         _this.imageList.push(json);
                         $file.append('<span class="success"></span>');
                     } else {
@@ -734,7 +734,7 @@
             uploader.on('uploadError', function (file, code) {
             });
             uploader.on('error', function (code, file) {
-                if (code == 'Q_TYPE_DENIED' || code == 'F_EXCEED_SIZE') {
+                if (code === 'Q_TYPE_DENIED' || code === 'F_EXCEED_SIZE') {
                     addFile(file);
                 }
             });
@@ -762,7 +762,7 @@
             var file, i, status, readyFile = 0, files = this.uploader.getFiles();
             for (i = 0; file = files[i++]; ) {
                 status = file.getStatus();
-                if (status == 'queued' || status == 'uploading' || status == 'progress') readyFile++;
+                if (status === 'queued' || status === 'uploading' || status === 'progress') readyFile++;
             }
             return readyFile;
         },
@@ -826,7 +826,7 @@
                 var target = e.target || e.srcElement,
                     li = target.parentNode;
 
-                if (li.tagName.toLowerCase() == 'li') {
+                if (li.tagName.toLowerCase() === 'li') {
                     if (domUtils.hasClass(li, 'selected')) {
                         domUtils.removeClasses(li, 'selected');
                     } else {
@@ -871,7 +871,7 @@
                     'onsuccess': function (r) {
                         try {
                             var json = isJsonp ? r:eval('(' + r.responseText + ')');
-                            if (json.state == 'SUCCESS') {
+                            if (json.state === 'SUCCESS') {
                                 _this.pushData(json.list);
                                 _this.listIndex = parseInt(json.start) + parseInt(json.list.length);
                                 if(_this.listIndex >= json.total) {
@@ -880,7 +880,7 @@
                                 _this.isLoadingData = false;
                             }
                         } catch (e) {
-                            if(r.responseText.indexOf('ue_separate_ue') != -1) {
+                            if(r.responseText.indexOf('ue_separate_ue') !== -1) {
                                 var list = r.responseText.split(r.responseText);
                                 _this.pushData(list);
                                 _this.listIndex = parseInt(list.length);
@@ -911,7 +911,7 @@
                         }
                     })(img));
                     img.width = 113;
-                    img.setAttribute('src', urlPrefix + list[i].url + (list[i].url.indexOf('?') == -1 ? '?noCache=':'&noCache=') + (+new Date()).toString(36) );
+                    img.setAttribute('src', urlPrefix + list[i].url + (list[i].url.indexOf('?') === -1 ? '?noCache=':'&noCache=') + (+new Date()).toString(36) );
                     img.setAttribute('_src', urlPrefix + list[i].url);
                     domUtils.addClass(icon, 'icon');
 
@@ -926,7 +926,7 @@
             var ow = img.width,
                 oh = img.height;
 
-            if (type == 'justify') {
+            if (type === 'justify') {
                 if (ow >= oh) {
                     img.width = w;
                     img.height = h * oh / ow;
@@ -981,7 +981,7 @@
             /* 点击搜索按钮 */
             domUtils.on($G('searchBtn'), 'click', function(){
                 var key = $G('searchTxt').value;
-                if(key && key != lang.searchRemind) {
+                if(key && key !== lang.searchRemind) {
                     _this.getImageData();
                 }
             });
@@ -994,14 +994,14 @@
             /* 搜索框聚焦 */
             domUtils.on($G('searchTxt'), 'focus', function(){
                 var key = $G('searchTxt').value;
-                if(key && key == lang.searchRemind) {
+                if(key && key === lang.searchRemind) {
                     $G('searchTxt').value = '';
                 }
             });
             /* 搜索框回车键搜索 */
             domUtils.on($G('searchTxt'), 'keydown', function(e){
                 var keyCode = e.keyCode || e.which;
-                if (keyCode == 13) {
+                if (keyCode === 13) {
                     $G('searchBtn').click();
                 }
             });
@@ -1011,7 +1011,7 @@
                 var target = e.target || e.srcElement,
                     li = target.parentNode.parentNode;
 
-                if (li.tagName.toLowerCase() == 'li') {
+                if (li.tagName.toLowerCase() === 'li') {
                     if (domUtils.hasClass(li, 'selected')) {
                         domUtils.removeClasses(li, 'selected');
                     } else {
@@ -1028,7 +1028,7 @@
             for (var i = 0; i < str.length; i++) {
                 var c = str.charAt(i),
                     code = str.charCodeAt(i);
-                if (c == " ") strOut += "+";
+                if (c === " ") strOut += "+";
                 else if (code >= 19968 && code <= 40869) {
                     var index = code - 19968;
                     strOut += "%" + z.substr(index * 4, 2) + "%" + z.substr(index * 4 + 2, 2);
@@ -1125,7 +1125,7 @@
                 items = $G('searchListUl').children;
             for(var i = 0; i < items.length; i++) {
                 child = items[i].firstChild && items[i].firstChild.firstChild;
-                if(child.tagName && child.tagName.toLowerCase() == 'img' && domUtils.hasClass(items[i], 'selected')) {
+                if(child.tagName && child.tagName.toLowerCase() === 'img' && domUtils.hasClass(items[i], 'selected')) {
                     src = child.src;
                     list.push({
                         src: src,

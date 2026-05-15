@@ -91,162 +91,162 @@
 </template>
 
 <script>
-import SingleUpload from "@/components/upload/singleUpload";
+import SingleUpload from '@/components/upload/singleUpload'
 export default {
   components: { SingleUpload },
-  data() {
+  data () {
     return {
       visible: false,
       memberLevels: [],
       dataForm: {
         id: 0,
-        couponType: "",
-        couponImg: "",
-        couponName: "",
-        num: "",
-        amount: "",
-        perLimit: "",
-        minPoint: "",
-        startTime: "",
-        endTime: "",
-        useType: "",
-        note: "",
-        publishCount: "",
-        useCount: "",
-        receiveCount: "",
-        enableStartTime: "",
-        enableEndTime: "",
-        code: "",
-        memberLevel: "",
+        couponType: '',
+        couponImg: '',
+        couponName: '',
+        num: '',
+        amount: '',
+        perLimit: '',
+        minPoint: '',
+        startTime: '',
+        endTime: '',
+        useType: '',
+        note: '',
+        publishCount: '',
+        useCount: '',
+        receiveCount: '',
+        enableStartTime: '',
+        enableEndTime: '',
+        code: '',
+        memberLevel: '',
         publish: 0,
         timeRange: [],
-        useTimeRange:[]
+        useTimeRange: []
       },
       dataRule: {
         couponType: [
           {
             required: true,
             message:
-              "优惠卷类型不能为空",
-            trigger: "blur"
+              '优惠卷类型不能为空',
+            trigger: 'blur'
           }
         ],
         couponImg: [
-          { required: true, message: "优惠券图片不能为空", trigger: "blur" }
+          { required: true, message: '优惠券图片不能为空', trigger: 'blur' }
         ],
         couponName: [
-          { required: true, message: "优惠卷名字不能为空", trigger: "blur" }
+          { required: true, message: '优惠卷名字不能为空', trigger: 'blur' }
         ],
-        num: [{ required: true, message: "数量不能为空", trigger: "blur" }],
-        amount: [{ required: true, message: "金额不能为空", trigger: "blur" }],
+        num: [{ required: true, message: '数量不能为空', trigger: 'blur' }],
+        amount: [{ required: true, message: '金额不能为空', trigger: 'blur' }],
         perLimit: [
-          { required: true, message: "每人限领张数不能为空", trigger: "blur" }
+          { required: true, message: '每人限领张数不能为空', trigger: 'blur' }
         ],
         minPoint: [
-          { required: true, message: "使用门槛不能为空", trigger: "blur" }
+          { required: true, message: '使用门槛不能为空', trigger: 'blur' }
         ],
         useType: [
           {
             required: true,
-            message: "使用类型不能为空",
-            trigger: "blur"
+            message: '使用类型不能为空',
+            trigger: 'blur'
           }
         ],
-        note: [{ required: true, message: "备注不能为空", trigger: "blur" }],
+        note: [{ required: true, message: '备注不能为空', trigger: 'blur' }],
         publishCount: [
-          { required: true, message: "发行数量不能为空", trigger: "blur" }
+          { required: true, message: '发行数量不能为空', trigger: 'blur' }
         ],
         enableStartTime: [
           {
             required: true,
-            message: "可以领取的开始日期不能为空",
-            trigger: "blur"
+            message: '可以领取的开始日期不能为空',
+            trigger: 'blur'
           }
         ],
         enableEndTime: [
           {
             required: true,
-            message: "可以领取的结束日期不能为空",
-            trigger: "blur"
+            message: '可以领取的结束日期不能为空',
+            trigger: 'blur'
           }
         ],
-        code: [{ required: true, message: "优惠码不能为空", trigger: "blur" }],
+        code: [{ required: true, message: '优惠码不能为空', trigger: 'blur' }],
         memberLevel: [
           {
             required: true,
-            message: "可以领取的会员等级不能为空",
-            trigger: "blur"
+            message: '可以领取的会员等级不能为空',
+            trigger: 'blur'
           }
         ]
       }
-    };
+    }
   },
-  created() {
-    this.getMemberLevels();
+  created () {
+    this.getMemberLevels()
   },
   methods: {
-    getMemberLevels() {
-      //获取所有的会员等级
+    getMemberLevels () {
+      // 获取所有的会员等级
       this.$http({
-        url: this.$http.adornUrl("/member/memberlevel/list"),
-        method: "get",
+        url: this.$http.adornUrl('/member/memberlevel/list'),
+        method: 'get',
         params: this.$http.adornParams({
           page: 1,
           limit: 500
         })
       }).then(({ data }) => {
-        this.memberLevels = data.page.list;
-      });
+        this.memberLevels = data.page.list
+      })
     },
-    init(id) {
-      this.dataForm.id = id || 0;
-      this.visible = true;
+    init (id) {
+      this.dataForm.id = id || 0
+      this.visible = true
       this.$nextTick(() => {
-        this.$refs["dataForm"].resetFields();
+        this.$refs['dataForm'].resetFields()
         if (this.dataForm.id) {
           this.$http({
             url: this.$http.adornUrl(`/coupon/coupon/info/${this.dataForm.id}`),
-            method: "get",
+            method: 'get',
             params: this.$http.adornParams()
           }).then(({ data }) => {
             if (data && data.code === 0) {
-              this.dataForm.couponType = data.coupon.couponType;
-              this.dataForm.couponImg = data.coupon.couponImg;
-              this.dataForm.couponName = data.coupon.couponName;
-              this.dataForm.num = data.coupon.num;
-              this.dataForm.amount = data.coupon.amount;
-              this.dataForm.perLimit = data.coupon.perLimit;
-              this.dataForm.minPoint = data.coupon.minPoint;
-              this.dataForm.startTime = data.coupon.startTime;
-              this.dataForm.endTime = data.coupon.endTime;
-              this.dataForm.useType = data.coupon.useType;
-              this.dataForm.note = data.coupon.note;
-              this.dataForm.publishCount = data.coupon.publishCount;
-              this.dataForm.useCount = data.coupon.useCount;
-              this.dataForm.receiveCount = data.coupon.receiveCount;
-              this.dataForm.enableStartTime = data.coupon.enableStartTime;
-              this.dataForm.enableEndTime = data.coupon.enableEndTime;
-              this.dataForm.code = data.coupon.code;
-              this.dataForm.memberLevel = data.coupon.memberLevel;
-              this.dataForm.publish = data.coupon.publish;
+              this.dataForm.couponType = data.coupon.couponType
+              this.dataForm.couponImg = data.coupon.couponImg
+              this.dataForm.couponName = data.coupon.couponName
+              this.dataForm.num = data.coupon.num
+              this.dataForm.amount = data.coupon.amount
+              this.dataForm.perLimit = data.coupon.perLimit
+              this.dataForm.minPoint = data.coupon.minPoint
+              this.dataForm.startTime = data.coupon.startTime
+              this.dataForm.endTime = data.coupon.endTime
+              this.dataForm.useType = data.coupon.useType
+              this.dataForm.note = data.coupon.note
+              this.dataForm.publishCount = data.coupon.publishCount
+              this.dataForm.useCount = data.coupon.useCount
+              this.dataForm.receiveCount = data.coupon.receiveCount
+              this.dataForm.enableStartTime = data.coupon.enableStartTime
+              this.dataForm.enableEndTime = data.coupon.enableEndTime
+              this.dataForm.code = data.coupon.code
+              this.dataForm.memberLevel = data.coupon.memberLevel
+              this.dataForm.publish = data.coupon.publish
               this.dataForm.timeRange = [
                 this.dataForm.startTime,
                 this.dataForm.endTime
-              ];
+              ]
             }
-          });
+          })
         }
-      });
+      })
     },
     // 表单提交
-    dataFormSubmit() {
-      this.$refs["dataForm"].validate(valid => {
+    dataFormSubmit () {
+      this.$refs['dataForm'].validate(valid => {
         if (valid) {
           this.$http({
             url: this.$http.adornUrl(
-              `/coupon/coupon/${!this.dataForm.id ? "save" : "update"}`
+              `/coupon/coupon/${!this.dataForm.id ? 'save' : 'update'}`
             ),
-            method: "post",
+            method: 'post',
             data: this.$http.adornData({
               id: this.dataForm.id || undefined,
               couponType: this.dataForm.couponType,
@@ -272,21 +272,21 @@ export default {
           }).then(({ data }) => {
             if (data && data.code === 0) {
               this.$message({
-                message: "操作成功",
-                type: "success",
+                message: '操作成功',
+                type: 'success',
                 duration: 1500,
                 onClose: () => {
-                  this.visible = false;
-                  this.$emit("refreshDataList");
+                  this.visible = false
+                  this.$emit('refreshDataList')
                 }
-              });
+              })
             } else {
-              this.$message.error(data.msg);
+              this.$message.error(data.msg)
             }
-          });
+          })
         }
-      });
+      })
     }
   }
-};
+}
 </script>

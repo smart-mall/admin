@@ -25,7 +25,7 @@ function clickHandler( tabHeads,tabBodys,obj ) {
         body.onclick = function(){
             this.style.zoom = 1;
         };
-        if ( id != tabSrc ) {
+        if ( id !== tabSrc ) {
             body.style.zIndex = 1;
         } else {
             body.style.zIndex = 200;

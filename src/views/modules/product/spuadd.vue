@@ -83,7 +83,7 @@
                   ></el-input>
                   <el-select
                     v-model="dataResp.baseAttrs[gidx][aidx].attrValues"
-                    :multiple="attr.valueType == 1"
+                    :multiple="attr.valueType===1"
                     filterable
                     allow-create
                     default-first-option
@@ -130,7 +130,7 @@
                   ></el-input>
                   <el-checkbox-group v-model="dataResp.tempSaleAttrs[aidx].attrValues">
                     <el-checkbox
-                      v-if="dataResp.saleAttrs[aidx].valueSelect != ''"
+                      v-if="dataResp.saleAttrs[aidx].valueSelect !== ''"
                       :label="val"
                       v-for="val in dataResp.saleAttrs[aidx].valueSelect.split(';')"
                       :key="val"
@@ -229,7 +229,7 @@
                             ></el-checkbox>
                           </el-col>
                           <el-col :span="12">
-                            <el-tag v-if="scope.row.images[index].defaultImg == 1">
+                            <el-tag v-if="scope.row.images[index].defaultImg === 1">
                               <input
                                 type="radio"
                                 checked
@@ -751,7 +751,7 @@ export default {
       }
 
       // 单维度数据结构直接返回
-      if (pIndex == null) {
+      if (pIndex === null) {
         return list
       }
 
@@ -771,7 +771,7 @@ export default {
           if (point[index01]['count'] + 1 >= list[index01].length) {
             point[index01]['count'] = 0
             pIndex = point[index01]['parent']
-            if (pIndex == null) {
+            if (pIndex === null) {
               return result
             }
 

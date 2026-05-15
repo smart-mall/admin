@@ -41,7 +41,7 @@
                 var address = document.getElementById('address').value;
                 var geocoder = new google.maps.Geocoder();
                 geocoder.geocode( { 'address': address}, function (results, status) {
-                    if (status == google.maps.GeocoderStatus.OK) {
+                    if (status === google.maps.GeocoderStatus.OK) {
                         var bounds = results[0].geometry.viewport;
                         map.fitBounds(bounds);
                         marker.setPosition(results[0].geometry.location);
@@ -51,7 +51,7 @@
             }
             $G('address').onkeydown = function (evt){
                 evt = evt || event;
-                if (evt.keyCode == 13) {
+                if (evt.keyCode === 13) {
                     doSearch();
                 }
             };

@@ -92,7 +92,7 @@
         var editor = parent.editor, containerIframe,
             iframes = parent.document.getElementsByTagName('iframe');
         for (var key in iframes) {
-            if (iframes[key].contentWindow == window) {
+            if (iframes[key].contentWindow === window) {
                 containerIframe = iframes[key];
                 break;
             }

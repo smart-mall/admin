@@ -28,7 +28,7 @@
                 var j, bodyId, target = e.target || e.srcElement;
                 for (j = 0; j < tabs.length; j++) {
                     bodyId = tabs[j].getAttribute('data-content-id');
-                    if(tabs[j] == target){
+                    if(tabs[j] === target){
                         domUtils.addClass(tabs[j], 'focus');
                         domUtils.addClass($G(bodyId), 'focus');
                     }else {
@@ -49,7 +49,7 @@
         (function(){
             var img = editor.selection.getRange().getClosedNode(),url;
             if(img && img.className){
-                var hasFakedClass = (img.className == "edui-faked-video"),
+                var hasFakedClass = (img.className === "edui-faked-video"),
                     hasUploadClass = img.className.indexOf("edui-upload-video")!=-1;
                 if(hasFakedClass || hasUploadClass) {
                     $G("videoUrl").value = url = img.getAttribute("_url");
@@ -98,7 +98,7 @@
     function updateAlignButton( align ) {
         var aligns = $G( "videoFloat" ).children;
         for ( var i = 0, ci; ci = aligns[i++]; ) {
-            if ( ci.getAttribute( "name" ) == align ) {
+            if ( ci.getAttribute( "name" ) === align ) {
                 if ( ci.className !="focus" ) {
                     ci.className = "focus";
                 }
@@ -219,7 +219,7 @@
              for ( var j in nameMaps ) {
                  var div = document.createElement( "div" );
                  div.setAttribute( "name", j );
-                 if ( j == "none" ) div.className="focus";
+                 if ( j === "none" ) div.className="focus";
                  div.style.cssText = "background:url(images/" + j + "_focus.jpg);";
                  div.setAttribute( "title", nameMaps[j] );
                  floatContainer.appendChild( div );
@@ -316,7 +316,7 @@
 
     /* 上传附件 */
     function UploadFile(target) {
-        this.$wrap = target.constructor == String ? $('#' + target) : $(target);
+        this.$wrap = target.constructor === String ? $('#' + target) : $(target);
         this.init();
     }
     UploadFile.prototype = {
@@ -449,7 +449,7 @@
                     showError(file.statusText);
                 } else {
                     $wrap.text(lang.uploadPreview);
-                    if ('|png|jpg|jpeg|bmp|gif|'.indexOf('|'+file.ext.toLowerCase()+'|') == -1) {
+                    if ('|png|jpg|jpeg|bmp|gif|'.indexOf('|'+file.ext.toLowerCase()+'|') === -1) {
                         $wrap.empty().addClass('notimage').append('<i class="file-preview file-type-' + file.ext.toLowerCase() + '"></i>' +
                             '<span class="file-title">' + file.name + '</span>');
                     } else {
@@ -473,7 +473,7 @@
                     file.rotation = 0;
 
                     /* 检查文件格式 */
-                    if (!file.ext || acceptExtensions.indexOf(file.ext.toLowerCase()) == -1) {
+                    if (!file.ext || acceptExtensions.indexOf(file.ext.toLowerCase()) === -1) {
                         showError('not_allow_type');
                         uploader.removeFile(file);
                     }
@@ -571,7 +571,7 @@
 
             function setState(val, files) {
 
-                if (val != state) {
+                if (val !== state) {
 
                     var stats = uploader.getStats();
 
@@ -690,7 +690,7 @@
             });
 
             uploader.on('filesQueued', function (file) {
-                if (!uploader.isInProgress() && (state == 'pedding' || state == 'finish' || state == 'confirm' || state == 'ready')) {
+                if (!uploader.isInProgress() && (state === 'pedding' || state === 'finish' || state === 'confirm' || state === 'ready')) {
                     setState('ready');
                 }
                 updateTotalProgress();
@@ -704,7 +704,7 @@
                     case 'startUpload':
                         /* 添加额外的GET参数 */
                         var params = utils.serializeParam(editor.queryCommandValue('serverparam')) || '',
-                            url = utils.formatUrl(actionUrl + (actionUrl.indexOf('?') == -1 ? '?':'&') + 'encode=utf-8&' + params);
+                            url = utils.formatUrl(actionUrl + (actionUrl.indexOf('?') === -1 ? '?':'&') + 'encode=utf-8&' + params);
                         uploader.option('server', url);
                         setState('uploading', files);
                         break;
@@ -733,7 +733,7 @@
                 try {
                     var responseText = (ret._raw || ret),
                         json = utils.str2json(responseText);
-                    if (json.state == 'SUCCESS') {
+                    if (json.state === 'SUCCESS') {
                         uploadVideoList.push({
                             'url': json.url,
                             'type': json.type,
@@ -751,7 +751,7 @@
             uploader.on('uploadError', function (file, code) {
             });
             uploader.on('error', function (code, file) {
-                if (code == 'Q_TYPE_DENIED' || code == 'F_EXCEED_SIZE') {
+                if (code === 'Q_TYPE_DENIED' || code === 'F_EXCEED_SIZE') {
                     addFile(file);
                 }
             });
@@ -779,7 +779,7 @@
             var file, i, status, readyFile = 0, files = this.uploader.getFiles();
             for (i = 0; file = files[i++]; ) {
                 status = file.getStatus();
-                if (status == 'queued' || status == 'uploading' || status == 'progress') readyFile++;
+                if (status === 'queued' || status === 'uploading' || status === 'progress') readyFile++;
             }
             return readyFile;
         },

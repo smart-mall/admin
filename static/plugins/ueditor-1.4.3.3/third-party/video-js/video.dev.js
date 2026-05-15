@@ -65,7 +65,7 @@ window.videojs = window.vjs = vjs;
 
 // CDN Version. Used to target right flash swf.
 vjs.CDN_VERSION = '4.3';
-vjs.ACCESS_PROTOCOL = ('https:' == document.location.protocol ? 'https://' : 'http://');
+vjs.ACCESS_PROTOCOL = ('https:' === document.location.protocol ? 'https://' : 'http://');
 
 /**
  * Global Player instance options, surfaced from vjs.Player.prototype.options_
@@ -299,7 +299,7 @@ vjs.on = function(elem, type, fn){
     };
   }
 
-  if (data.handlers[type].length == 1) {
+  if (data.handlers[type].length === 1) {
     if (document.addEventListener) {
       elem.addEventListener(type, data.dispatcher, false);
     } else if (document.attachEvent) {
@@ -475,7 +475,7 @@ vjs.fixEvent = function(event) {
     event.isImmediatePropagationStopped = returnFalse;
 
     // Handle mouse position
-    if (event.clientX != null) {
+    if (event.clientX !== null) {
       var doc = document.documentElement, body = document.body;
 
       event.pageX = event.clientX +
@@ -490,8 +490,8 @@ vjs.fixEvent = function(event) {
     event.which = event.charCode || event.keyCode;
 
     // Fix button for mouse clicks:
-    // 0 == left; 1 == middle; 2 == right
-    if (event.button != null) {
+    // 0 === left; 1 === middle; 2 === right
+    if (event.button !== null) {
       event.button = (event.button & 1 ? 0 :
         (event.button & 4 ? 1 :
           (event.button & 2 ? 2 : 0)));
@@ -880,7 +880,7 @@ vjs.isEmpty = function(obj) {
  * @private
  */
 vjs.addClass = function(element, classToAdd){
-  if ((' '+element.className+' ').indexOf(' '+classToAdd+' ') == -1) {
+  if ((' '+element.className+' ').indexOf(' '+classToAdd+' ') === -1) {
     element.className = element.className === '' ? classToAdd : element.className + ' ' + classToAdd;
   }
 };
@@ -894,7 +894,7 @@ vjs.addClass = function(element, classToAdd){
 vjs.removeClass = function(element, classToRemove){
   var classNames, i;
 
-  if (element.className.indexOf(classToRemove) == -1) { return; }
+  if (element.className.indexOf(classToRemove) === -1) { return; }
 
   classNames = element.className.split(' ');
 
@@ -1215,10 +1215,10 @@ vjs.setLocalStorage = function(key, value){
     if (!localStorage) { return; }
     localStorage[key] = value;
   } catch(e) {
-    if (e.code == 22 || e.code == 1014) { // Webkit == 22 / Firefox == 1014
+    if (e.code === 22 || e.code === 1014) { // Webkit === 22 / Firefox === 1014
       vjs.log('LocalStorage Full (VideoJS)', e);
     } else {
-      if (e.code == 18) {
+      if (e.code === 18) {
         vjs.log('LocalStorage not allowed (VideoJS)', e);
       } else {
         vjs.log('LocalStorage Error (VideoJS)', e);
@@ -2216,7 +2216,7 @@ vjs.Button.prototype.onFocus = function(){
   // KeyPress (document level) - Trigger click when keys are pressed
 vjs.Button.prototype.onKeyPress = function(event){
   // Check for space bar (32) or enter (13) keys
-  if (event.which == 32 || event.which == 13) {
+  if (event.which === 32 || event.which === 13) {
     event.preventDefault();
     this.onClick();
   }
@@ -2407,10 +2407,10 @@ vjs.Slider.prototype.onFocus = function(){
 };
 
 vjs.Slider.prototype.onKeyPress = function(event){
-  if (event.which == 37) { // Left Arrow
+  if (event.which === 37) { // Left Arrow
     event.preventDefault();
     this.stepBack();
-  } else if (event.which == 39) { // Right Arrow
+  } else if (event.which === 39) { // Right Arrow
     event.preventDefault();
     this.stepForward();
   }
@@ -2645,14 +2645,14 @@ vjs.MenuButton.prototype.onKeyPress = function(event){
   event.preventDefault();
 
   // Check for space bar (32) or enter (13) keys
-  if (event.which == 32 || event.which == 13) {
+  if (event.which === 32 || event.which === 13) {
     if (this.buttonPressed_){
       this.unpressButton();
     } else {
       this.pressButton();
     }
   // Check for escape (27) key
-  } else if (event.which == 27){
+  } else if (event.which === 27){
     if (this.buttonPressed_){
       this.unpressButton();
     }
@@ -2954,7 +2954,7 @@ vjs.Player.prototype.loadTech = function(techName, source){
   var techOptions = vjs.obj.merge({ 'source': source, 'parentEl': this.el_ }, this.options_[techName.toLowerCase()]);
 
   if (source) {
-    if (source.src == this.cache_.src && this.cache_.currentTime > 0) {
+    if (source.src === this.cache_.src && this.cache_.currentTime > 0) {
       techOptions['startTime'] = this.cache_.currentTime;
     }
 
@@ -3030,7 +3030,7 @@ vjs.Player.prototype.trackProgress = function(){
     /* TODO: update for multiple buffered regions */
     if (this.cache_.bufferEnd < this.buffered().end(0)) {
       this.trigger('progress');
-    } else if (this.bufferedPercent() == 1) {
+    } else if (this.bufferedPercent() === 1) {
       this.stopTrackingProgress();
       this.trigger('progress'); // Last update
     }
@@ -3151,13 +3151,13 @@ vjs.Player.prototype.onTimeUpdate;
  */
 vjs.Player.prototype.onProgress = function(){
   // Add custom event for when source is finished downloading.
-  if (this.bufferedPercent() == 1) {
+  if (this.bufferedPercent() === 1) {
     this.trigger('loadedalldata');
   }
 };
 
 /**
- * Fired when the end of the media resource is reached (currentTime == duration)
+ * Fired when the end of the media resource is reached (currentTime === duration)
  * @event ended
  */
 vjs.Player.prototype.onEnded = function(){
@@ -3250,7 +3250,7 @@ vjs.Player.prototype.techGet = function(method){
         vjs.log('Video.js: ' + method + ' method not defined for '+this.techName+' playback technology.', e);
       } else {
         // When a method isn't available on the object it throws a TypeError
-        if (e.name == 'TypeError') {
+        if (e.name === 'TypeError') {
           vjs.log('Video.js: ' + method + ' unavailable on '+this.techName+' playback technology element.', e);
           this.tech.isReady_ = false;
         } else {
@@ -3664,7 +3664,7 @@ vjs.Player.prototype.src = function(source){
         techName = sourceTech.tech;
 
       // If this technology is already loaded, set source
-      if (techName == this.techName) {
+      if (techName === this.techName) {
         this.src(source); // Passing the source object
       // Otherwise load this technology with chosen source
       } else {
@@ -3697,7 +3697,7 @@ vjs.Player.prototype.src = function(source){
       });
     } else {
       this.techCall('src', source);
-      if (this.options_['preload'] == 'auto') {
+      if (this.options_['preload'] === 'auto') {
         this.load();
       }
       if (this.options_['autoplay']) {
@@ -4407,7 +4407,7 @@ vjs.SeekBar.prototype.onMouseMove = function(event){
   var newTime = this.calculateDistance(event) * this.player_.duration();
 
   // Don't let video end while scrubbing.
-  if (newTime == this.player_.duration()) { newTime = newTime - 0.1; }
+  if (newTime === this.player_.duration()) { newTime = newTime - 0.1; }
 
   // Set new time (tell player to seek to new time)
   this.player_.currentTime(newTime);
@@ -5244,7 +5244,7 @@ vjs.Html5.prototype.width = function(){ return this.el_.offsetWidth; };
 vjs.Html5.prototype.height = function(){ return this.el_.offsetHeight; };
 
 vjs.Html5.prototype.supportsFullScreen = function(){
-  if (typeof this.el_.webkitEnterFullScreen == 'function') {
+  if (typeof this.el_.webkitEnterFullScreen === 'function') {
 
     // Seems to be broken in Chromium/Chrome && Safari in Leopard
     if (/Android/.test(vjs.USER_AGENT) || !/Chrome|Mac OS X 10.5/.test(vjs.USER_AGENT)) {
@@ -5352,7 +5352,7 @@ vjs.Html5.disposeMediaElement = function(el){
   // Override Android 2.2 and less canPlayType method which is broken
 if (vjs.IS_OLD_ANDROID) {
   document.createElement('video').constructor.prototype.canPlayType = function(type){
-    return (type && type.toLowerCase().indexOf('video/mp4') != -1) ? 'maybe' : '';
+    return (type && type.toLowerCase().indexOf('video/mp4') !== -1) ? 'maybe' : '';
   };
 }
 /**
@@ -5611,7 +5611,7 @@ vjs.Flash.prototype.src = function(src){
 vjs.Flash.prototype.currentSrc = function(){
   var src = this.el_.vjs_getProperty('currentSrc');
   // no src, check and see if RTMP
-  if (src == null) {
+  if (src === null) {
     var connection = this.rtmpConnection(),
         stream = this.rtmpStream();
 
@@ -6029,7 +6029,7 @@ vjs.Player.prototype.showTextTrack = function(id, disableSameKind){
       showTrack = track;
 
     // Disable tracks of the same kind
-    } else if (disableSameKind && track.kind() == disableSameKind && track.mode() > 0) {
+    } else if (disableSameKind && track.kind() === disableSameKind && track.mode() > 0) {
       track.disable();
     }
   }
@@ -6301,7 +6301,7 @@ vjs.TextTrack.prototype.hide = function(){
  */
 vjs.TextTrack.prototype.disable = function(){
   // If showing, hide.
-  if (this.mode_ == 2) { this.hide(); }
+  if (this.mode_ === 2) { this.hide(); }
 
   // Stop triggering cues
   this.deactivate();
@@ -6392,7 +6392,7 @@ vjs.TextTrack.prototype.parseCues = function(srcContent) {
 
       // First line could be an optional cue ID
       // Check if line has the time separator
-      if (line.indexOf('-->') == -1) {
+      if (line.indexOf('-->') === -1) {
         id = line;
         // Advance to next line for timing.
         line = vjs.trim(lines[++i]);
@@ -6439,7 +6439,7 @@ vjs.TextTrack.prototype.parseCueTime = function(timeText) {
 
   // Check if optional hours place is included
   // 00:00:00.000 vs. 00:00.000
-  if (parts.length == 3) {
+  if (parts.length === 3) {
     hours = parts[0];
     minutes = parts[1];
     other = parts[2];
@@ -6685,7 +6685,7 @@ vjs.TextTrackMenuItem.prototype.onClick = function(){
 };
 
 vjs.TextTrackMenuItem.prototype.update = function(){
-  this.selected(this.track.mode() == 2);
+  this.selected(this.track.mode() === 2);
 };
 
 /**
@@ -6722,7 +6722,7 @@ vjs.OffTextTrackMenuItem.prototype.update = function(){
 
   for (;i<j;i++) {
     track = tracks[i];
-    if (track.kind() == this.track.kind() && track.mode() == 2) {
+    if (track.kind() === this.track.kind() && track.mode() === 2) {
       off = false;
     }
   }
@@ -6865,7 +6865,7 @@ vjs.ChaptersButton.prototype.createMenu = function(){
 
   for (;i<j;i++) {
     track = tracks[i];
-    if (track.kind() == this.kind_ && track.dflt()) {
+    if (track.kind() === this.kind_ && track.dflt()) {
       if (track.readyState() < 2) {
         this.chaptersTrack = track;
         track.on('loaded', vjs.bind(this, this.createMenu));
@@ -7048,7 +7048,7 @@ vjs.autoSetup = function(){
       vid = vids[i];
 
       // Check if element exists, has getAttribute func.
-      // IE seems to consider typeof el.getAttribute == 'object' instead of 'function' like expected, at least when loading the player immediately.
+      // IE seems to consider typeof el.getAttribute === 'object' instead of 'function' like expected, at least when loading the player immediately.
       if (vid && vid.getAttribute) {
 
         // Make sure this player hasn't already been set up.

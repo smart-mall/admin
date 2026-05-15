@@ -15,11 +15,11 @@
             domUtils.on(tabs[i], "click", function (e) {
                 var target = e.target || e.srcElement;
                 for (var j = 0; j < tabs.length; j++) {
-                    if(tabs[j] == target){
+                    if(tabs[j] === target){
                         tabs[j].className = "focus";
                         var contentId = tabs[j].getAttribute('data-content-id');
                         $G(contentId).style.display = "block";
-                        if(contentId == 'imgManager') {
+                        if(contentId === 'imgManager') {
                             initImagePanel();
                         }
                     }else {
@@ -43,7 +43,7 @@
                 x = parseInt(pos[0]) || 0,
                 y = parseInt(pos[1]) || 0;
 
-            if(repeat == 'no-repeat' && (x || y)) repeat = 'self';
+            if(repeat === 'no-repeat' && (x || y)) repeat = 'self';
 
             image = image.match(/url[\s]*\(([^\)]*)\)/);
             image = image ? image[1]:'';
@@ -59,9 +59,9 @@
         domUtils.on($G('nocolorRadio'), 'click', updateBackground);
         domUtils.on($G('coloredRadio'), 'click', updateHandler);
         domUtils.on($G('url'), 'keyup', function(){
-            if($G('url').value && $G('alignment').style.display == "none") {
+            if($G('url').value && $G('alignment').style.display === "none") {
                 utils.each($G('repeatType').children, function(item){
-                    item.selected = ('repeat' == item.getAttribute('value') ? 'selected':false);
+                    item.selected = ('repeat' === item.getAttribute('value') ? 'selected':false);
                 });
             }
             updateHandler();
@@ -123,8 +123,8 @@
             coloredRadio = $G('coloredRadio');
 
         if(radio) {
-            nocolorRadio.checked = (radio == 'colored' ? false:'checked');
-            coloredRadio.checked = (radio == 'colored' ? 'checked':false);
+            nocolorRadio.checked = (radio === 'colored' ? false:'checked');
+            coloredRadio.checked = (radio === 'colored' ? 'checked':false);
         }
         if(color) {
             domUtils.setStyle($G("colorPicker"), "background-color", color);
@@ -142,7 +142,7 @@
         }
         if(align) {
             utils.each($G('repeatType').children, function(item){
-                item.selected = (align == item.getAttribute('value') ? 'selected':false);
+                item.selected = (align === item.getAttribute('value') ? 'selected':false);
             });
         }
         if(x || y) {
@@ -151,7 +151,7 @@
         }
 
         $G('alignment').style.display = coloredRadio.checked && $G('url').value ? '':'none';
-        $G('custom').style.display = coloredRadio.checked && $G('url').value && $G('repeatType').value == 'self' ? '':'none';
+        $G('custom').style.display = coloredRadio.checked && $G('url').value && $G('repeatType').value === 'self' ? '':'none';
     }
 
     /* 更新背景颜色 */
@@ -167,9 +167,9 @@
 
             if (color) backgroundObj["background-color"] = color;
             if (bgimg) backgroundObj["background-image"] = 'url(' + bgimg + ')';
-            if (align == 'self') {
+            if (align === 'self') {
                 backgroundObj["background-position"] = $G("x").value + "px " + $G("y").value + "px";
-            } else if (align == 'repeat-x' || align == 'repeat-y' || align == 'repeat') {
+            } else if (align === 'repeat-x' || align === 'repeat-y' || align === 'repeat') {
                 backgroundObj["background-repeat"] = align;
             }
 
@@ -220,10 +220,10 @@
                     li = target.parentNode,
                     nodes = $G('imageListUl').childNodes;
 
-                if (li.tagName.toLowerCase() == 'li') {
+                if (li.tagName.toLowerCase() === 'li') {
                     updateFormState('nocolor', null, '');
                     for (var i = 0, node; node = nodes[i++];) {
-                        if (node == li && !domUtils.hasClass(node, 'selected')) {
+                        if (node === li && !domUtils.hasClass(node, 'selected')) {
                             domUtils.addClass(node, 'selected');
                             updateFormState('colored', null, li.firstChild.getAttribute("_src"), 'repeat');
                         } else {
@@ -270,7 +270,7 @@
                     'onsuccess': function (r) {
                         try {
                             var json = isJsonp ? r:eval('(' + r.responseText + ')');
-                            if (json.state == 'SUCCESS') {
+                            if (json.state === 'SUCCESS') {
                                 _this.pushData(json.list);
                                 _this.listIndex = parseInt(json.start) + parseInt(json.list.length);
                                 if(_this.listIndex >= json.total) {
@@ -279,7 +279,7 @@
                                 _this.isLoadingData = false;
                             }
                         } catch (e) {
-                            if(r.responseText.indexOf('ue_separate_ue') != -1) {
+                            if(r.responseText.indexOf('ue_separate_ue') !== -1) {
                                 var list = r.responseText.split(r.responseText);
                                 _this.pushData(list);
                                 _this.listIndex = parseInt(list.length);
@@ -310,7 +310,7 @@
                         }
                     })(img));
                     img.width = 113;
-                    img.setAttribute('src', urlPrefix + list[i].url + (list[i].url.indexOf('?') == -1 ? '?noCache=':'&noCache=') + (+new Date()).toString(36) );
+                    img.setAttribute('src', urlPrefix + list[i].url + (list[i].url.indexOf('?') === -1 ? '?noCache=':'&noCache=') + (+new Date()).toString(36) );
                     img.setAttribute('_src', urlPrefix + list[i].url);
                     domUtils.addClass(icon, 'icon');
 
@@ -325,7 +325,7 @@
             var ow = img.width,
                 oh = img.height;
 
-            if (type == 'justify') {
+            if (type === 'justify') {
                 if (ow >= oh) {
                     img.width = w;
                     img.height = h * oh / ow;

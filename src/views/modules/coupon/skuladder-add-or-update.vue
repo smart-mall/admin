@@ -39,70 +39,70 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       visible: false,
       dataForm: {
         id: 0,
-        skuId: "",
-        fullCount: "",
-        discount: "",
-        price: "",
-        addOther: ""
+        skuId: '',
+        fullCount: '',
+        discount: '',
+        price: '',
+        addOther: ''
       },
       dataRule: {
-        skuId: [{ required: true, message: "spu_id不能为空", trigger: "blur" }],
+        skuId: [{ required: true, message: 'spu_id不能为空', trigger: 'blur' }],
         fullCount: [
-          { required: true, message: "满几件不能为空", trigger: "blur" }
+          { required: true, message: '满几件不能为空', trigger: 'blur' }
         ],
         discount: [
-          { required: true, message: "打几折不能为空", trigger: "blur" }
+          { required: true, message: '打几折不能为空', trigger: 'blur' }
         ],
-        price: [{ required: true, message: "折后价不能为空", trigger: "blur" }],
+        price: [{ required: true, message: '折后价不能为空', trigger: 'blur' }],
         addOther: [
           {
             required: true,
-            message: "是否叠加其他优惠[0-不可叠加，1-可叠加]不能为空",
-            trigger: "blur"
+            message: '是否叠加其他优惠[0-不可叠加，1-可叠加]不能为空',
+            trigger: 'blur'
           }
         ]
       }
-    };
+    }
   },
   methods: {
-    init(id) {
-      this.dataForm.id = id || 0;
-      this.visible = true;
+    init (id) {
+      this.dataForm.id = id || 0
+      this.visible = true
       this.$nextTick(() => {
-        this.$refs["dataForm"].resetFields();
+        this.$refs['dataForm'].resetFields()
         if (this.dataForm.id) {
           this.$http({
             url: this.$http.adornUrl(
               `/coupon/skuladder/info/${this.dataForm.id}`
             ),
-            method: "get",
+            method: 'get',
             params: this.$http.adornParams()
           }).then(({ data }) => {
             if (data && data.code === 0) {
-              this.dataForm.skuId = data.skuLadder.skuId;
-              this.dataForm.fullCount = data.skuLadder.fullCount;
-              this.dataForm.discount = data.skuLadder.discount;
-              this.dataForm.price = data.skuLadder.price;
-              this.dataForm.addOther = data.skuLadder.addOther;
+              this.dataForm.skuId = data.skuLadder.skuId
+              this.dataForm.fullCount = data.skuLadder.fullCount
+              this.dataForm.discount = data.skuLadder.discount
+              this.dataForm.price = data.skuLadder.price
+              this.dataForm.addOther = data.skuLadder.addOther
             }
-          });
+          })
         }
-      });
+      })
     },
     // 表单提交
-    dataFormSubmit() {
-      this.$refs["dataForm"].validate(valid => {
+    dataFormSubmit () {
+      this.$refs['dataForm'].validate(valid => {
         if (valid) {
           this.$http({
             url: this.$http.adornUrl(
-              `/coupon/skuladder/${!this.dataForm.id ? "save" : "update"}`
+              `/coupon/skuladder/${!this.dataForm.id ? 'save' : 'update'}`
             ),
-            method: "post",
+            method: 'post',
             data: this.$http.adornData({
               id: this.dataForm.id || undefined,
               skuId: this.dataForm.skuId,
@@ -114,21 +114,21 @@ export default {
           }).then(({ data }) => {
             if (data && data.code === 0) {
               this.$message({
-                message: "操作成功",
-                type: "success",
+                message: '操作成功',
+                type: 'success',
                 duration: 1500,
                 onClose: () => {
-                  this.visible = false;
-                  this.$emit("refreshDataList");
+                  this.visible = false
+                  this.$emit('refreshDataList')
                 }
-              });
+              })
             } else {
-              this.$message.error(data.msg);
+              this.$message.error(data.msg)
             }
-          });
+          })
         }
-      });
+      })
     }
   }
-};
+}
 </script>

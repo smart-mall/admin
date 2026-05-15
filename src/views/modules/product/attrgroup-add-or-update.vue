@@ -15,7 +15,7 @@
         <el-input v-model="dataForm.descript" placeholder="描述"></el-input>
       </el-form-item>
       <el-form-item label="组图标" prop="icon">
-        <input type="text" v-model="dataForm.icon" placeholder="请上传组图标"></input>
+        <single-upload v-model="dataForm.icon"></single-upload>
       </el-form-item>
       <el-form-item label="所属分类id" prop="catelogId">
         <el-cascader
@@ -35,7 +35,10 @@
 </template>
 
 <script>
+import SingleUpload from '@/components/upload/singleUpload.vue'
+
 export default {
+  components: {SingleUpload},
   data () {
     return {
       catelogIds: [],

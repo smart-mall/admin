@@ -17,9 +17,9 @@
       <el-form-item label="组图标" prop="icon">
         <single-upload v-model="dataForm.icon"></single-upload>
       </el-form-item>
-      <el-form-item label="所属分类id" prop="catelogId">
+      <el-form-item label="所属分类id" prop="catalogId">
         <el-cascader
-          v-model="catelogIds"
+          v-model="catalogIds"
           :options="category"
           :props="cascaderProps"
           @change="handleChangeCascader"
@@ -41,7 +41,7 @@ export default {
   components: {SingleUpload},
   data () {
     return {
-      catelogIds: [],
+      catalogIds: [],
       category: [],
       cascaderProps: {
         value: 'catId',
@@ -55,7 +55,7 @@ export default {
         sort: '',
         descript: '',
         icon: '',
-        catelogId: ''
+        catalogId: ''
       },
       dataRule: {
         attrGroupName: [
@@ -70,7 +70,7 @@ export default {
         icon: [
           {required: true, message: '组图标不能为空', trigger: 'blur'}
         ],
-        catelogId: [
+        catalogId: [
           {required: true, message: '所属分类id不能为空', trigger: 'blur'}
         ]
       }
@@ -93,8 +93,8 @@ export default {
               this.dataForm.sort = data.attrGroup.sort
               this.dataForm.descript = data.attrGroup.descript
               this.dataForm.icon = data.attrGroup.icon
-              this.dataForm.catelogId = data.attrGroup.catelogId
-              this.catelogIds = data.attrGroup.catelogIds
+              this.dataForm.catalogId = data.attrGroup.catalogId
+              this.catalogIds = data.attrGroup.catalogIds
             }
           })
         }
@@ -113,7 +113,7 @@ export default {
               'sort': this.dataForm.sort,
               'descript': this.dataForm.descript,
               'icon': this.dataForm.icon,
-              'catelogId': this.dataForm.catelogId
+              'catalogId': this.dataForm.catalogId
             })
           }).then(({data}) => {
             if (data && data.code === 0) {
@@ -146,7 +146,7 @@ export default {
     },
     handleChangeCascader () {
       // 取最后一个
-      this.dataForm.catelogId = this.catelogIds[this.catelogIds.length - 1]
+      this.dataForm.catalogId = this.catalogIds[this.catalogIds.length - 1]
     }
   },
   created () {

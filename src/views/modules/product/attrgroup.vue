@@ -198,7 +198,7 @@ export default {
             </template>
           </el-table-column>
           <el-table-column
-            prop="catelogName"
+            prop="catalogName"
             header-align="center"
             align="center"
             label="所属分类">

@@ -83,7 +83,7 @@
         width="150"
         label="操作">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="updateCatelogHandle(scope.row.brandId)">关联分类</el-button>
+          <el-button type="text" size="small" @click="updatecatalogHandle(scope.row.brandId)">关联分类</el-button>
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.brandId)">修改</el-button>
           <el-button type="text" size="small" @click="deleteHandle(scope.row.brandId)">删除</el-button>
         </template>
@@ -102,18 +102,18 @@
     <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
 
     <el-dialog title="关联分类" :visible.sync="cateRelationDialogVisible" width="30%">
-      <el-popover placement="right-end" v-model="popCatelogSelectVisible">
-        <category-cascader :catelogPath.sync="catelogPath"></category-cascader>
+      <el-popover placement="right-end" v-model="popcatalogSelectVisible">
+        <category-cascader :catalogPath.sync="catalogPath"></category-cascader>
         <div style="text-align: right; margin: 0">
-          <el-button size="mini" type="text" @click="popCatelogSelectVisible = false">取消</el-button>
-          <el-button type="primary" size="mini" @click="addCatelogSelect">确定</el-button>
+          <el-button size="mini" type="text" @click="popcatalogSelectVisible = false">取消</el-button>
+          <el-button type="primary" size="mini" @click="addcatalogSelect">确定</el-button>
         </div>
         <el-button slot="reference">新增关联</el-button>
       </el-popover>
       <el-table :data="cateRelationTableData" style="width: 100%">
         <el-table-column prop="id" label="#"></el-table-column>
         <el-table-column prop="brandName" label="品牌名"></el-table-column>
-        <el-table-column prop="catelogName" label="分类名"></el-table-column>
+        <el-table-column prop="catalogName" label="分类名"></el-table-column>
         <el-table-column fixed="right" header-align="center" align="center" label="操作">
           <template slot-scope="scope">
             <el-button
@@ -154,8 +154,8 @@ export default {
       addOrUpdateVisible: false,
       cateRelationDialogVisible: false,
       cateRelationTableData: [],
-      popCatelogSelectVisible: false,
-      catelogPath: []
+      popcatalogSelectVisible: false,
+      catalogPath: []
     }
   },
   components: {
@@ -270,7 +270,7 @@ export default {
     },
     getCateRelation () {
       this.$http({
-        url: this.$http.adornUrl('/product/categorybrandrelation/catelog/list'),
+        url: this.$http.adornUrl('/product/categorybrandrelation/catalog/list'),
         method: 'get',
         params: this.$http.adornParams({
           brandId: this.brandId
@@ -288,20 +288,20 @@ export default {
         this.getCateRelation()
       })
     },
-    addCatelogSelect () {
-      this.popCatelogSelectVisible = false
+    addcatalogSelect () {
+      this.popcatalogSelectVisible = false
       this.$http({
         url: this.$http.adornUrl('/product/categorybrandrelation/save'),
         method: 'post',
         data: this.$http.adornData({
           brandId: this.brandId,
-          catelogId: this.catelogPath[this.catelogPath.length - 1]
+          catalogId: this.catalogPath[this.catalogPath.length - 1]
         }, false)
       }).then(({data}) => {
         this.getCateRelation()
       })
     },
-    updateCatelogHandle (brandId) {
+    updatecatalogHandle (brandId) {
       this.cateRelationDialogVisible = true
       this.brandId = brandId
       this.getCateRelation()

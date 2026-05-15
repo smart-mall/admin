@@ -2,10 +2,10 @@
   <!--
   使用说明：
   1）、引入category-cascader.vue
-  2）、语法：<category-cascader :catelogPath.sync="catelogPath"></category-cascader>
+  2）、语法：<category-cascader :catalogPath.sync="catalogPath"></category-cascader>
       解释：
-        catelogPath：指定的值是cascader初始化需要显示的值，应该和父组件的catelogPath绑定;
-            由于有sync修饰符，所以cascader路径变化以后自动会修改父的catelogPath，这是结合子组件this.$emit("update:catelogPath",v);做的
+        catalogPath：指定的值是cascader初始化需要显示的值，应该和父组件的catalogPath绑定;
+            由于有sync修饰符，所以cascader路径变化以后自动会修改父的catalogPath，这是结合子组件this.$emit("update:catalogPath",v);做的
         -->
   <div>
     <el-cascader
@@ -27,7 +27,7 @@ export default {
   components: {},
   // 接受父组件传来的值
   props: {
-    catelogPath: {
+    catalogPath: {
       type: Array,
       default () {
         return []
@@ -43,15 +43,15 @@ export default {
         children: 'children'
       },
       categorys: [],
-      paths: this.catelogPath
+      paths: this.catalogPath
     }
   },
   watch: {
-    catelogPath (v) {
-      this.paths = this.catelogPath
+    catalogPath (v) {
+      this.paths = this.catalogPath
     },
     paths (v) {
-      this.$emit('update:catelogPath', v)
+      this.$emit('update:catalogPath', v)
       // 还可以使用pubsub-js进行传值
       PubSub.publish('catPath', v)
     }

@@ -132,8 +132,9 @@ export default {
       // 通知父组件上传成功，传递完整URL
       this.$emit('input', this.fileList[0].url || '')
     },
-    handleError (err) {
-      this.$message.error(`文件上传失败: ${err.message || '未知错误'}`)
+    handleError (err, file, fileList) {
+      console.error('上传失败:', err, file)
+      this.$message.error(`文件上传失败: ${err.message || '上传出错'}`)
     }
   }
 }

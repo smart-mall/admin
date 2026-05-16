@@ -13,8 +13,9 @@
         @keyup.enter.native="dataFormSubmit()"
         label-width="120px"
       >
-        <el-form-item label="spu_id" prop="skuId">
-          <el-input v-model="dataForm.skuId" placeholder="spu_id"></el-input>
+        <el-form-item label="spuId" prop="spuId">
+          <sku-select v-model="dataForm.skuId"></sku-select>
+
         </el-form-item>
         <el-form-item label="满多少" prop="fullPrice">
           <el-input v-model="dataForm.fullPrice" placeholder="满多少"></el-input>
@@ -23,7 +24,13 @@
           <el-input v-model="dataForm.reducePrice" placeholder="减多少"></el-input>
         </el-form-item>
         <el-form-item label="是否参与其他优惠" prop="addOther">
-          <el-input v-model="dataForm.addOther" placeholder="是否参与其他优惠"></el-input>
+          <el-switch
+            v-model="dataForm.addOther"
+            :active-value="1"
+            :inactive-value="0"
+            active-text="参与"
+            inactive-text="不参与">
+          </el-switch>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -35,13 +42,16 @@
 </template>
 
 <script>
+import SkuSelect from '../common/sku-select.vue'
+
 export default {
+  components: {SkuSelect},
   data () {
     return {
       visible: false,
       dataForm: {
         id: 0,
-        skuId: '',
+        skuId: 0,
         fullPrice: '',
         reducePrice: '',
         addOther: ''

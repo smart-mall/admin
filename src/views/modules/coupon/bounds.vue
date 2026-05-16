@@ -29,10 +29,10 @@
         label="id">
       </el-table-column>
       <el-table-column
-        prop="spuId"
+        prop="spuName"
         header-align="center"
         align="center"
-        label="">
+        label="spu">
       </el-table-column>
       <el-table-column
         prop="growBounds"
@@ -50,8 +50,41 @@
         prop="work"
         header-align="center"
         align="center"
-        label="优惠生效情况">
-        <!-- [1111（四个状态位，从右到左）;0 - 无优惠，成长积分是否赠送;1 - 无优惠，购物积分是否赠送;2 - 有优惠，成长积分是否赠送;3 - 有优惠，购物积分是否赠送【状态位0：不赠送，1：赠送】] -->
+        label="优惠生效情况"
+        width="200">
+        <template slot-scope="scope">
+          <div style="display: flex; flex-wrap: wrap; gap: 5px; justify-content: center;">
+            <el-tag
+              v-if="scope.row.work & 1"
+              type="success"
+              size="small"
+              effect="plain">
+              无优惠-成长积分
+            </el-tag>
+            <el-tag
+              v-if="scope.row.work & 2"
+              type="success"
+              size="small"
+              effect="plain">
+              无优惠-购物积分
+            </el-tag>
+            <el-tag
+              v-if="scope.row.work & 4"
+              type="primary"
+              size="small"
+              effect="plain">
+              有优惠-成长积分
+            </el-tag>
+            <el-tag
+              v-if="scope.row.work & 8"
+              type="primary"
+              size="small"
+              effect="plain">
+              有优惠-购物积分
+            </el-tag>
+            <span v-if="!scope.row.work" style="color: #909399;">不赠送积分</span>
+          </div>
+        </template>
       </el-table-column>
       <el-table-column
         fixed="right"

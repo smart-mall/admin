@@ -36,7 +36,18 @@
           <el-tag type="warning" v-if="scope.row.couponType==3">注册赠券</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="couponImg" header-align="center" align="center" label="优惠券图片"></el-table-column>
+      <el-table-column
+        prop="logo"
+        header-align="center"
+        align="center"
+        label="优惠券图片">
+        <template slot-scope="scope">
+          <img
+            :src="scope.row.couponImg"
+            style="width: 100px;"
+            alt="logo">
+        </template>
+      </el-table-column>
       <el-table-column prop="couponName" header-align="center" align="center" label="优惠卷名字"></el-table-column>
       <el-table-column prop="num" header-align="center" align="center" label="数量"></el-table-column>
       <el-table-column prop="amount" header-align="center" align="center" label="金额"></el-table-column>

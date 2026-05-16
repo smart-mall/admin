@@ -50,7 +50,12 @@
         prop="status"
         header-align="center"
         align="center"
-        label="显示状态">
+        label="显示状态"
+      >
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.status === 1" type="success">显示</el-tag>
+          <el-tag v-else type="danger">隐藏</el-tag>
+        </template>
       </el-table-column>
       <el-table-column
         prop="url"
@@ -65,10 +70,16 @@
         label="排序">
       </el-table-column>
       <el-table-column
-        prop="img"
+        prop="logo"
         header-align="center"
         align="center"
         label="专题图片地址">
+        <template slot-scope="scope">
+          <img
+            :src="scope.row.img"
+            style="width: 100px;"
+            alt="logo">
+        </template>
       </el-table-column>
       <el-table-column
         fixed="right"

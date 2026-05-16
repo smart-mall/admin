@@ -7,7 +7,7 @@
             <category-cascader :catalogPath.sync="catalogPath"></category-cascader>
           </el-form-item>
           <el-form-item label="品牌">
-            <brand-select style="width:160px"></brand-select>
+            <brand-select v-model="dataForm.brandId" style="width:160px"></brand-select>
           </el-form-item>
           <el-form-item label="状态">
             <el-select style="width:160px" v-model="dataForm.status" clearable>
@@ -19,7 +19,7 @@
           <el-form-item label="检索">
             <el-input style="width:160px" v-model="dataForm.key" clearable></el-input>
           </el-form-item>
-          <el-form-item>
+          <el-form-item
             <el-button type="primary" @click="searchSpuInfo">查询</el-button>
           </el-form-item>
         </el-form>
@@ -64,7 +64,7 @@ export default {
   methods: {
     searchSpuInfo () {
       console.log('搜索条件', this.dataForm)
-      this.PubSub.publish('dataForm', this.dataForm)
+      PubSub.publish('dataForm', this.dataForm)
     }
   },
   // 生命周期 创建完成（可以访问当前this实例）

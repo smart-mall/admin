@@ -44,6 +44,7 @@
           range-separator="至"
           start-placeholder="开始时间"
           end-placeholder="结束时间"
+          value-format="yyyy-MM-dd HH:mm:ss"
         ></el-date-picker>
       </el-form-item>
       <el-form-item label="使用类型" prop="useType">
@@ -59,13 +60,14 @@
       <el-form-item label="发行数量" prop="publishCount">
         <el-input-number v-model="dataForm.publishCount" :min="0"></el-input-number>
       </el-form-item>
-      <el-form-item label="领取日期" prop="enableStartTime">
+      <el-form-item label="领取日期" prop="timeRange">
         <el-date-picker
           v-model="dataForm.timeRange"
           type="daterange"
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
+          value-format="yyyy-MM-dd HH:mm:ss"
         ></el-date-picker>
       </el-form-item>
       <el-form-item label="优惠码" prop="code">
@@ -156,18 +158,30 @@ export default {
         publishCount: [
           { required: true, message: '发行数量不能为空', trigger: 'blur' }
         ],
-        enableStartTime: [
+        timeRange: [
           {
             required: true,
-            message: '可以领取的开始日期不能为空',
-            trigger: 'blur'
+            validator: (rule, value, callback) => {
+              if (!value || value.length !== 2 || !value[0] || !value[1]) {
+                callback(new Error('请选择领取日期范围'))
+              } else {
+                callback()
+              }
+            },
+            trigger: 'change'
           }
         ],
-        enableEndTime: [
+        useTimeRange: [
           {
             required: true,
-            message: '可以领取的结束日期不能为空',
-            trigger: 'blur'
+            validator: (rule, value, callback) => {
+              if (!value || value.length !== 2 || !value[0] || !value[1]) {
+                callback(new Error('请选择领取日期范围'))
+              } else {
+                callback()
+              }
+            },
+            trigger: 'change'
           }
         ],
         code: [{ required: true, message: '优惠码不能为空', trigger: 'blur' }],

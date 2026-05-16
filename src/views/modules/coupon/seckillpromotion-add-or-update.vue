@@ -14,13 +14,14 @@
       <el-form-item label="活动标题" prop="title">
         <el-input v-model="dataForm.title" placeholder="活动标题"></el-input>
       </el-form-item>
-      <el-form-item label="生效日期" prop="enableStartTime">
+      <el-form-item label="生效日期" prop="timeRange">
         <el-date-picker
           v-model="dataForm.timeRange"
           type="datetimerange"
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
+          value-format="yyyy-MM-dd HH:mm:ss"
         ></el-date-picker>
       </el-form-item>
       <el-form-item label="上下线状态" prop="status">
@@ -28,9 +29,6 @@
           <el-option :value="1" label="上线"></el-option>
           <el-option :value="0" label="下线"></el-option>
         </el-select>
-      </el-form-item>
-      <el-form-item label="创建人" prop="userId">
-        <el-input v-model="dataForm.userId" placeholder="创建人"></el-input>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -52,12 +50,27 @@ export default {
         endTime: '',
         status: '',
         createTime: '',
-        userId: '',
         timeRange: []
       },
       dataRule: {
         title: [
           { required: true, message: '活动标题不能为空', trigger: 'blur' }
+        ],
+        status: [
+          { required: true, message: '上下线状态不能为空', trigger: 'blur' }
+        ],
+        timeRange: [
+          {
+            required: true,
+            validator: (rule, value, callback) => {
+              if (!value || value.length !== 2 || !value[0] || !value[1]) {
+                callback(new Error('请选择领取日期范围'))
+              } else {
+                callback()
+              }
+            },
+            trigger: 'change'
+          }
         ]
       }
     }
@@ -82,9 +95,10 @@ export default {
               this.dataForm.endTime = data.seckillPromotion.endTime
               this.dataForm.status = data.seckillPromotion.status
               this.dataForm.createTime = data.seckillPromotion.createTime
-              this.dataForm.userId = data.seckillPromotion.userId
-              this.dataForm.timeRange.push(this.dataForm.startTime)
-              this.dataForm.timeRange.push(this.dataForm.endTime)
+              this.dataForm.timeRange = [
+                this.dataForm.startTime,
+                this.dataForm.endTime
+              ]
             }
           })
         }
@@ -106,7 +120,8 @@ export default {
               title: this.dataForm.title,
               startTime: this.dataForm.timeRange[0],
               endTime: this.dataForm.timeRange[1],
-              status: this.dataForm.status
+              status: this.dataForm.status,
+              userId: this.$store.state.user.id
             })
           }).then(({ data }) => {
             if (data && data.code === 0) {

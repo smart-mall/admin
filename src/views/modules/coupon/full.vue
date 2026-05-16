@@ -29,10 +29,10 @@
         label="id">
       </el-table-column>
       <el-table-column
-        prop="skuId"
+        prop="skuName"
         header-align="center"
         align="center"
-        label="spu_id">
+        label="sku">
       </el-table-column>
       <el-table-column
         prop="fullPrice"
@@ -50,7 +50,25 @@
         prop="addOther"
         header-align="center"
         align="center"
-        label="是否参与其他优惠">
+        label="是否参与其他优惠"
+        width="150">
+        <template slot-scope="scope">
+          <el-tag
+            v-if="scope.row.addOther === 1"
+            type="success"
+            size="small"
+            effect="plain">
+            ✓ 参与
+          </el-tag>
+          <el-tag
+            v-else-if="scope.row.addOther === 0"
+            type="danger"
+            size="small"
+            effect="plain">
+            ✗ 不参与
+          </el-tag>
+          <span v-else style="color: #909399; font-size: 12px;">未设置</span>
+        </template>
       </el-table-column>
       <el-table-column
         fixed="right"

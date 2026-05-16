@@ -11,14 +11,15 @@
       @keyup.enter.native="dataFormSubmit()"
       label-width="120px"
     >
-      <el-form-item label="sku_id" prop="skuId">
-        <el-input v-model="dataForm.skuId" placeholder="sku_id"></el-input>
+      <el-form-item label="sku" prop="skuId">
+        <sku-select v-model="dataForm.skuId"></sku-select>
       </el-form-item>
-      <el-form-item label="会员等级id" prop="memberLevelId">
-        <el-input v-model="dataForm.memberLevelId" placeholder="会员等级id"></el-input>
-      </el-form-item>
-      <el-form-item label="会员等级名" prop="memberLevelName">
-        <el-input v-model="dataForm.memberLevelName" placeholder="会员等级名"></el-input>
+
+      <el-form-item label="会员等级" prop="memberLevelId">
+        <member-select
+          v-model="dataForm.memberLevelId"
+          @selected-item="handleSelectedItem"
+        />
       </el-form-item>
       <el-form-item label="会员对应价格" prop="memberPrice">
         <el-input v-model="dataForm.memberPrice" placeholder="会员对应价格"></el-input>
@@ -41,7 +42,11 @@
 </template>
 
 <script>
+import SkuSelect from '../common/sku-select.vue'
+import MemberSelect from '../common/member-select.vue'
+
 export default {
+  components: {MemberSelect, SkuSelect},
   data () {
     return {
       visible: false,
@@ -54,15 +59,15 @@ export default {
         addOther: ''
       },
       dataRule: {
-        skuId: [{ required: true, message: 'sku_id不能为空', trigger: 'blur' }],
+        skuId: [{required: true, message: 'sku_id不能为空', trigger: 'blur'}],
         memberLevelId: [
-          { required: true, message: '会员等级id不能为空', trigger: 'blur' }
+          {required: true, message: '会员等级id不能为空', trigger: 'blur'}
         ],
         memberLevelName: [
-          { required: true, message: '会员等级名不能为空', trigger: 'blur' }
+          {required: true, message: '会员等级名不能为空', trigger: 'blur'}
         ],
         memberPrice: [
-          { required: true, message: '会员对应价格不能为空', trigger: 'blur' }
+          {required: true, message: '会员对应价格不能为空', trigger: 'blur'}
         ],
         addOther: [
           {
@@ -87,7 +92,7 @@ export default {
             ),
             method: 'get',
             params: this.$http.adornParams()
-          }).then(({ data }) => {
+          }).then(({data}) => {
             if (data && data.code === 0) {
               this.dataForm.skuId = data.memberPrice.skuId
               this.dataForm.memberLevelId = data.memberPrice.memberLevelId
@@ -116,7 +121,7 @@ export default {
               memberPrice: this.dataForm.memberPrice,
               addOther: this.dataForm.addOther
             })
-          }).then(({ data }) => {
+          }).then(({data}) => {
             if (data && data.code === 0) {
               this.$message({
                 message: '操作成功',
@@ -133,6 +138,9 @@ export default {
           })
         }
       })
+    },
+    handleSelectedItem (level) {
+      this.dataForm.memberLevelName = level.name
     }
   }
 }

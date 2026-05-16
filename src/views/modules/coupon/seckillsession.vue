@@ -31,8 +31,13 @@
       <el-table-column prop="name" header-align="center" align="center" label="场次名称"></el-table-column>
       <el-table-column prop="startTime" header-align="center" align="center" label="每日开始时间"></el-table-column>
       <el-table-column prop="endTime" header-align="center" align="center" label="每日结束时间"></el-table-column>
-      <el-table-column prop="status" header-align="center" align="center" label="启用状态"></el-table-column>
-      <el-table-column prop="createTime" header-align="center" align="center" label="创建时间"></el-table-column>
+      <el-table-column header-align="center" align="center" label="启用状态">
+        <template slot-scope="scope">
+          <el-tag :type="scope.row.status === 1 ? 'success' : 'danger'" size="small">
+            {{ scope.row.status === 1 ? '已启用' : '已禁用' }}
+          </el-tag>
+        </template>
+      </el-table-column>      <el-table-column prop="createTime" header-align="center" align="center" label="创建时间"></el-table-column>
       <el-table-column fixed="right" header-align="center" align="center" width="150" label="操作">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="relationProduct(scope.row.id)">关联商品</el-button>

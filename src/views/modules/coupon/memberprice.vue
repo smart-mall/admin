@@ -28,9 +28,8 @@
     >
       <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
       <el-table-column prop="id" header-align="center" align="center" label="id"></el-table-column>
-      <el-table-column prop="skuId" header-align="center" align="center" label="sku_id"></el-table-column>
-      <el-table-column prop="memberLevelId" header-align="center" align="center" label="会员等级id"></el-table-column>
-      <el-table-column prop="memberLevelName" header-align="center" align="center" label="会员等级名"></el-table-column>
+      <el-table-column prop="skuName" header-align="center" align="center" label="sku"></el-table-column>
+      <el-table-column prop="memberLevelName" header-align="center" align="center" label="会员等级"></el-table-column>
       <el-table-column prop="memberPrice" header-align="center" align="center" label="会员对应价格"></el-table-column>
       <el-table-column
         prop="addOther"

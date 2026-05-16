@@ -15,13 +15,31 @@
         <el-input v-model="dataForm.name" placeholder="场次名称"></el-input>
       </el-form-item>
       <el-form-item label="每日开始时间" prop="startTime">
-        <el-date-picker type="datetime" placeholder="每日开始时间" v-model="dataForm.startTime"></el-date-picker>
+        <el-date-picker
+          type="datetime"
+          placeholder="每日开始时间"
+          v-model="dataForm.startTime"
+          value-format="yyyy-MM-dd HH:mm:ss"
+        />
       </el-form-item>
       <el-form-item label="每日结束时间" prop="endTime">
-        <el-date-picker type="datetime" placeholder="每日结束时间" v-model="dataForm.endTime"></el-date-picker>
+        <el-date-picker
+          type="datetime"
+          placeholder="每日结束时间"
+          v-model="dataForm.endTime"
+          value-format="yyyy-MM-dd HH:mm:ss"
+        />
       </el-form-item>
       <el-form-item label="启用状态" prop="status">
-        <el-input v-model="dataForm.status" placeholder="启用状态"></el-input>
+        <el-switch
+          v-model="dataForm.status"
+          :active-value="1"
+          :inactive-value="0"
+          active-text="启用"
+          inactive-text="禁用"
+          active-color="#13ce66"
+          inactive-color="#ff4949"
+        />
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -42,7 +60,6 @@ export default {
         startTime: '',
         endTime: '',
         status: '',
-        createTime: ''
       },
       dataRule: {
         name: [
@@ -79,7 +96,6 @@ export default {
               this.dataForm.startTime = data.seckillSession.startTime
               this.dataForm.endTime = data.seckillSession.endTime
               this.dataForm.status = data.seckillSession.status
-              this.dataForm.createTime = data.seckillSession.createTime
             }
           })
         }
@@ -100,7 +116,6 @@ export default {
               startTime: this.dataForm.startTime,
               endTime: this.dataForm.endTime,
               status: this.dataForm.status,
-              createTime: new Date()
             })
           }).then(({ data }) => {
             if (data && data.code === 0) {

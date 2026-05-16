@@ -23,7 +23,7 @@
               <category-cascader></category-cascader>
             </el-form-item>
             <el-form-item label="选择品牌" prop="brandId">
-              <brand-select></brand-select>
+              <brand-select v-model="spu.brandId"></brand-select>
             </el-form-item>
             <el-form-item label="商品重量(Kg)" prop="weight">
               <el-input-number v-model.number="spu.weight" :min="0" :precision="3" :step="0.1"></el-input-number>
@@ -376,7 +376,6 @@ export default {
         publishStatus: 0,
         decript: [], // 商品详情
         images: [
-          {imgUrl: ''}
         ], // 商品图集，最后sku也可以新增
         bounds: {
           // 积分

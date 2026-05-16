@@ -59,7 +59,7 @@
         label="创建时间">
       </el-table-column>
       <el-table-column
-        prop="userId"
+        prop="userName"
         header-align="center"
         align="center"
         label="创建人">

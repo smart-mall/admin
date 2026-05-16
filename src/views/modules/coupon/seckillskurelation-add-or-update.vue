@@ -16,7 +16,7 @@
         <el-input v-model="sessionId" placeholder="活动场次id" :disabled="true"></el-input>
       </el-form-item>
       <el-form-item label="商品id" prop="skuId">
-        <el-input v-model="dataForm.skuId" placeholder="商品id"></el-input>
+        <sku-select v-model="dataForm.skuId"></sku-select>
       </el-form-item>
       <el-form-item label="秒杀价格" prop="seckillPrice">
         <el-input-number v-model="dataForm.seckillPrice" :min="0" :precision="2" :step="0.1"></el-input-number>
@@ -39,7 +39,10 @@
 </template>
 
 <script>
+import SkuSelect from '../common/sku-select.vue'
+
 export default {
+  components: {SkuSelect},
   data () {
     return {
       visible: false,

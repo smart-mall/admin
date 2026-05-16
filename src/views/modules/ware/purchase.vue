@@ -37,7 +37,6 @@
     >
       <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
       <el-table-column prop="id" header-align="center" align="center" label="采购单id"></el-table-column>
-      <el-table-column prop="assigneeId" header-align="center" align="center" label="采购人id"></el-table-column>
       <el-table-column prop="assigneeName" header-align="center" align="center" label="采购人名"></el-table-column>
       <el-table-column prop="phone" header-align="center" align="center" label="联系方式"></el-table-column>
       <el-table-column prop="priority" header-align="center" align="center" label="优先级"></el-table-column>
@@ -50,7 +49,7 @@
           <el-tag type="danger" v-if="scope.row.status === 4">有异常</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="wareId" header-align="center" align="center" label="仓库id"></el-table-column>
+      <el-table-column prop="wareName" header-align="center" align="center" label="仓库id"></el-table-column>
       <el-table-column prop="amount" header-align="center" align="center" label="总金额"></el-table-column>
       <el-table-column prop="createTime" header-align="center" align="center" label="创建日期"></el-table-column>
       <el-table-column prop="updateTime" header-align="center" align="center" label="更新日期"></el-table-column>
@@ -189,7 +188,8 @@ export default {
         params: this.$http.adornParams({
           page: this.pageIndex,
           limit: this.pageSize,
-          key: this.dataForm.key
+          key: this.dataForm.key,
+          status: this.dataForm.status
         })
       }).then(({ data }) => {
         if (data && data.code === 0) {

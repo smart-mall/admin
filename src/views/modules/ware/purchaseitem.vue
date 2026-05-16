@@ -47,10 +47,10 @@
       <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
       <el-table-column prop="id" header-align="center" align="center" label="id"></el-table-column>
       <el-table-column prop="purchaseId" header-align="center" align="center" label="采购单id"></el-table-column>
-      <el-table-column prop="skuId" header-align="center" align="center" label="采购商品id"></el-table-column>
+      <el-table-column prop="skuName" header-align="center" align="center" label="采购商品id"></el-table-column>
       <el-table-column prop="skuNum" header-align="center" align="center" label="采购数量"></el-table-column>
       <el-table-column prop="skuPrice" header-align="center" align="center" label="采购金额"></el-table-column>
-      <el-table-column prop="wareId" header-align="center" align="center" label="仓库id"></el-table-column>
+      <el-table-column prop="wareName" header-align="center" align="center" label="仓库id"></el-table-column>
       <el-table-column prop="status" header-align="center" align="center" label="状态">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.status==0">新建</el-tag>

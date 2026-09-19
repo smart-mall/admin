@@ -1,0 +1,8 @@
+﻿node_modules
+dist
+.git
+.idea
+demo-screenshot
+test/e2e/reports
+test/unit/coverage
+npm-debug.log*

@@ -1,5 +1,11 @@
 <template>
   <div class="mod-config">
+    <!-- 不加 isAuth：这个项目没有为商品删除配权限项，加了之后按钮会被 v-if 直接藏掉 -->
+    <el-form :inline="true">
+      <el-form-item>
+        <el-button type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
+      </el-form-item>
+    </el-form>
     <el-table
       :data="dataList"
       border
@@ -23,7 +29,7 @@
       </el-table-column>
       <el-table-column prop="createTime" header-align="center" align="center" label="创建时间"></el-table-column>
       <el-table-column prop="updateTime" header-align="center" align="center" label="修改时间"></el-table-column>
-      <el-table-column fixed="right" header-align="center" align="center" width="150" label="操作">
+      <el-table-column fixed="right" header-align="center" align="center" width="180" label="操作">
         <template slot-scope="scope">
           <el-button
             v-if="scope.row.publishStatus === 0"
@@ -31,6 +37,14 @@
             size="small"
             @click="productUp(scope.row.id)"
           >上架
+          </el-button>
+          <!-- 只在未上架时给删除入口：已上架的会被后端拒绝（11001），摆一个点了必然失败的按钮没意义 -->
+          <el-button
+            v-if="scope.row.publishStatus === 0"
+            type="text"
+            size="small"
+            @click="deleteHandle(scope.row.id)"
+          >删除
           </el-button>
           <el-button type="text" size="small" @click="attrUpdateShow(scope.row)">规格</el-button>
         </template>
@@ -95,6 +109,40 @@ export default {
           this.$message.error(data.msg)
         }
       })
+    },
+    // 删除。传了 id 就是单条，不传就是删勾选的那几条
+    deleteHandle (id) {
+      const ids = id ? [id] : this.dataListSelections.map(item => item.id)
+      if (!ids.length) {
+        this.$message.warning('请先勾选要删除的商品')
+        return
+      }
+      this.$confirm(
+        `确定删除商品[id=${ids.join(',')}]? 它的 sku、图片、规格参数和优惠数据会一起清掉`,
+        '提示',
+        { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }
+      ).then(() => {
+        this.$http({
+          url: this.$http.adornUrl('/product/spuinfo/delete'),
+          method: 'post',
+          data: this.$http.adornData(ids, false)
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            this.$message({
+              message: '删除成功',
+              type: 'success',
+              duration: 1500,
+              onClose: () => {
+                this.getDataList()
+              }
+            })
+          } else {
+            // 11001（商品已上架，请先下架再删除）不带 errors，msg 本身就是那句话；
+            // 10001 的字段级错误已经被 utils/httpRequest.js 摊平进 msg。两条路都直接显示 msg
+            this.$message.error(data.msg)
+          }
+        })
+      }).catch(() => {})
     },
     attrUpdateShow (row) {
       console.log(row)

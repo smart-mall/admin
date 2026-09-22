@@ -33,7 +33,7 @@
             size="small"
             class="batch-delete-btn"
           >
-            <i class="el-icon-delete-solid"></i> 批量删除
+            <i class="el-icon-delete"></i> 批量删除
           </el-button>
         </div>
       </div>
@@ -43,11 +43,11 @@
     <el-card class="tree-card" shadow="never">
       <div class="tree-header">
         <div class="tree-title-wrap">
-          <i class="el-icon-s-grid"></i>
+          <i class="el-icon-menu"></i>
           <h3 class="tree-title">商品分类管理</h3>
         </div>
         <el-tag type="info" size="small" effect="plain">
-          <i class="el-icon-collection-tag"></i> 共 {{ menus.length }} 个分类
+          <i class="el-icon-tickets"></i> 共 {{ menus.length }} 个分类
         </el-tag>
       </div>
 
@@ -68,8 +68,14 @@
       >
         <span class="custom-tree-node" slot-scope="{ node, data }">
           <span class="node-label">
+            <!-- 配了图标就显示它，三个层级一视同仁；没配才退回按"有无子节点"区分的默认图标。
+                 原来的 el-icon-folder-opened 是 Element UI 2.x 才有的类名，而项目加载的主题
+                 字体是 1.x 生成的（见 src/icons/element-icons.js），父节点一直是空白，
+                 这里换成字体里确实存在的 el-icon-menu。 -->
+            <i v-if="data.icon" :class="data.icon"></i>
             <i
-              :class="node.childNodes.length > 0 ? 'el-icon-folder-opened' : 'el-icon-document'"
+              v-else
+              :class="node.childNodes.length > 0 ? 'el-icon-menu' : 'el-icon-document'"
               :style="{ color: node.childNodes.length > 0 ? '#409EFF' : '#67C23A' }"
             ></i>
             <span class="node-name">{{ node.label }}</span>
@@ -162,25 +168,41 @@
           <span class="form-tip">数值越小越靠前</span>
         </el-form-item>
         <el-form-item label="分类图标">
-          <el-input
-            v-model="category.icon"
-            placeholder="请输入图标URL或Element UI图标类名"
-            clearable
-            prefix-icon="el-icon-picture"
-          >
-            <template slot="append">
-              <el-tooltip content="支持图标URL或Element UI图标类名" placement="top">
-                <i class="el-icon-question"></i>
-              </el-tooltip>
-            </template>
-          </el-input>
+          <!-- 下拉里是一个图标网格。只给图形没法分辨相似的图标，所以每个格子用原生 title
+               显示类名；清单从已加载的样式表里扫出来，见 src/icons/element-icons.js -->
+          <el-popover ref="iconPopover" placement="bottom-start" trigger="click">
+            <div class="icon-picker__grid">
+              <div
+                v-for="name in iconList"
+                :key="name"
+                class="icon-picker__item"
+                :class="{ 'is-active': name === category.icon }"
+                :title="name"
+                @click="iconActiveHandle(name)"
+              >
+                <i :class="name"></i>
+              </div>
+            </div>
+          </el-popover>
+          <div class="icon-picker__trigger" v-popover:iconPopover>
+            <i class="icon-picker__preview" :class="category.icon || 'el-icon-picture-outline'"></i>
+            <span class="icon-picker__label">{{ category.icon || '点击选择图标' }}</span>
+            <i class="el-icon-arrow-down icon-picker__caret"></i>
+          </div>
+          <el-button
+            v-if="category.icon"
+            class="icon-picker__clear"
+            type="text"
+            size="mini"
+            @click="category.icon = ''"
+          >清除</el-button>
         </el-form-item>
         <el-form-item label="计量单位">
           <el-input
             v-model="category.productUnit"
             placeholder="例如：个、件、台"
             clearable
-            prefix-icon="el-icon-s-operation"
+            prefix-icon="el-icon-setting"
           />
         </el-form-item>
       </el-form>
@@ -202,6 +224,8 @@
 </template>
 
 <script>
+import { collectIconNames } from '@/icons/element-icons'
+
 export default {
   name: 'RenrenFastVueCategory',
   data () {
@@ -210,6 +234,8 @@ export default {
       updateNodes: [],
       maxNum: 0,
       submitLoading: false,
+      // Element UI 图标类名清单（如 el-icon-goods），created 里扫已加载的样式表填上
+      iconList: [],
       category: {
         catId: '',
         name: '',
@@ -239,6 +265,9 @@ export default {
   },
   created () {
     this.getMenus()
+    // 放 created 而不是 mounted：样式（dev 下 style-loader 注入的 <style>、构建产物的
+    // <link>）在这之前就已生效，扫得到规则
+    this.iconList = collectIconNames()
   },
   methods: {
     // 清空选中
@@ -350,6 +379,12 @@ export default {
 
     handleNodeClick (data) {
       console.log('节点点击:', data)
+    },
+
+    // 选中图标：回填并收起下拉。不收起的话每选一个都得在外面点一下才知道生效了没有
+    iconActiveHandle (name) {
+      this.category.icon = name
+      this.$refs.iconPopover.doClose()
     },
 
     getMenus () {
@@ -731,6 +766,84 @@ export default {
     margin-left: 12px;
     font-size: 12px;
     color: #909399;
+  }
+}
+
+/* 分类图标选择器。
+   这些规则全部放在顶层、不嵌进 .category-form：下拉面板里的网格被 popper
+   append 到了 body，DOM 上不在表单内部，嵌进去的后代选择器会匹配不到。
+   作用域靠 icon-picker__ 前缀加 scoped 的 data-v 属性保证。 */
+.icon-picker__trigger {
+  display: inline-flex;
+  align-items: center;
+  width: 240px;
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
+  color: #606266;
+  cursor: pointer;
+  transition: border-color 0.2s;
+
+  &:hover {
+    border-color: #c0c4cc;
+  }
+}
+
+.icon-picker__preview {
+  font-size: 16px;
+  color: #409eff;
+}
+
+.icon-picker__label {
+  flex: 1;
+  margin-left: 8px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.icon-picker__caret {
+  color: #c0c4cc;
+}
+
+.icon-picker__clear {
+  margin-left: 6px;
+}
+
+/* 宽度写死是为了让 popper 按内容撑开 —— popper 的外层容器由 element-ui 生成，
+   scoped 样式够不到，尺寸只能由内容决定。70 个图标 8 列约 9 行，超出部分滚动。 */
+.icon-picker__grid {
+  display: flex;
+  flex-wrap: wrap;
+  width: 320px;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.icon-picker__item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  margin: 0 4px 4px 0;
+  font-size: 16px;
+  color: #606266;
+  border: 1px solid #ebeef5;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    color: #409eff;
+    border-color: #409eff;
+  }
+
+  &.is-active {
+    color: #fff;
+    background-color: #409eff;
+    border-color: #409eff;
   }
 }
 

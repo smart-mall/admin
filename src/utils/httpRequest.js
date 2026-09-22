@@ -27,9 +27,21 @@ http.interceptors.request.use(config => {
  * 响应拦截
  */
 http.interceptors.response.use(response => {
-  if (response.data && response.data.code === 401) { // 401, token失效
+  const body = response.data
+  if (body && body.code === 401) { // 401, token失效
     clearLoginInfo()
     router.push({ name: 'login' })
+  }
+  // 校验类失败的 msg 是固定文案（"参数格式校验失败"），具体信息在 errors 里
+  // （字段名 → 中文消息，由后端 GlobalExceptionHandler 统一产出）。
+  // 各表单的失败分支普遍只弹 data.msg，在这里拼进去 —— 一处改动覆盖全部表单，
+  // 不用去改那几十个 .vue。
+  const errors = body && body.errors
+  if (errors && typeof errors === 'object') {
+    const messages = Object.keys(errors).map(key => errors[key]).filter(Boolean)
+    if (messages.length) {
+      body.msg = messages.join('；')
+    }
   }
   return response
 }, error => {

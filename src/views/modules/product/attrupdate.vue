@@ -159,10 +159,14 @@ export default {
             method: 'post',
             data: this.$http.adornData(submitData, false)
           }).then(({ data }) => {
-            this.$message({
-              type: 'success',
-              message: '属性修改成功!'
-            })
+            if (data && data.code === 0) {
+              this.$message({
+                type: 'success',
+                message: '属性修改成功!'
+              })
+            } else {
+              this.$message.error(data.msg)
+            }
           })
         })
         .catch((e) => {

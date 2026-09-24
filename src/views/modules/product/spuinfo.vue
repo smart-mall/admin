@@ -53,7 +53,14 @@
             @click="deleteHandle(scope.row.id)"
           >删除
           </el-button>
-          <el-button type="text" size="small" @click="attrUpdateShow(scope.row)">规格</el-button>
+          <!-- 规格参数在上架时快照进 ES，改完搜索的筛选面板对不上，所以上架期间不给入口 -->
+          <el-button
+            v-if="scope.row.publishStatus !== 1"
+            type="text"
+            size="small"
+            @click="attrUpdateShow(scope.row)"
+          >规格
+          </el-button>
         </template>
       </el-table-column>
     </el-table>

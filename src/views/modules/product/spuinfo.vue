@@ -29,18 +29,25 @@
       </el-table-column>
       <el-table-column prop="createTime" header-align="center" align="center" label="创建时间"></el-table-column>
       <el-table-column prop="updateTime" header-align="center" align="center" label="修改时间"></el-table-column>
-      <el-table-column fixed="right" header-align="center" align="center" width="180" label="操作">
+      <el-table-column fixed="right" header-align="center" align="center" width="220" label="操作">
         <template slot-scope="scope">
           <el-button
-            v-if="scope.row.publishStatus === 0"
+            v-if="scope.row.publishStatus !== 1"
             type="text"
             size="small"
             @click="productUp(scope.row.id)"
           >上架
           </el-button>
-          <!-- 只在未上架时给删除入口：已上架的会被后端拒绝（11001），摆一个点了必然失败的按钮没意义 -->
           <el-button
-            v-if="scope.row.publishStatus === 0"
+            v-if="scope.row.publishStatus === 1"
+            type="text"
+            size="small"
+            @click="productDown(scope.row.id)"
+          >下架
+          </el-button>
+          <!-- 已上架的会被后端拒绝（11001），必须先下架；下架后（2）才给删除入口 -->
+          <el-button
+            v-if="scope.row.publishStatus !== 1"
             type="text"
             size="small"
             @click="deleteHandle(scope.row.id)"
@@ -94,6 +101,25 @@ export default {
     productUp (id) {
       this.$http({
         url: this.$http.adornUrl('/product/spuinfo/' + id + '/up'),
+        method: 'post'
+      }).then(({data}) => {
+        if (data && data.code === 0) {
+          this.$message({
+            message: '操作成功',
+            type: 'success',
+            duration: 1500,
+            onClose: () => {
+              this.getDataList()
+            }
+          })
+        } else {
+          this.$message.error(data.msg)
+        }
+      })
+    },
+    productDown (id) {
+      this.$http({
+        url: this.$http.adornUrl('/product/spuinfo/' + id + '/down'),
         method: 'post'
       }).then(({data}) => {
         if (data && data.code === 0) {

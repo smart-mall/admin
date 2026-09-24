@@ -145,7 +145,7 @@
         var ids = id ? [id] : this.dataListSelections.map(item => {
           return item.id
         })
-        this.$confirm(`确定删除仓库[id=${ids.join(',')}]? 还有库存或关联单据的仓库删不掉`, '提示', {
+        this.$confirm(`确定删除仓库[id=${ids.join(',')}]? 会一并清掉它的库存、采购需求和采购单；还有库存、在途采购或已锁定未解锁的库存工作单的仓库删不掉`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'

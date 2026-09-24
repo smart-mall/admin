@@ -54,7 +54,7 @@
             @click="opendrawer(scope.row)"
           >分配</el-button>
           <el-button
-            v-if="hasAction(scope.row, 'receive')"
+            v-if="hasAction(scope.row, 'receive') && scope.row.assigneeId === currentUserId"
             type="text"
             size="small"
             @click="receiveHandle(scope.row)"
@@ -126,6 +126,12 @@ export default {
   components: {
     PurchaseDone
   },
+  computed: {
+    // 当前登录用户：领取只能由这张单分配的采购员做
+    currentUserId () {
+      return this.$store.state.user.id
+    }
+  },
   activated () {
     this.getDataList()
   },
@@ -171,7 +177,7 @@ export default {
         }
       })
     },
-    // 领取：领取之后这张单和它下面的需求单一起冻结
+    // 领取：必须是分配给自己的单，领取之后这张单和它下面的需求单一起冻结
     receiveHandle (row) {
       this.$confirm(
         `确定领取采购单[id=${row.id}]? 领取后这张单和它下面的需求单都不能再改`,
@@ -181,7 +187,7 @@ export default {
         this.$http({
           url: this.$http.adornUrl('/ware/purchase/receive'),
           method: 'post',
-          data: this.$http.adornData([row.id], false)
+          data: this.$http.adornData({ ids: [row.id], assigneeId: this.currentUserId }, false)
         }).then(({ data }) => {
           if (data && data.code === 0) {
             this.$message({
@@ -262,11 +268,11 @@ export default {
       }
       const blocked = rows.filter(item => !this.hasAction(item, 'delete'))
       if (blocked.length) {
-        this.$message.warning('采购单[' + blocked.map(item => item.id).join(',') + ']不在"新建/已分配"状态，不能删除')
+        this.$message.warning('采购单[' + blocked.map(item => item.id).join(',') + ']已被领取、正在采购中，不能删除')
         return
       }
       this.$confirm(
-        `确定删除采购单[id=${ids.join(',')}]? 单下还有采购需求的删不掉`,
+        `确定删除采购单[id=${ids.join(',')}]? 还没开始采购的会把它的需求退回"新建"；已完成的会连它的采购需求一起删掉（库存不回滚）`,
         '提示',
         { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }
       ).then(() => {

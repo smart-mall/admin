@@ -57,10 +57,16 @@
           <el-tag type="danger" v-if="scope.row.status==4">采购失败</el-tag>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" header-align="center" align="center" width="200" label="操作">
+      <el-table-column fixed="right" header-align="center" align="center" width="260" label="操作">
         <template slot-scope="scope">
-          <!-- 能不能改/删由后端给的 allowedActions 决定：并入采购单之后就不能再改数量和仓库了，
+          <!-- 能不能操作由后端给的 allowedActions 决定：并入采购单之后就不能再改数量和仓库了，
                要改先"取消分配"退回新建 -->
+          <el-button
+            v-if="hasAction(scope.row, 'merge')"
+            type="text"
+            size="small"
+            @click="mergeOne(scope.row)"
+          >分配</el-button>
           <el-button
             v-if="hasAction(scope.row, 'edit')"
             type="text"
@@ -120,6 +126,13 @@
       <div v-else style="color:#909399;">
         当前没有可合并的采购单（"新建/已分配"状态的都没有），直接点"确定"会自动创建一张新单。
       </div>
+      <div style="margin-top:14px;">
+        <span style="color:#606266;margin-right:8px;">优先级</span>
+        <el-input-number v-model="priority" :min="1" :max="9" size="small"></el-input-number>
+        <span style="color:#909399;font-size:12px;margin-left:8px;">
+          {{ purchaseId ? '会把这张采购单的优先级改成这个值' : '新建采购单时用它' }}
+        </span>
+      </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="mergedialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="mergeItem">确 定</el-button>
@@ -148,18 +161,24 @@ export default {
       addOrUpdateVisible: false,
       mergedialogVisible: false,
       purchaseId: '',
+      // 要合并的需求单 id：单条"分配"和批量"合并整单"都写进这里，弹窗显示和提交用同一份
+      mergeItems: [],
+      priority: 1,
       purchasetableData: []
     }
   },
   components: {
     AddOrUpdate
   },
-  computed: {
-    // 选中的、能合并的需求单 id（只有"新建"状态能合并，已并入采购单的要先取消分配）
-    mergeItems () {
-      return this.dataListSelections
-        .filter(item => this.hasAction(item, 'merge'))
-        .map(item => item.id)
+  watch: {
+    // 选中已有采购单时把它的优先级带出来，免得"顺手把人家改掉"
+    purchaseId (val) {
+      if (!val) {
+        this.priority = 1
+        return
+      }
+      const hit = this.purchasetableData.find(item => item.id === val)
+      this.priority = hit && hit.priority ? hit.priority : 1
     }
   },
   activated () {
@@ -171,6 +190,14 @@ export default {
     hasAction (row, action) {
       return (row.allowedActions || []).indexOf(action) >= 0
     },
+    // 单条分配：不用先进批量操作，直接对这一条打开合并弹窗
+    mergeOne (row) {
+      this.mergeItems = [row.id]
+      this.purchaseId = ''
+      this.priority = 1
+      this.getUnreceivedPurchase()
+      this.mergedialogVisible = true
+    },
     // 合并：没选采购单就新建一张，选了就并进去
     mergeItem () {
       const items = this.mergeItems
@@ -181,7 +208,9 @@ export default {
         })
         return
       }
-      const body = this.purchaseId ? { purchaseId: this.purchaseId, items: items } : { items: items }
+      const body = this.purchaseId
+        ? { purchaseId: this.purchaseId, items: items, priority: this.priority }
+        : { items: items, priority: this.priority }
       const tip = this.purchaseId
         ? `确定把[id=${items.join(',')}]并入采购单[${this.purchaseId}]?`
         : `没有选择采购单，将自动创建新单合并[id=${items.join(',')}]，确认吗？`
@@ -262,6 +291,11 @@ export default {
       }
       if (cmd === 'merge') {
         if (this.dataListSelections.length !== 0) {
+          this.mergeItems = this.dataListSelections
+            .filter(item => this.hasAction(item, 'merge'))
+            .map(item => item.id)
+          this.purchaseId = ''
+          this.priority = 1
           this.getUnreceivedPurchase()
           this.mergedialogVisible = true
         } else {

@@ -100,6 +100,14 @@
               effect="plain"
               class="level-tag"
             >三级</el-tag>
+            <!-- 管理树不过滤 showStatus，用红标标出已隐藏的分类 -->
+            <el-tag
+              v-if="data.showStatus === 0"
+              size="mini"
+              type="danger"
+              effect="plain"
+              class="level-tag"
+            >已隐藏</el-tag>
           </span>
           <span class="node-actions">
             <el-button
@@ -205,6 +213,15 @@
             prefix-icon="el-icon-setting"
           />
         </el-form-item>
+        <el-form-item label="商城显示">
+          <!-- 必须给 active-value/inactive-value，否则绑出 true/false，后端 Integer 收不下 -->
+          <el-switch
+            v-model="category.showStatus"
+            :active-value="1"
+            :inactive-value="0"
+          />
+          <span class="form-tip">关闭后该分类及其子分类都不会出现在商城导航里</span>
+        </el-form-item>
       </el-form>
 
       <span slot="footer" class="dialog-footer">
@@ -291,7 +308,7 @@ export default {
       const catIds = checkedNodes.map(node => node.catId)
       const names = checkedNodes.map(node => node.name).join('、')
 
-      this.$confirm(`确定要删除分类【${names}】吗？删除后无法恢复！`, '批量删除', {
+      this.$confirm(`确定要删除分类【${names}】及其所有子分类吗？删除后无法恢复！`, '批量删除', {
         confirmButtonText: '确定删除',
         cancelButtonText: '取消',
         type: 'warning'
@@ -433,11 +450,12 @@ export default {
       this.$refs.categoryForm.validate((valid) => {
         if (valid) {
           this.submitLoading = true
-          const {catId, name, icon, sort, productCount} = this.category
+          const {catId, name, icon, sort, productCount, productUnit, showStatus} = this.category
           this.$http({
             url: this.$http.adornUrl('/product/category/update'),
             method: 'post',
-            data: this.$http.adornData({catId, name, icon, sort, productCount}, false)
+            data: this.$http.adornData(
+              {catId, name, icon, sort, productCount, productUnit, showStatus}, false)
           }).then(({data}) => {
             this.submitLoading = false
             if (data && data.code === 0) {
@@ -467,7 +485,8 @@ export default {
         sort: 0,
         icon: '',
         productUnit: '',
-        productCount: 0
+        productCount: 0,
+        showStatus: 1
       }
       this.dialogVisible = true
     },
@@ -490,7 +509,8 @@ export default {
             sort: res.category.sort || 0,
             icon: res.category.icon || '',
             productUnit: res.category.productUnit || '',
-            productCount: res.category.productCount || 0
+            productCount: res.category.productCount || 0,
+            showStatus: res.category.showStatus === 0 ? 0 : 1
           }
           this.dialogVisible = true
         } else {
@@ -501,7 +521,7 @@ export default {
 
     // 删除分类
     remove (node, data) {
-      this.$confirm(`确定要删除分类【${data.name}】吗？`, '删除确认', {
+      this.$confirm(`确定要删除分类【${data.name}】及其所有子分类吗？删除后无法恢复！`, '删除确认', {
         confirmButtonText: '确定删除',
         cancelButtonText: '取消',
         type: 'warning'

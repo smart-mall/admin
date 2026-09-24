@@ -2,7 +2,7 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item label="状态">
-        <el-select style="width:120px;" v-model="dataForm.status" placeholder="请选择状态" clearable>
+        <el-select style="width:120px" v-model="dataForm.status" placeholder="请选择状态" clearable>
           <el-option label="新建" :value="0"></el-option>
           <el-option label="已分配" :value="1"></el-option>
           <el-option label="已领取" :value="2"></el-option>
@@ -11,21 +11,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="关键字">
-        <el-input style="width:120px;" v-model="dataForm.key" placeholder="参数名" clearable></el-input>
+        <el-input style="width:160px" v-model="dataForm.key" placeholder="采购单id/采购人名" clearable></el-input>
       </el-form-item>
       <el-form-item>
+        <!-- 没有"新增"：采购单是合并采购需求单时自动生成的 -->
         <el-button @click="getDataList()">查询</el-button>
-        <el-button
-          v-if="isAuth('ware:purchase:save')"
-          type="primary"
-          @click="addOrUpdateHandle()"
-        >新增</el-button>
-        <el-button
-          v-if="isAuth('ware:purchase:delete')"
-          type="danger"
-          @click="deleteHandle()"
-          :disabled="dataListSelections.length <= 0"
-        >批量删除</el-button>
+        <el-button v-if="isAuth('ware:purchase:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -49,20 +40,37 @@
           <el-tag type="danger" v-if="scope.row.status === 4">有异常</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="wareName" header-align="center" align="center" label="仓库id"></el-table-column>
+      <el-table-column prop="wareName" header-align="center" align="center" label="仓库"></el-table-column>
       <el-table-column prop="amount" header-align="center" align="center" label="总金额"></el-table-column>
       <el-table-column prop="createTime" header-align="center" align="center" label="创建日期"></el-table-column>
       <el-table-column prop="updateTime" header-align="center" align="center" label="更新日期"></el-table-column>
-      <el-table-column fixed="right" header-align="center" align="center" width="150" label="操作">
+      <el-table-column fixed="right" header-align="center" align="center" width="260" label="操作">
         <template slot-scope="scope">
+          <!-- 能不能点由后端给的 allowedActions 决定，前端不再自己写 status == 0 || status == 1 -->
           <el-button
+            v-if="hasAction(scope.row, 'assign')"
             type="text"
             size="small"
-            v-if="scope.row.status==0||scope.row.status==1"
             @click="opendrawer(scope.row)"
           >分配</el-button>
-          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
-          <el-button type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>
+          <el-button
+            v-if="hasAction(scope.row, 'receive')"
+            type="text"
+            size="small"
+            @click="receiveHandle(scope.row)"
+          >领取</el-button>
+          <el-button
+            v-if="hasAction(scope.row, 'done')"
+            type="text"
+            size="small"
+            @click="doneHandle(scope.row)"
+          >完成采购</el-button>
+          <el-button
+            v-if="hasAction(scope.row, 'delete')"
+            type="text"
+            size="small"
+            @click="deleteHandle(scope.row.id)"
+          >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -75,8 +83,6 @@
       :total="totalPage"
       layout="total, sizes, prev, pager, next, jumper"
     ></el-pagination>
-    <!-- 弹窗, 新增 / 修改 -->
-    <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
     <el-dialog title="分配采购人员" :visible.sync="caigoudialogVisible" width="30%">
       <el-select v-model="userId" filterable placeholder="请选择">
         <el-option
@@ -91,11 +97,13 @@
         <el-button type="primary" @click="assignUser">确 定</el-button>
       </span>
     </el-dialog>
+    <!-- 完成采购：逐条填结果 -->
+    <purchase-done ref="purchaseDone" @refreshDataList="getDataList"></purchase-done>
   </div>
 </template>
 
 <script>
-import AddOrUpdate from './purchase-add-or-update'
+import PurchaseDone from './purchase-done'
 export default {
   data () {
     return {
@@ -110,62 +118,88 @@ export default {
       totalPage: 0,
       dataListLoading: false,
       dataListSelections: [],
-      addOrUpdateVisible: false,
       caigoudialogVisible: false,
       userId: '',
       userList: []
     }
   },
   components: {
-    AddOrUpdate
+    PurchaseDone
   },
   activated () {
     this.getDataList()
   },
-  created () {
-
-  },
   methods: {
+    // 后端在列表里给了 allowedActions，按钮显不显示以它为准
+    hasAction (row, action) {
+      return (row.allowedActions || []).indexOf(action) >= 0
+    },
     opendrawer (row) {
       this.getUserList()
       this.currentRow = row
       this.caigoudialogVisible = true
     },
     assignUser () {
-      let _this = this
-      let user = {}
-      this.userList.forEach(item => {
-        if (item.userId === _this.userId) {
-          user = item
-        }
-      })
+      const user = this.userList.find(item => item.userId === this.userId)
+      if (!user) {
+        this.$message.warning('请先选择采购人员')
+        return
+      }
       this.caigoudialogVisible = false
       this.$http({
-        url: this.$http.adornUrl(
-          `/ware/purchase/update`
-        ),
+        url: this.$http.adornUrl('/ware/purchase/assign'),
         method: 'post',
         data: this.$http.adornData({
-          id: this.currentRow.id || undefined,
+          id: this.currentRow.id,
           assigneeId: user.userId,
           assigneeName: user.username,
-          phone: user.mobile,
-          status: 1
-        })
+          phone: user.mobile
+        }, false)
       }).then(({ data }) => {
         if (data && data.code === 0) {
           this.$message({
-            message: '操作成功',
+            message: '分配成功',
             type: 'success',
-            duration: 1500
+            duration: 1500,
+            onClose: () => {
+              this.userId = ''
+              this.getDataList()
+            }
           })
-
-          this.userId = ''
-          this.getDataList()
         } else {
           this.$message.error(data.msg)
         }
       })
+    },
+    // 领取：领取之后这张单和它下面的需求单一起冻结
+    receiveHandle (row) {
+      this.$confirm(
+        `确定领取采购单[id=${row.id}]? 领取后这张单和它下面的需求单都不能再改`,
+        '提示',
+        { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }
+      ).then(() => {
+        this.$http({
+          url: this.$http.adornUrl('/ware/purchase/receive'),
+          method: 'post',
+          data: this.$http.adornData([row.id], false)
+        }).then(({ data }) => {
+          if (data && data.code === 0) {
+            this.$message({
+              message: '领取成功',
+              type: 'success',
+              duration: 1500,
+              onClose: () => {
+                this.getDataList()
+              }
+            })
+          } else {
+            this.$message.error(data.msg)
+          }
+        })
+      }).catch(() => {})
+    },
+    doneHandle (row) {
+      this.$refs.purchaseDone.init(row.id)
     },
     getUserList () {
       this.$http({
@@ -217,28 +251,24 @@ export default {
     selectionChangeHandle (val) {
       this.dataListSelections = val
     },
-    // 新增 / 修改
-    addOrUpdateHandle (id) {
-      this.addOrUpdateVisible = true
-      this.$nextTick(() => {
-        this.$refs.addOrUpdate.init(id)
-      })
-    },
-    // 删除
+    // 删除：只有"还没被领取、且没有明细"的空单能删，前端先挡一道，
+    // "有没有明细"后端会再判（11106）
     deleteHandle (id) {
-      var ids = id
-        ? [id]
-        : this.dataListSelections.map(item => {
-          return item.id
-        })
+      const rows = id ? this.dataList.filter(item => item.id === id) : this.dataListSelections
+      const ids = rows.map(item => item.id)
+      if (!ids.length) {
+        this.$message.warning('请先勾选要删除的采购单')
+        return
+      }
+      const blocked = rows.filter(item => !this.hasAction(item, 'delete'))
+      if (blocked.length) {
+        this.$message.warning('采购单[' + blocked.map(item => item.id).join(',') + ']不在"新建/已分配"状态，不能删除')
+        return
+      }
       this.$confirm(
-        `确定对[id=${ids.join(',')}]进行[${id ? '删除' : '批量删除'}]操作?`,
+        `确定删除采购单[id=${ids.join(',')}]? 单下还有采购需求的删不掉`,
         '提示',
-        {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }
+        { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }
       ).then(() => {
         this.$http({
           url: this.$http.adornUrl('/ware/purchase/delete'),
@@ -247,7 +277,7 @@ export default {
         }).then(({ data }) => {
           if (data && data.code === 0) {
             this.$message({
-              message: '操作成功',
+              message: '删除成功',
               type: 'success',
               duration: 1500,
               onClose: () => {
@@ -258,7 +288,7 @@ export default {
             this.$message.error(data.msg)
           }
         })
-      })
+      }).catch(() => {})
     }
   }
 }

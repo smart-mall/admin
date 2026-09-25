@@ -187,7 +187,8 @@ export default {
         this.$http({
           url: this.$http.adornUrl('/ware/purchase/receive'),
           method: 'post',
-          data: this.$http.adornData({ ids: [row.id], assigneeId: this.currentUserId }, false)
+          // 领取人不由前端传：后端从网关注入的 X-Admin 取当前登录管理员
+          data: this.$http.adornData([row.id], false)
         }).then(({ data }) => {
           if (data && data.code === 0) {
             this.$message({

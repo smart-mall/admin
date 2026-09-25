@@ -44,7 +44,7 @@ export default {
   methods: {
     getAreaTree () {
       this.$http({
-        url: this.$http.adornUrl('/thirdParty/address/tree'),
+        url: this.$http.adornUrl('/thirdParty/front/address/tree'),
         method: 'get',
         params: this.$http.adornParams({})
       })

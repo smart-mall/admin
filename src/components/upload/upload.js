@@ -68,6 +68,7 @@ export function uploadFile (file) {
     if (data.code !== 0) {
       throw new Error(data.msg || '上传失败')
     }
-    return data
+    // 文件信息在响应体的 data 里，剥一层给调用方，调用方只关心 {url, name, size}
+    return data.data
   })
 }

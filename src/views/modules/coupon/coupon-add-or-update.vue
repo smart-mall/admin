@@ -224,25 +224,25 @@ export default {
             params: this.$http.adornParams()
           }).then(({ data }) => {
             if (data && data.code === 0) {
-              this.dataForm.couponType = data.coupon.couponType
-              this.dataForm.couponImg = data.coupon.couponImg
-              this.dataForm.couponName = data.coupon.couponName
-              this.dataForm.num = data.coupon.num
-              this.dataForm.amount = data.coupon.amount
-              this.dataForm.perLimit = data.coupon.perLimit
-              this.dataForm.minPoint = data.coupon.minPoint
-              this.dataForm.startTime = data.coupon.startTime
-              this.dataForm.endTime = data.coupon.endTime
-              this.dataForm.useType = data.coupon.useType
-              this.dataForm.note = data.coupon.note
-              this.dataForm.publishCount = data.coupon.publishCount
-              this.dataForm.useCount = data.coupon.useCount
-              this.dataForm.receiveCount = data.coupon.receiveCount
-              this.dataForm.enableStartTime = data.coupon.enableStartTime
-              this.dataForm.enableEndTime = data.coupon.enableEndTime
-              this.dataForm.code = data.coupon.code
-              this.dataForm.memberLevel = data.coupon.memberLevel
-              this.dataForm.publish = data.coupon.publish
+              this.dataForm.couponType = data.data.couponType
+              this.dataForm.couponImg = data.data.couponImg
+              this.dataForm.couponName = data.data.couponName
+              this.dataForm.num = data.data.num
+              this.dataForm.amount = data.data.amount
+              this.dataForm.perLimit = data.data.perLimit
+              this.dataForm.minPoint = data.data.minPoint
+              this.dataForm.startTime = data.data.startTime
+              this.dataForm.endTime = data.data.endTime
+              this.dataForm.useType = data.data.useType
+              this.dataForm.note = data.data.note
+              this.dataForm.publishCount = data.data.publishCount
+              this.dataForm.useCount = data.data.useCount
+              this.dataForm.receiveCount = data.data.receiveCount
+              this.dataForm.enableStartTime = data.data.enableStartTime
+              this.dataForm.enableEndTime = data.data.enableEndTime
+              this.dataForm.code = data.data.code
+              this.dataForm.memberLevel = data.data.memberLevel
+              this.dataForm.publish = data.data.publish
               this.dataForm.timeRange = [
                 this.dataForm.startTime,
                 this.dataForm.endTime

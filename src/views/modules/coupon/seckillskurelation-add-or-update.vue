@@ -97,14 +97,14 @@ export default {
             params: this.$http.adornParams()
           }).then(({ data }) => {
             if (data && data.code === 0) {
-              this.dataForm.promotionId = data.seckillSkuRelation.promotionId
+              this.dataForm.promotionId = data.data.promotionId
               this.dataForm.promotionSessionId =
-                data.seckillSkuRelation.promotionSessionId
-              this.dataForm.skuId = data.seckillSkuRelation.skuId
-              this.dataForm.seckillPrice = data.seckillSkuRelation.seckillPrice
-              this.dataForm.seckillCount = data.seckillSkuRelation.seckillCount
-              this.dataForm.seckillLimit = data.seckillSkuRelation.seckillLimit
-              this.dataForm.seckillSort = data.seckillSkuRelation.seckillSort
+                data.data.promotionSessionId
+              this.dataForm.skuId = data.data.skuId
+              this.dataForm.seckillPrice = data.data.seckillPrice
+              this.dataForm.seckillCount = data.data.seckillCount
+              this.dataForm.seckillLimit = data.data.seckillLimit
+              this.dataForm.seckillSort = data.data.seckillSort
             }
           })
         }

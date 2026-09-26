@@ -276,7 +276,7 @@ export default {
           brandId: this.brandId
         })
       }).then(({data}) => {
-        this.cateRelationTableData = data.list
+        this.cateRelationTableData = data.data
       })
     },
     deleteCateRelationHandle (id, brandId) {

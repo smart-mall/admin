@@ -410,7 +410,7 @@ export default {
         method: 'get'
       }).then(({data}) => {
         if (data && data.code === 0) {
-          this.menus = data.tree || []
+          this.menus = data.data || []
         }
       })
     },
@@ -502,15 +502,15 @@ export default {
       }).then(({data: res}) => {
         if (res && res.code === 0) {
           this.category = {
-            catId: res.category.catId,
-            name: res.category.name,
-            parentCid: res.category.parentCid,
-            catLevel: res.category.catLevel,
-            sort: res.category.sort || 0,
-            icon: res.category.icon || '',
-            productUnit: res.category.productUnit || '',
-            productCount: res.category.productCount || 0,
-            showStatus: res.category.showStatus === 0 ? 0 : 1
+            catId: res.data.catId,
+            name: res.data.name,
+            parentCid: res.data.parentCid,
+            catLevel: res.data.catLevel,
+            sort: res.data.sort || 0,
+            icon: res.data.icon || '',
+            productUnit: res.data.productUnit || '',
+            productCount: res.data.productCount || 0,
+            showStatus: res.data.showStatus === 0 ? 0 : 1
           }
           this.dialogVisible = true
         } else {

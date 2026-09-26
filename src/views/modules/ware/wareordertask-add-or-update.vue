@@ -128,19 +128,19 @@
               params: this.$http.adornParams()
             }).then(({data}) => {
               if (data && data.code === 0) {
-                this.dataForm.orderId = data.wareOrderTask.orderId
-                this.dataForm.orderSn = data.wareOrderTask.orderSn
-                this.dataForm.consignee = data.wareOrderTask.consignee
-                this.dataForm.consigneeTel = data.wareOrderTask.consigneeTel
-                this.dataForm.deliveryAddress = data.wareOrderTask.deliveryAddress
-                this.dataForm.orderComment = data.wareOrderTask.orderComment
-                this.dataForm.paymentWay = data.wareOrderTask.paymentWay
-                this.dataForm.taskStatus = data.wareOrderTask.taskStatus
-                this.dataForm.orderBody = data.wareOrderTask.orderBody
-                this.dataForm.trackingNo = data.wareOrderTask.trackingNo
-                this.dataForm.createTime = data.wareOrderTask.createTime
-                this.dataForm.wareId = data.wareOrderTask.wareId
-                this.dataForm.taskComment = data.wareOrderTask.taskComment
+                this.dataForm.orderId = data.data.orderId
+                this.dataForm.orderSn = data.data.orderSn
+                this.dataForm.consignee = data.data.consignee
+                this.dataForm.consigneeTel = data.data.consigneeTel
+                this.dataForm.deliveryAddress = data.data.deliveryAddress
+                this.dataForm.orderComment = data.data.orderComment
+                this.dataForm.paymentWay = data.data.paymentWay
+                this.dataForm.taskStatus = data.data.taskStatus
+                this.dataForm.orderBody = data.data.orderBody
+                this.dataForm.trackingNo = data.data.trackingNo
+                this.dataForm.createTime = data.data.createTime
+                this.dataForm.wareId = data.data.wareId
+                this.dataForm.taskComment = data.data.taskComment
               }
             })
           }

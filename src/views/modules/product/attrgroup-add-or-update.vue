@@ -89,12 +89,12 @@ export default {
             params: this.$http.adornParams()
           }).then(({data}) => {
             if (data && data.code === 0) {
-              this.dataForm.attrGroupName = data.attrGroup.attrGroupName
-              this.dataForm.sort = data.attrGroup.sort
-              this.dataForm.descript = data.attrGroup.descript
-              this.dataForm.icon = data.attrGroup.icon
-              this.dataForm.catalogId = data.attrGroup.catalogId
-              this.catalogIds = data.attrGroup.catalogIds
+              this.dataForm.attrGroupName = data.data.attrGroupName
+              this.dataForm.sort = data.data.sort
+              this.dataForm.descript = data.data.descript
+              this.dataForm.icon = data.data.icon
+              this.dataForm.catalogId = data.data.catalogId
+              this.catalogIds = data.data.catalogIds
             }
           })
         }
@@ -141,7 +141,7 @@ export default {
         params: this.$http.adornParams()
       }).then(({data}) => {
         console.log(data)
-        this.category = data.tree
+        this.category = data.data
       })
     },
     handleChangeCascader () {

@@ -93,12 +93,12 @@ export default {
             params: this.$http.adornParams()
           }).then(({ data }) => {
             if (data && data.code === 0) {
-              this.dataForm.memberId = data.seckillSkuNotice.memberId
-              this.dataForm.skuId = data.seckillSkuNotice.skuId
-              this.dataForm.sessionId = data.seckillSkuNotice.sessionId
-              this.dataForm.subscribeTime = data.seckillSkuNotice.subscribeTime
-              this.dataForm.sendTime = data.seckillSkuNotice.sendTime
-              this.dataForm.noticeType = data.seckillSkuNotice.noticeType
+              this.dataForm.memberId = data.data.memberId
+              this.dataForm.skuId = data.data.skuId
+              this.dataForm.sessionId = data.data.sessionId
+              this.dataForm.subscribeTime = data.data.subscribeTime
+              this.dataForm.sendTime = data.data.sendTime
+              this.dataForm.noticeType = data.data.noticeType
             }
           })
         }

@@ -94,11 +94,11 @@ export default {
             params: this.$http.adornParams()
           }).then(({data}) => {
             if (data && data.code === 0) {
-              this.dataForm.skuId = data.memberPrice.skuId
-              this.dataForm.memberLevelId = data.memberPrice.memberLevelId
-              this.dataForm.memberLevelName = data.memberPrice.memberLevelName
-              this.dataForm.memberPrice = data.memberPrice.memberPrice
-              this.dataForm.addOther = data.memberPrice.addOther
+              this.dataForm.skuId = data.data.skuId
+              this.dataForm.memberLevelId = data.data.memberLevelId
+              this.dataForm.memberLevelName = data.data.memberLevelName
+              this.dataForm.memberPrice = data.data.memberPrice
+              this.dataForm.addOther = data.data.addOther
             }
           })
         }

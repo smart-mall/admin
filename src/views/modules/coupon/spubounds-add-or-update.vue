@@ -75,10 +75,10 @@ export default {
             params: this.$http.adornParams()
           }).then(({data}) => {
             if (data && data.code === 0) {
-              this.dataForm.spuId = data.spuBounds.spuId
-              this.dataForm.growBounds = data.spuBounds.growBounds
-              this.dataForm.buyBounds = data.spuBounds.buyBounds
-              this.dataForm.work = data.spuBounds.work
+              this.dataForm.spuId = data.data.spuId
+              this.dataForm.growBounds = data.data.growBounds
+              this.dataForm.buyBounds = data.data.buyBounds
+              this.dataForm.work = data.data.work
             }
           })
         }

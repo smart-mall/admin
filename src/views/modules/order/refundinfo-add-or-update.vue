@@ -79,12 +79,12 @@
               params: this.$http.adornParams()
             }).then(({data}) => {
               if (data && data.code === 0) {
-                this.dataForm.orderReturnId = data.refundInfo.orderReturnId
-                this.dataForm.refund = data.refundInfo.refund
-                this.dataForm.refundSn = data.refundInfo.refundSn
-                this.dataForm.refundStatus = data.refundInfo.refundStatus
-                this.dataForm.refundChannel = data.refundInfo.refundChannel
-                this.dataForm.refundContent = data.refundInfo.refundContent
+                this.dataForm.orderReturnId = data.data.orderReturnId
+                this.dataForm.refund = data.data.refund
+                this.dataForm.refundSn = data.data.refundSn
+                this.dataForm.refundStatus = data.data.refundStatus
+                this.dataForm.refundChannel = data.data.refundChannel
+                this.dataForm.refundContent = data.data.refundContent
               }
             })
           }

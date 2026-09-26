@@ -114,17 +114,17 @@
               params: this.$http.adornParams()
             }).then(({data}) => {
               if (data && data.code === 0) {
-                this.dataForm.name = data.homeAdv.name
-                this.dataForm.pic = data.homeAdv.pic
-                this.dataForm.startTime = data.homeAdv.startTime
-                this.dataForm.endTime = data.homeAdv.endTime
-                this.dataForm.status = data.homeAdv.status
-                this.dataForm.clickCount = data.homeAdv.clickCount
-                this.dataForm.url = data.homeAdv.url
-                this.dataForm.note = data.homeAdv.note
-                this.dataForm.sort = data.homeAdv.sort
-                this.dataForm.publisherId = data.homeAdv.publisherId
-                this.dataForm.authId = data.homeAdv.authId
+                this.dataForm.name = data.data.name
+                this.dataForm.pic = data.data.pic
+                this.dataForm.startTime = data.data.startTime
+                this.dataForm.endTime = data.data.endTime
+                this.dataForm.status = data.data.status
+                this.dataForm.clickCount = data.data.clickCount
+                this.dataForm.url = data.data.url
+                this.dataForm.note = data.data.note
+                this.dataForm.sort = data.data.sort
+                this.dataForm.publisherId = data.data.publisherId
+                this.dataForm.authId = data.data.authId
               }
             })
           }

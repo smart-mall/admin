@@ -156,23 +156,23 @@
               params: this.$http.adornParams()
             }).then(({data}) => {
               if (data && data.code === 0) {
-                this.dataForm.levelId = data.member.levelId
-                this.dataForm.username = data.member.username
-                this.dataForm.password = data.member.password
-                this.dataForm.nickname = data.member.nickname
-                this.dataForm.mobile = data.member.mobile
-                this.dataForm.email = data.member.email
-                this.dataForm.header = data.member.header
-                this.dataForm.gender = data.member.gender
-                this.dataForm.birth = data.member.birth
-                this.dataForm.city = data.member.city
-                this.dataForm.job = data.member.job
-                this.dataForm.sign = data.member.sign
-                this.dataForm.sourceType = data.member.sourceType
-                this.dataForm.integration = data.member.integration
-                this.dataForm.growth = data.member.growth
-                this.dataForm.status = data.member.status
-                this.dataForm.createTime = data.member.createTime
+                this.dataForm.levelId = data.data.levelId
+                this.dataForm.username = data.data.username
+                this.dataForm.password = data.data.password
+                this.dataForm.nickname = data.data.nickname
+                this.dataForm.mobile = data.data.mobile
+                this.dataForm.email = data.data.email
+                this.dataForm.header = data.data.header
+                this.dataForm.gender = data.data.gender
+                this.dataForm.birth = data.data.birth
+                this.dataForm.city = data.data.city
+                this.dataForm.job = data.data.job
+                this.dataForm.sign = data.data.sign
+                this.dataForm.sourceType = data.data.sourceType
+                this.dataForm.integration = data.data.integration
+                this.dataForm.growth = data.data.growth
+                this.dataForm.status = data.data.status
+                this.dataForm.createTime = data.data.createTime
               }
             })
           }

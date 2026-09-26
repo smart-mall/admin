@@ -65,10 +65,10 @@
               params: this.$http.adornParams()
             }).then(({data}) => {
               if (data && data.code === 0) {
-                this.dataForm.name = data.homeSubjectSpu.name
-                this.dataForm.subjectId = data.homeSubjectSpu.subjectId
-                this.dataForm.spuId = data.homeSubjectSpu.spuId
-                this.dataForm.sort = data.homeSubjectSpu.sort
+                this.dataForm.name = data.data.name
+                this.dataForm.subjectId = data.data.subjectId
+                this.dataForm.spuId = data.data.spuId
+                this.dataForm.sort = data.data.sort
               }
             })
           }

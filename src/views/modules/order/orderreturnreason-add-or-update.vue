@@ -65,10 +65,10 @@
               params: this.$http.adornParams()
             }).then(({data}) => {
               if (data && data.code === 0) {
-                this.dataForm.name = data.orderReturnReason.name
-                this.dataForm.sort = data.orderReturnReason.sort
-                this.dataForm.status = data.orderReturnReason.status
-                this.dataForm.createTime = data.orderReturnReason.createTime
+                this.dataForm.name = data.data.name
+                this.dataForm.sort = data.data.sort
+                this.dataForm.status = data.data.status
+                this.dataForm.createTime = data.data.createTime
               }
             })
           }

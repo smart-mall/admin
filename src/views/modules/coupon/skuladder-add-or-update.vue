@@ -84,11 +84,11 @@ export default {
             params: this.$http.adornParams()
           }).then(({ data }) => {
             if (data && data.code === 0) {
-              this.dataForm.skuId = data.skuLadder.skuId
-              this.dataForm.fullCount = data.skuLadder.fullCount
-              this.dataForm.discount = data.skuLadder.discount
-              this.dataForm.price = data.skuLadder.price
-              this.dataForm.addOther = data.skuLadder.addOther
+              this.dataForm.skuId = data.data.skuId
+              this.dataForm.fullCount = data.data.fullCount
+              this.dataForm.discount = data.data.discount
+              this.dataForm.price = data.data.price
+              this.dataForm.addOther = data.data.addOther
             }
           })
         }

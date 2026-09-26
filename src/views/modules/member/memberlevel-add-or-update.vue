@@ -100,15 +100,15 @@
               params: this.$http.adornParams()
             }).then(({data}) => {
               if (data && data.code === 0) {
-                this.dataForm.name = data.memberLevel.name
-                this.dataForm.growthPoint = data.memberLevel.growthPoint || 0
-                this.dataForm.defaultStatus = data.memberLevel.defaultStatus || 0
-                this.dataForm.freeFreightPoint = data.memberLevel.freeFreightPoint || 0
-                this.dataForm.commentGrowthPoint = data.memberLevel.commentGrowthPoint || 0
-                this.dataForm.priviledgeFreeFreight = data.memberLevel.priviledgeFreeFreight || 0
-                this.dataForm.priviledgeMemberPrice = data.memberLevel.priviledgeMemberPrice || 0
-                this.dataForm.priviledgeBirthday = data.memberLevel.priviledgeBirthday || 0
-                this.dataForm.note = data.memberLevel.note
+                this.dataForm.name = data.data.name
+                this.dataForm.growthPoint = data.data.growthPoint || 0
+                this.dataForm.defaultStatus = data.data.defaultStatus || 0
+                this.dataForm.freeFreightPoint = data.data.freeFreightPoint || 0
+                this.dataForm.commentGrowthPoint = data.data.commentGrowthPoint || 0
+                this.dataForm.priviledgeFreeFreight = data.data.priviledgeFreeFreight || 0
+                this.dataForm.priviledgeMemberPrice = data.data.priviledgeMemberPrice || 0
+                this.dataForm.priviledgeBirthday = data.data.priviledgeBirthday || 0
+                this.dataForm.note = data.data.note
               }
             })
           }

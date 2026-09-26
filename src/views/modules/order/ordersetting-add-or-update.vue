@@ -79,12 +79,12 @@
               params: this.$http.adornParams()
             }).then(({data}) => {
               if (data && data.code === 0) {
-                this.dataForm.flashOrderOvertime = data.orderSetting.flashOrderOvertime
-                this.dataForm.normalOrderOvertime = data.orderSetting.normalOrderOvertime
-                this.dataForm.confirmOvertime = data.orderSetting.confirmOvertime
-                this.dataForm.finishOvertime = data.orderSetting.finishOvertime
-                this.dataForm.commentOvertime = data.orderSetting.commentOvertime
-                this.dataForm.memberLevel = data.orderSetting.memberLevel
+                this.dataForm.flashOrderOvertime = data.data.flashOrderOvertime
+                this.dataForm.normalOrderOvertime = data.data.normalOrderOvertime
+                this.dataForm.confirmOvertime = data.data.confirmOvertime
+                this.dataForm.finishOvertime = data.data.finishOvertime
+                this.dataForm.commentOvertime = data.data.commentOvertime
+                this.dataForm.memberLevel = data.data.memberLevel
               }
             })
           }

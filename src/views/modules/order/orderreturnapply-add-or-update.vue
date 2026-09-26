@@ -226,33 +226,33 @@
               params: this.$http.adornParams()
             }).then(({data}) => {
               if (data && data.code === 0) {
-                this.dataForm.orderId = data.orderReturnApply.orderId
-                this.dataForm.skuId = data.orderReturnApply.skuId
-                this.dataForm.orderSn = data.orderReturnApply.orderSn
-                this.dataForm.createTime = data.orderReturnApply.createTime
-                this.dataForm.memberUsername = data.orderReturnApply.memberUsername
-                this.dataForm.returnAmount = data.orderReturnApply.returnAmount
-                this.dataForm.returnName = data.orderReturnApply.returnName
-                this.dataForm.returnPhone = data.orderReturnApply.returnPhone
-                this.dataForm.status = data.orderReturnApply.status
-                this.dataForm.handleTime = data.orderReturnApply.handleTime
-                this.dataForm.skuImg = data.orderReturnApply.skuImg
-                this.dataForm.skuName = data.orderReturnApply.skuName
-                this.dataForm.skuBrand = data.orderReturnApply.skuBrand
-                this.dataForm.skuAttrsVals = data.orderReturnApply.skuAttrsVals
-                this.dataForm.skuCount = data.orderReturnApply.skuCount
-                this.dataForm.skuPrice = data.orderReturnApply.skuPrice
-                this.dataForm.skuRealPrice = data.orderReturnApply.skuRealPrice
-                this.dataForm.reason = data.orderReturnApply.reason
-                this.dataForm.description = data.orderReturnApply.description
-                this.dataForm.descPics = data.orderReturnApply.descPics
-                this.dataForm.handleNote = data.orderReturnApply.handleNote
-                this.dataForm.handleMan = data.orderReturnApply.handleMan
-                this.dataForm.receiveMan = data.orderReturnApply.receiveMan
-                this.dataForm.receiveTime = data.orderReturnApply.receiveTime
-                this.dataForm.receiveNote = data.orderReturnApply.receiveNote
-                this.dataForm.receivePhone = data.orderReturnApply.receivePhone
-                this.dataForm.companyAddress = data.orderReturnApply.companyAddress
+                this.dataForm.orderId = data.data.orderId
+                this.dataForm.skuId = data.data.skuId
+                this.dataForm.orderSn = data.data.orderSn
+                this.dataForm.createTime = data.data.createTime
+                this.dataForm.memberUsername = data.data.memberUsername
+                this.dataForm.returnAmount = data.data.returnAmount
+                this.dataForm.returnName = data.data.returnName
+                this.dataForm.returnPhone = data.data.returnPhone
+                this.dataForm.status = data.data.status
+                this.dataForm.handleTime = data.data.handleTime
+                this.dataForm.skuImg = data.data.skuImg
+                this.dataForm.skuName = data.data.skuName
+                this.dataForm.skuBrand = data.data.skuBrand
+                this.dataForm.skuAttrsVals = data.data.skuAttrsVals
+                this.dataForm.skuCount = data.data.skuCount
+                this.dataForm.skuPrice = data.data.skuPrice
+                this.dataForm.skuRealPrice = data.data.skuRealPrice
+                this.dataForm.reason = data.data.reason
+                this.dataForm.description = data.data.description
+                this.dataForm.descPics = data.data.descPics
+                this.dataForm.handleNote = data.data.handleNote
+                this.dataForm.handleMan = data.data.handleMan
+                this.dataForm.receiveMan = data.data.receiveMan
+                this.dataForm.receiveTime = data.data.receiveTime
+                this.dataForm.receiveNote = data.data.receiveNote
+                this.dataForm.receivePhone = data.data.receivePhone
+                this.dataForm.companyAddress = data.data.companyAddress
               }
             })
           }

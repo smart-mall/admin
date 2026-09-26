@@ -58,9 +58,9 @@
               params: this.$http.adornParams()
             }).then(({data}) => {
               if (data && data.code === 0) {
-                this.dataForm.couponId = data.couponSpuCategoryRelation.couponId
-                this.dataForm.categoryId = data.couponSpuCategoryRelation.categoryId
-                this.dataForm.categoryName = data.couponSpuCategoryRelation.categoryName
+                this.dataForm.couponId = data.data.couponId
+                this.dataForm.categoryId = data.data.categoryId
+                this.dataForm.categoryName = data.data.categoryName
               }
             })
           }

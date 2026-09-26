@@ -99,13 +99,13 @@ export default {
             params: this.$http.adornParams()
           }).then(({ data }) => {
             if (data && data.code === 0) {
-              this.dataForm.name = data.homeSubject.name
-              this.dataForm.title = data.homeSubject.title
-              this.dataForm.subTitle = data.homeSubject.subTitle
-              this.dataForm.status = data.homeSubject.status
-              this.dataForm.url = data.homeSubject.url
-              this.dataForm.sort = data.homeSubject.sort
-              this.dataForm.img = data.homeSubject.img
+              this.dataForm.name = data.data.name
+              this.dataForm.title = data.data.title
+              this.dataForm.subTitle = data.data.subTitle
+              this.dataForm.status = data.data.status
+              this.dataForm.url = data.data.url
+              this.dataForm.sort = data.data.sort
+              this.dataForm.img = data.data.img
             }
           })
         }

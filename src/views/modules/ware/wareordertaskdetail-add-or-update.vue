@@ -65,10 +65,10 @@
               params: this.$http.adornParams()
             }).then(({data}) => {
               if (data && data.code === 0) {
-                this.dataForm.skuId = data.wareOrderTaskDetail.skuId
-                this.dataForm.skuName = data.wareOrderTaskDetail.skuName
-                this.dataForm.skuNum = data.wareOrderTaskDetail.skuNum
-                this.dataForm.taskId = data.wareOrderTaskDetail.taskId
+                this.dataForm.skuId = data.data.skuId
+                this.dataForm.skuName = data.data.skuName
+                this.dataForm.skuNum = data.data.skuNum
+                this.dataForm.taskId = data.data.taskId
               }
             })
           }

@@ -90,11 +90,11 @@ export default {
             params: this.$http.adornParams()
           }).then(({ data }) => {
             if (data && data.code === 0) {
-              this.dataForm.title = data.seckillPromotion.title
-              this.dataForm.startTime = data.seckillPromotion.startTime
-              this.dataForm.endTime = data.seckillPromotion.endTime
-              this.dataForm.status = data.seckillPromotion.status
-              this.dataForm.createTime = data.seckillPromotion.createTime
+              this.dataForm.title = data.data.title
+              this.dataForm.startTime = data.data.startTime
+              this.dataForm.endTime = data.data.endTime
+              this.dataForm.status = data.data.status
+              this.dataForm.createTime = data.data.createTime
               this.dataForm.timeRange = [
                 this.dataForm.startTime,
                 this.dataForm.endTime

@@ -170,25 +170,25 @@
               params: this.$http.adornParams()
             }).then(({data}) => {
               if (data && data.code === 0) {
-                this.dataForm.orderId = data.orderItem.orderId
-                this.dataForm.orderSn = data.orderItem.orderSn
-                this.dataForm.spuId = data.orderItem.spuId
-                this.dataForm.spuName = data.orderItem.spuName
-                this.dataForm.spuPic = data.orderItem.spuPic
-                this.dataForm.spuBrand = data.orderItem.spuBrand
-                this.dataForm.categoryId = data.orderItem.categoryId
-                this.dataForm.skuId = data.orderItem.skuId
-                this.dataForm.skuName = data.orderItem.skuName
-                this.dataForm.skuPic = data.orderItem.skuPic
-                this.dataForm.skuPrice = data.orderItem.skuPrice
-                this.dataForm.skuQuantity = data.orderItem.skuQuantity
-                this.dataForm.skuAttrsVals = data.orderItem.skuAttrsVals
-                this.dataForm.promotionAmount = data.orderItem.promotionAmount
-                this.dataForm.couponAmount = data.orderItem.couponAmount
-                this.dataForm.integrationAmount = data.orderItem.integrationAmount
-                this.dataForm.realAmount = data.orderItem.realAmount
-                this.dataForm.giftIntegration = data.orderItem.giftIntegration
-                this.dataForm.giftGrowth = data.orderItem.giftGrowth
+                this.dataForm.orderId = data.data.orderId
+                this.dataForm.orderSn = data.data.orderSn
+                this.dataForm.spuId = data.data.spuId
+                this.dataForm.spuName = data.data.spuName
+                this.dataForm.spuPic = data.data.spuPic
+                this.dataForm.spuBrand = data.data.spuBrand
+                this.dataForm.categoryId = data.data.categoryId
+                this.dataForm.skuId = data.data.skuId
+                this.dataForm.skuName = data.data.skuName
+                this.dataForm.skuPic = data.data.skuPic
+                this.dataForm.skuPrice = data.data.skuPrice
+                this.dataForm.skuQuantity = data.data.skuQuantity
+                this.dataForm.skuAttrsVals = data.data.skuAttrsVals
+                this.dataForm.promotionAmount = data.data.promotionAmount
+                this.dataForm.couponAmount = data.data.couponAmount
+                this.dataForm.integrationAmount = data.data.integrationAmount
+                this.dataForm.realAmount = data.data.realAmount
+                this.dataForm.giftIntegration = data.data.giftIntegration
+                this.dataForm.giftGrowth = data.data.giftGrowth
               }
             })
           }

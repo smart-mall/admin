@@ -107,16 +107,16 @@
               params: this.$http.adornParams()
             }).then(({data}) => {
               if (data && data.code === 0) {
-                this.dataForm.orderSn = data.paymentInfo.orderSn
-                this.dataForm.orderId = data.paymentInfo.orderId
-                this.dataForm.alipayTradeNo = data.paymentInfo.alipayTradeNo
-                this.dataForm.totalAmount = data.paymentInfo.totalAmount
-                this.dataForm.subject = data.paymentInfo.subject
-                this.dataForm.paymentStatus = data.paymentInfo.paymentStatus
-                this.dataForm.createTime = data.paymentInfo.createTime
-                this.dataForm.confirmTime = data.paymentInfo.confirmTime
-                this.dataForm.callbackContent = data.paymentInfo.callbackContent
-                this.dataForm.callbackTime = data.paymentInfo.callbackTime
+                this.dataForm.orderSn = data.data.orderSn
+                this.dataForm.orderId = data.data.orderId
+                this.dataForm.alipayTradeNo = data.data.alipayTradeNo
+                this.dataForm.totalAmount = data.data.totalAmount
+                this.dataForm.subject = data.data.subject
+                this.dataForm.paymentStatus = data.data.paymentStatus
+                this.dataForm.createTime = data.data.createTime
+                this.dataForm.confirmTime = data.data.confirmTime
+                this.dataForm.callbackContent = data.data.callbackContent
+                this.dataForm.callbackTime = data.data.callbackTime
               }
             })
           }

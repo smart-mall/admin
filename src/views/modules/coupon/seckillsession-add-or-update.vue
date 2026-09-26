@@ -92,10 +92,10 @@ export default {
             params: this.$http.adornParams()
           }).then(({ data }) => {
             if (data && data.code === 0) {
-              this.dataForm.name = data.seckillSession.name
-              this.dataForm.startTime = data.seckillSession.startTime
-              this.dataForm.endTime = data.seckillSession.endTime
-              this.dataForm.status = data.seckillSession.status
+              this.dataForm.name = data.data.name
+              this.dataForm.startTime = data.data.startTime
+              this.dataForm.endTime = data.data.endTime
+              this.dataForm.status = data.data.status
             }
           })
         }

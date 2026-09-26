@@ -20,8 +20,8 @@
       <el-form-item label="活动场次id" prop="sessionId">
         <el-input v-model="dataForm.sessionId" placeholder="活动场次id"></el-input>
       </el-form-item>
-      <el-form-item label="订阅时间" prop="subcribeTime">
-        <el-input v-model="dataForm.subcribeTime" placeholder="订阅时间"></el-input>
+      <el-form-item label="订阅时间" prop="subscribeTime">
+        <el-input v-model="dataForm.subscribeTime" placeholder="订阅时间"></el-input>
       </el-form-item>
       <el-form-item label="发送时间" prop="sendTime">
         <el-input v-model="dataForm.sendTime" placeholder="发送时间"></el-input>
@@ -50,7 +50,7 @@ export default {
         memberId: '',
         skuId: '',
         sessionId: '',
-        subcribeTime: '',
+        subscribeTime: '',
         sendTime: '',
         noticeType: ''
       },
@@ -62,7 +62,7 @@ export default {
         sessionId: [
           { required: true, message: '活动场次id不能为空', trigger: 'blur' }
         ],
-        subcribeTime: [
+        subscribeTime: [
           { required: true, message: '订阅时间不能为空', trigger: 'blur' }
         ],
         sendTime: [
@@ -96,7 +96,7 @@ export default {
               this.dataForm.memberId = data.seckillSkuNotice.memberId
               this.dataForm.skuId = data.seckillSkuNotice.skuId
               this.dataForm.sessionId = data.seckillSkuNotice.sessionId
-              this.dataForm.subcribeTime = data.seckillSkuNotice.subcribeTime
+              this.dataForm.subscribeTime = data.seckillSkuNotice.subscribeTime
               this.dataForm.sendTime = data.seckillSkuNotice.sendTime
               this.dataForm.noticeType = data.seckillSkuNotice.noticeType
             }
@@ -120,7 +120,7 @@ export default {
               memberId: this.dataForm.memberId,
               skuId: this.dataForm.skuId,
               sessionId: this.dataForm.sessionId,
-              subcribeTime: this.dataForm.subcribeTime,
+              subscribeTime: this.dataForm.subscribeTime,
               sendTime: this.dataForm.sendTime,
               noticeType: this.dataForm.noticeType
             })

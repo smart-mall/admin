@@ -76,7 +76,7 @@ export default {
           limit: 500
         })
       }).then(({ data }) => {
-        this.wareList = data.page.list
+        this.wareList = data.data.rows
       })
     },
     // 获取数据列表
@@ -93,8 +93,8 @@ export default {
         })
       }).then(({ data }) => {
         if (data && data.code === 0) {
-          this.dataList = data.page.list
-          this.totalPage = data.page.totalCount
+          this.dataList = data.data.rows
+          this.totalPage = data.data.total
         } else {
           this.dataList = []
           this.totalPage = 0

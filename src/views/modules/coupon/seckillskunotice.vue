@@ -47,7 +47,7 @@
         label="活动场次id">
       </el-table-column>
       <el-table-column
-        prop="subcribeTime"
+        prop="subscribeTime"
         header-align="center"
         align="center"
         label="订阅时间">
@@ -127,8 +127,8 @@
           })
         }).then(({data}) => {
           if (data && data.code === 0) {
-            this.dataList = data.page.list
-            this.totalPage = data.page.totalCount
+            this.dataList = data.data.rows
+            this.totalPage = data.data.total
           } else {
             this.dataList = []
             this.totalPage = 0

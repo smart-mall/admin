@@ -148,7 +148,7 @@ export default {
           limit: 500
         })
       }).then(({ data }) => {
-        data.page.list.forEach(item => {
+        data.data.rows.forEach(item => {
           this.memberLevels['level_' + item.id] = item.name
         })
       })
@@ -166,8 +166,8 @@ export default {
         })
       }).then(({ data }) => {
         if (data && data.code === 0) {
-          this.dataList = data.page.list
-          this.totalPage = data.page.totalCount
+          this.dataList = data.data.rows
+          this.totalPage = data.data.total
         } else {
           this.dataList = []
           this.totalPage = 0

@@ -137,7 +137,7 @@
         label="原因">
       </el-table-column>
       <el-table-column
-        prop="description述"
+        prop="description"
         header-align="center"
         align="center"
         label="描述">
@@ -253,8 +253,8 @@
           })
         }).then(({data}) => {
           if (data && data.code === 0) {
-            this.dataList = data.page.list
-            this.totalPage = data.page.totalCount
+            this.dataList = data.data.rows
+            this.totalPage = data.data.total
           } else {
             this.dataList = []
             this.totalPage = 0

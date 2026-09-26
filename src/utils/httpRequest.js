@@ -32,11 +32,11 @@ http.interceptors.response.use(response => {
     clearLoginInfo()
     router.push({ name: 'login' })
   }
-  // 校验类失败的 msg 是固定文案（"参数格式校验失败"），具体信息在 errors 里
+  // 校验类失败的 msg 是固定文案（"参数格式校验失败"），具体信息在 data 里
   // （字段名 → 中文消息，由后端 GlobalExceptionHandler 统一产出）。
   // 各表单的失败分支普遍只弹 data.msg，在这里拼进去 —— 一处改动覆盖全部表单，
   // 不用去改那几十个 .vue。
-  const errors = body && body.errors
+  const errors = body && body.data
   if (errors && typeof errors === 'object') {
     const messages = Object.keys(errors).map(key => errors[key]).filter(Boolean)
     if (messages.length) {

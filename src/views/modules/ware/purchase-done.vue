@@ -64,7 +64,7 @@ export default {
       }).then(({ data }) => {
         this.loading = false
         if (data && data.code === 0) {
-          this.detailList = data.page.list.map(item => {
+          this.detailList = data.data.rows.map(item => {
             item.result = 3
             item.reason = ''
             return item

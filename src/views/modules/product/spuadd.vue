@@ -53,7 +53,12 @@
             </el-form-item>
 
             <el-form-item label="商品图集" prop="images">
-              <multi-upload v-model="spu.images"></multi-upload>
+              <multi-upload :show-file-list="false" @uploaded="handleImageUploaded"></multi-upload>
+              <sortable-image-list
+                :value="spu.images"
+                radio-name="spu-default-image"
+                @input="handleSpuImagesChange"
+              ></sortable-image-list>
             </el-form-item>
             <el-form-item>
               <el-button type="success" @click="collectSpuBaseInfo">下一步：设置基本参数</el-button>
@@ -203,51 +208,22 @@
                     <label style="display:block;float:left">选择图集 或</label>
                     <multi-upload
                       style="float:left;margin-left:10px;"
-                      :showFile="false"
-                      :listType="'text'"
-                      v-model="uploadImages"
+                      :show-file-list="false"
+                      @uploaded="handleImageUploaded($event, scope.$index)"
                     ></multi-upload>
+                    <div style="clear:both;padding-top:6px;font-size:12px;color:#909399">
+                      勾选「选用」把图加进本 SKU，拖动卡片调整顺序，带「默认」的图是本 SKU 的主图
+                    </div>
                   </el-col>
                   <el-col :span="24">
                     <el-divider></el-divider>
                   </el-col>
                   <el-col :span="24">
-                    <el-card
-                      style="width:170px;float:left;margin-left:15px;margin-top:15px;"
-                      :body-style="{ padding: '0px' }"
-                      v-for="(img,index) in spu.images"
-                      :key="index"
-                    >
-                      <img :src="img" style="width:160px;height:120px"/>
-                      <div style="padding: 14px;">
-                        <el-row>
-                          <el-col :span="12">
-                            <el-checkbox
-                              v-model="scope.row.images[index].imgUrl"
-                              :true-label="img"
-                              false-label
-                            ></el-checkbox>
-                          </el-col>
-                          <el-col :span="12">
-                            <el-tag v-if="scope.row.images[index].defaultImg === 1">
-                              <input
-                                type="radio"
-                                checked
-                                :name="scope.row.skuName"
-                                @change="checkDefaultImg(scope.row,index,img)"
-                              />设为默认
-                            </el-tag>
-                            <el-tag v-else>
-                              <input
-                                type="radio"
-                                :name="scope.row.skuName"
-                                @change="checkDefaultImg(scope.row,index,img)"
-                              />设为默认
-                            </el-tag>
-                          </el-col>
-                        </el-row>
-                      </div>
-                    </el-card>
+                    <sortable-image-list
+                      v-model="scope.row.images"
+                      show-select
+                      :radio-name="'sku-default-image-' + scope.$index"
+                    ></sortable-image-list>
                   </el-col>
                 </el-row>
                 <!-- 折扣，满减，会员价 -->
@@ -352,18 +328,18 @@
 import CategoryCascader from '../common/category-cascader'
 import BrandSelect from '../common/brand-select'
 import MultiUpload from '@/components/upload/multiUpload'
+import SortableImageList from '@/components/upload/sortableImageList'
 import PubSub from 'pubsub-js'
 
 export default {
   // import引入的组件需要注入到对象中才能使用
-  components: {CategoryCascader, BrandSelect, MultiUpload},
+  components: {CategoryCascader, BrandSelect, MultiUpload, SortableImageList},
   props: {},
   data () {
     return {
       catPathSub: null,
       brandIdSub: null,
       uploadDialogVisible: false,
-      uploadImages: [],
       step: 0,
       // spu_name  spu_description  catalog_id  brand_id  weight  publish_status
       spu: {
@@ -375,8 +351,8 @@ export default {
         weight: '',
         publishStatus: 0,
         description: [], // 商品详情
-        images: [
-        ], // 商品图集，最后sku也可以新增
+        // 商品图集，元素为 {imgName, imgUrl, defaultImg}；数组顺序就是落库的 imgSort
+        images: [],
         bounds: {
           // 积分
           buyBounds: 0,
@@ -429,26 +405,7 @@ export default {
   },
   computed: {},
   // 监控data中的数据变化
-  watch: {
-    uploadImages (val) {
-      // 扩展每个skus里面的imgs选项
-      let imgArr = Array.from(new Set(this.spu.images.concat(val)))
-
-      // {imgUrl:"",defaultImg:0} 由于concat每次迭代上次，有很多重复。所以我们必须得到上次+这次的总长
-
-      this.spu.skus.forEach((item, index) => {
-        let len = imgArr.length - this.spu.skus[index].images.length // 还差这么多
-        if (len > 0) {
-          let imgs = new Array(len)
-          imgs = imgs.fill({imgUrl: '', defaultImg: 0})
-          this.spu.skus[index].images = item.images.concat(imgs)
-        }
-      })
-
-      this.spu.images = imgArr // 去重
-      console.log('this.spu.skus', this.spu.skus)
-    }
-  },
+  watch: {},
   // 方法集合
   methods: {
     addAgian () {
@@ -497,16 +454,59 @@ export default {
       this.inputVisible[idx].view = true
       // this.$refs['saveTagInput'+idx].$refs.input.focus();
     },
-    checkDefaultImg (row, index, img) {
-      console.log('默认图片', row, index)
-      // 这个图片被选中了，
-      row.images[index].imgUrl = img // 默认选中
-      row.images[index].defaultImg = 1 // 修改标志位;
-      // 修改其他人的标志位
-      row.images.forEach((item, idx) => {
-        if (idx !== index) {
-          row.images[idx].defaultImg = 0
+    // 商品图集的增删改与拖拽都从这里进：先补默认图，再换掉整份图集，最后让各 sku 的槽位对齐
+    handleSpuImagesChange (images) {
+      this.applyDefaultFallback(images)
+      this.spu.images = images
+      this.syncSkuImageSlots()
+    },
+    // 上传成功后把图并进商品图集；传了 skuIndex 说明是在某个 sku 里上传的，同时勾选进该 sku
+    handleImageUploaded (info, skuIndex) {
+      const url = info.url
+      if (!this.spu.images.some(item => item.imgUrl === url)) {
+        this.spu.images.push({
+          imgName: info.name,
+          imgUrl: url,
+          defaultImg: 0
+        })
+      }
+      this.applyDefaultFallback(this.spu.images)
+      this.syncSkuImageSlots()
+      if (skuIndex !== undefined && skuIndex !== null) {
+        const slot = this.spu.skus[skuIndex].images.find(item => item.imgUrl === url)
+        if (slot) {
+          slot.selected = 1
         }
+      }
+    },
+    // 一张都没标默认时把第一张设为默认，保证图集不会整组没有主图
+    applyDefaultFallback (images) {
+      if (images && images.length > 0 && !images.some(item => item.defaultImg === 1)) {
+        this.$set(images[0], 'defaultImg', 1)
+      }
+    },
+    /**
+     * 让每个 sku 各持一份与商品图集同集合的槽位。
+     *
+     * 按 imgUrl 配对而不是按下标：图集在页面上可以拖拽换位，下标随时会变，
+     * 按下标配对会让某个 sku 的勾选状态错挂到别的图上。
+     * 已存在的槽位对象原样复用，勾选与默认标记因此得以保留。
+     */
+    syncSkuImageSlots () {
+      this.spu.skus.forEach(sku => {
+        const existed = new Map(sku.images.map(item => [item.imgUrl, item]))
+        sku.images = this.spu.images.map(spuImg => {
+          const slot = existed.get(spuImg.imgUrl)
+          if (slot) {
+            return slot
+          }
+          return {
+            imgName: spuImg.imgName,
+            imgUrl: spuImg.imgUrl,
+            selected: 0,
+            defaultImg: 0
+          }
+        })
       })
     },
     handleInputConfirm (idx) {
@@ -585,12 +585,6 @@ export default {
           }
           attrArray.push(saleAttrItem)
         })
-        // 先初始化几个images，后面的上传还要加
-        let imgs = []
-        this.spu.images.forEach((img, idx) => {
-          imgs.push({imgUrl: '', defaultImg: 0})
-        })
-
         // 会员价，也必须在循环里面生成，否则会导致数据绑定问题
         let memberPrices = []
         if (this.dataResp.memberLevels.length > 0) {
@@ -613,7 +607,7 @@ export default {
             price: 0,
             skuTitle: this.spu.spuName + ' ' + descar.join(' '),
             skuSubtitle: '',
-            images: imgs,
+            images: [],
             descar: descar,
             fullCount: 0,
             discount: 0,
@@ -628,6 +622,8 @@ export default {
         }
       })
       this.spu.skus = skus
+      // 刚生成的 sku 图集是空的，按商品图集补齐槽位
+      this.syncSkuImageSlots()
       console.log('结果!!!', this.spu.skus, this.dataResp.tableAttrColumn)
     },
     // 判断如果包含之前的sku的descar组合，就返回这个sku的详细信息；
@@ -696,8 +692,37 @@ export default {
       }
     },
 
+    /**
+     * 组装提交体：图集要转成后端契约的形状。
+     *
+     * 列表顺序即 img_sort，在这里按下标重新编号；sku 图集还要先滤掉没勾选「选用」的图。
+     */
+    buildSubmitPayload () {
+      return {
+        ...this.spu,
+        images: this.normalizeImages(this.spu.images),
+        skus: this.spu.skus.map(sku => ({
+          ...sku,
+          images: this.normalizeImages(sku.images.filter(item => item.selected === 1))
+        }))
+      }
+    },
+    // 只保留后端认识的四个字段，并保证本组恰好有一张默认图
+    normalizeImages (images) {
+      const normalized = images.map((item, index) => ({
+        imgName: item.imgName,
+        imgUrl: item.imgUrl,
+        imgSort: index,
+        defaultImg: item.defaultImg === 1 ? 1 : 0
+      }))
+      if (normalized.length > 0 && !normalized.some(item => item.defaultImg === 1)) {
+        normalized[0].defaultImg = 1
+      }
+      return normalized
+    },
     submitSkus () {
-      console.log('~~~~~', JSON.stringify(this.spu))
+      const payload = this.buildSubmitPayload()
+      console.log('~~~~~', JSON.stringify(payload))
       this.$confirm('将要提交商品数据，需要一小段时间，是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -707,7 +732,7 @@ export default {
           this.$http({
             url: this.$http.adornUrl('/product/spuinfo/save'),
             method: 'post',
-            data: this.$http.adornData(this.spu, false)
+            data: this.$http.adornData(payload, false)
           }).then(({data}) => {
             if (data.code === 0) {
               this.$message({

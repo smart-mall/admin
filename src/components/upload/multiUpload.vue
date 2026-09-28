@@ -7,6 +7,7 @@
       :file-list="fileList"
       :accept="acceptTypes"
       :limit="maxCount"
+      :show-file-list="showFileList"
       :before-upload="beforeUpload"
       :http-request="customUpload"
       :on-remove="handleRemove"
@@ -35,6 +36,11 @@ export default {
     maxCount: {
       type: Number,
       default: 30
+    },
+    // 关掉 el-upload 自带列表后，调用方自己渲染缩略图（商品图集要额外排序，见 spuadd）
+    showFileList: {
+      type: Boolean,
+      default: true
     }
   },
   data () {
@@ -72,6 +78,8 @@ export default {
       return uploadFile(params.file).then(
         data => {
           this.$emit('input', this.currentUrls().concat(data.url))
+          // 额外抛出原始文件信息：图集要落库 img_name，用户选的文件名只有这里拿得到
+          this.$emit('uploaded', data)
           this.$message.success(`${params.file.name} 上传成功`)
           return data
         },

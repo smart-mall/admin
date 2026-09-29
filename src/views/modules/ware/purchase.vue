@@ -217,7 +217,9 @@ export default {
           limit: 500
         })
       }).then(({ data }) => {
-        this.userList = data.data.rows
+        // renren 的分页接口把结果放在顶层的 page 里（R.ok().put("page", ...)），不在 data.data，
+        // 而且列表字段叫 list 不叫 rows。读 data.data.rows 拿到的是 undefined，下拉框就是空的
+        this.userList = data && data.code === 0 ? data.page.list : []
       })
     },
     // 获取数据列表

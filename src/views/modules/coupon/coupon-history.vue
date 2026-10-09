@@ -99,7 +99,7 @@ export default {
       })
     },
     useText (useType) {
-      const texts = { 0: '未使用', 1: '已使用', 2: '已过期' }
+      const texts = { 0: '未使用', 1: '已使用', 2: '已过期', 3: '占用中' }
       return texts[useType] || '未知'
     },
     useTagType (useType) {

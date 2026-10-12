@@ -278,9 +278,11 @@
         fixed="right"
         header-align="center"
         align="center"
-        width="150"
+        width="200"
         label="操作">
         <template slot-scope="scope">
+          <!-- 只有已付款(1)的订单能发货：其余状态后端会返回"状态不支持"，不如直接不摆按钮 -->
+          <el-button v-if="scope.row.status === 1" type="text" size="small" @click="deliverHandle(scope.row)">发货</el-button>
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
           <el-button type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>
         </template>
@@ -297,6 +299,33 @@
     </el-pagination>
     <!-- 弹窗, 新增 / 修改 -->
     <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
+    <!-- 弹窗, 发货：只收物流信息，订单号由点中的行带过来，不允许手填 -->
+    <el-dialog
+      title="订单发货"
+      :visible.sync="deliverVisible"
+      :close-on-click-modal="false"
+      width="480px">
+      <el-form :model="deliverForm" :rules="deliverRule" ref="deliverForm" label-width="90px">
+        <el-form-item label="订单号">
+          <el-input v-model="deliverForm.orderSn" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="物流公司" prop="deliveryCompany">
+          <el-select v-model="deliverForm.deliveryCompany" placeholder="请选择物流公司" style="width: 100%">
+            <el-option
+              v-for="item in deliveryCompanies"
+              :key="item.code"
+              :label="item.name"
+              :value="item.code">
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <p style="margin: 0; font-size: 12px; color: #909399;">物流单号由系统生成，无需填写。</p>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="deliverVisible = false">取消</el-button>
+        <el-button type="primary" @click="deliverSubmit()">确定发货</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -314,7 +343,20 @@
         totalPage: 0,
         dataListLoading: false,
         dataListSelections: [],
-        addOrUpdateVisible: false
+        addOrUpdateVisible: false,
+        // 发货弹窗：只收物流公司与单号，订单号从点中的行带过来
+        deliverVisible: false,
+        // 物流公司清单由服务端下发（loadDeliveryCompanies），前端不抄一份
+        deliveryCompanies: [],
+        deliverForm: {
+          orderSn: '',
+          deliveryCompany: ''
+        },
+        deliverRule: {
+          deliveryCompany: [
+            { required: true, message: '请选择物流公司', trigger: 'change' }
+          ]
+        }
       }
     },
     components: {
@@ -366,6 +408,57 @@
         this.addOrUpdateVisible = true
         this.$nextTick(() => {
           this.$refs.addOrUpdate.init(id)
+        })
+      },
+      // 打开发货弹窗
+      deliverHandle (row) {
+        this.deliverForm.orderSn = row.orderSn
+        this.deliverForm.deliveryCompany = row.deliveryCompany || ''
+        this.deliverVisible = true
+        // 清单只在第一次打开发货弹窗时拉一次
+        if (this.deliveryCompanies.length === 0) {
+          this.loadDeliveryCompanies()
+        }
+      },
+      // 拉物流公司清单：选项只此一份，前端不抄
+      loadDeliveryCompanies () {
+        this.$http({
+          url: this.$http.adornUrl('/order/order/delivery-companies'),
+          method: 'get',
+          params: this.$http.adornParams()
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            this.deliveryCompanies = data.data
+          } else {
+            this.$message.error(data.msg)
+          }
+        })
+      },
+      // 提交发货：成功只代表订单状态流转了，库存由仓库侧异步扣减
+      deliverSubmit () {
+        this.$refs['deliverForm'].validate((valid) => {
+          if (valid) {
+            this.$http({
+              url: this.$http.adornUrl('/order/order/deliver'),
+              method: 'post',
+              data: this.$http.adornData({
+                'orderSn': this.deliverForm.orderSn,
+                'deliveryCompany': this.deliverForm.deliveryCompany
+              })
+            }).then(({data}) => {
+              if (data && data.code === 0) {
+                this.$message({
+                  message: '发货成功',
+                  type: 'success',
+                  duration: 2000
+                })
+                this.deliverVisible = false
+                this.getDataList()
+              } else {
+                this.$message.error(data.msg)
+              }
+            })
+          }
         })
       },
       // 删除

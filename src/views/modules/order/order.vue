@@ -151,7 +151,7 @@
       :total="totalPage"
       layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
-    <!-- 弹窗, 订单详情：按分组铺开整单信息 -->
+    <!-- 弹窗, 订单详情：六个页签，商品明细、操作流水与支付信息用表格铺开 -->
     <order-detail v-if="detailVisible" ref="orderDetail"></order-detail>
     <!-- 弹窗, 改备注：只允许改备注一个字段 -->
     <el-dialog

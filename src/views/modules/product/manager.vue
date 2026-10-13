@@ -132,6 +132,10 @@ export default {
       // sku详情查询
       console.log('展开某行...', row, expand)
     },
+    // 跳到评价审核页，并带上这一行的 skuId 作为默认筛选
+    commentHandle (skuId) {
+      this.$router.push({path: '/product-spucomment', query: {skuId}})
+    },
     // 处理更多指令
     handleCommand (row, command) {
       console.log('~~~~~', row, command)

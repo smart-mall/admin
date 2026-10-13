@@ -70,6 +70,7 @@
               { label: '订单 ID', value: order.id },
               { label: '优惠券 ID', value: order.couponId },
               { label: '确认收货', value: order.confirmStatus === 1 ? '已确认' : '未确认' },
+              { label: '删除标记', value: order.deleteStatus === 1 ? '会员已删除' : '', type: 'danger' },
               { label: '自动确认天数', value: order.autoConfirmDay }
             ]
           },

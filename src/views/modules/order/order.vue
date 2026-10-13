@@ -15,6 +15,13 @@
         </el-select>
       </el-form-item>
       <el-form-item>
+        <!-- 删除标记是硬删的准入条件：后台要能一眼看出、也要能单独筛出来 -->
+        <el-select v-model="dataForm.deleteStatus" placeholder="删除标记" clearable style="width: 130px">
+          <el-option label="未删除" :value="0"></el-option>
+          <el-option label="已删除" :value="1"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
         <el-date-picker
           v-model="dataForm.dateRange"
           type="daterange"
@@ -109,6 +116,15 @@
         label="收货人电话">
       </el-table-column>
       <el-table-column
+        header-align="center"
+        align="center"
+        width="100"
+        label="删除标记">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.deleteStatus === 1" type="danger">已删除</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
         fixed="right"
         header-align="center"
         align="center"
@@ -121,6 +137,8 @@
           <el-button v-if="scope.row.status === 0" type="text" size="small" @click="closeHandle(scope.row)">关闭订单</el-button>
           <!-- 只有已付款(1)的订单能发货：其余状态后端会返回"状态不支持" -->
           <el-button v-if="scope.row.status === 1" type="text" size="small" @click="deliverHandle(scope.row)">发货</el-button>
+          <!-- 硬删只对会员标记过删除的订单开放；准入条件同样写在后端 SQL 的 WHERE 里 -->
+          <el-button v-if="scope.row.deleteStatus === 1" type="text" size="small" @click="removeHandle(scope.row)">删除订单</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -201,6 +219,7 @@
         dataForm: {
           key: '',
           status: '',
+          deleteStatus: '',
           dateRange: null
         },
         // 状态选项由服务端下发，前端不抄一份状态文案
@@ -255,7 +274,8 @@
           'page': this.pageIndex,
           'limit': this.pageSize,
           'key': this.dataForm.key,
-          'status': this.dataForm.status
+          'status': this.dataForm.status,
+          'deleteStatus': this.dataForm.deleteStatus
         }
         // 起止补足时分秒：只给日期的话结束日当天的订单会被整天排除
         if (this.dataForm.dateRange && this.dataForm.dateRange.length === 2) {
@@ -296,6 +316,7 @@
         this.dataForm.key = ''
         this.dataForm.status = ''
         this.dataForm.dateRange = null
+        this.dataForm.deleteStatus = ''
         this.pageIndex = 1
         this.getDataList()
       },
@@ -363,6 +384,33 @@
             if (data && data.code === 0) {
               this.$message({
                 message: '订单已关闭',
+                type: 'success',
+                duration: 1500,
+                onClose: () => {
+                  this.getDataList()
+                }
+              })
+            } else {
+              this.$message.error(data.msg)
+            }
+          })
+        })
+      },
+      // 硬删订单：不可逆，且只有会员标记过删除的订单能删
+      removeHandle (row) {
+        this.$confirm(`确定物理删除订单[${row.orderSn}]？订单项、支付流水与库存工作单会一并删除，不可恢复。`, '提示', {
+          confirmButtonText: '确定删除',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http({
+            url: this.$http.adornUrl(`/order/order/delete/${row.orderSn}`),
+            method: 'post',
+            data: this.$http.adornData()
+          }).then(({data}) => {
+            if (data && data.code === 0) {
+              this.$message({
+                message: '订单已删除',
                 type: 'success',
                 duration: 1500,
                 onClose: () => {

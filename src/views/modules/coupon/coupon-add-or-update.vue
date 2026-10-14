@@ -66,6 +66,18 @@
         </el-tab-pane>
 
         <el-tab-pane :label="grantTabLabel" name="grant">
+          <el-form-item label="会员等级" prop="memberLevel">
+            <el-select v-model="dataForm.memberLevel" :disabled="locked">
+              <el-option :value="0" label="不限等级"></el-option>
+              <el-option
+                v-for="level in memberLevels"
+                :key="level.id"
+                :value="level.id"
+                :label="level.name"
+              ></el-option>
+            </el-select>
+            <div class="form-hint">该等级及以上可领取；选"不限等级"则所有会员都能领</div>
+          </el-form-item>
           <el-form-item label="券类型" prop="couponType">
             <el-select v-model="dataForm.couponType" :disabled="locked">
               <el-option :value="0" label="全场赠券（券中心主动领取）"></el-option>
@@ -168,14 +180,18 @@ export default {
         minPoint: 'rule',
         perLimit: 'rule',
         useType: 'rule',
+        memberLevel: 'grant',
         couponType: 'grant',
         enableTimeRange: 'grant',
         useTimeRange: 'grant',
         publishCount: 'grant'
       },
+      /** 会员等级下拉选项，形状 { id, name }，打开弹窗时从 member 拉一次。 */
+      memberLevels: [],
       dataForm: {
         id: 0,
         couponType: 0,
+        memberLevel: 0,
         couponImg: '',
         couponName: '',
         amount: 10,
@@ -241,6 +257,9 @@ export default {
       }
     }
   },
+  created () {
+    this.loadMemberLevels()
+  },
   computed: {
     dialogTitle () {
       if (!this.dataForm.id) {
@@ -272,6 +291,21 @@ export default {
         }
       })
     },
+    /**
+     * 拉一次会员等级下拉选项。
+     *
+     * 等级清单在 member 侧维护，前端不写死：写死等于同一份清单存在两处，加一档要改两个仓库。
+     */
+    loadMemberLevels () {
+      this.$http({
+        url: this.$http.adornUrl('/member/memberlevel/getMemberSelect'),
+        method: 'get',
+        params: this.$http.adornParams()
+      }).then(({ data }) => {
+        // 拉不到等级就只留"不限等级"一项：等级拉不到不该让整个弹窗打不开
+        this.memberLevels = (data && data.code === 0 && data.data) || []
+      })
+    },
     loadDetail () {
       this.$http({
         url: this.$http.adornUrl(`/coupon/coupon/info/${this.dataForm.id}`),
@@ -290,6 +324,7 @@ export default {
         this.dataForm.minPoint = coupon.minPoint
         this.dataForm.useType = coupon.useType
         this.dataForm.note = coupon.note
+        this.dataForm.memberLevel = coupon.memberLevel || 0
         this.dataForm.publishCount = coupon.publishCount
         this.dataForm.enableTimeRange = [coupon.enableStartTime, coupon.enableEndTime]
         this.originalEnableStart = coupon.enableStartTime
@@ -349,6 +384,7 @@ export default {
         perLimit: this.dataForm.perLimit,
         minPoint: this.dataForm.minPoint,
         useType: this.dataForm.useType,
+        memberLevel: this.dataForm.memberLevel,
         note: this.dataForm.note,
         publishCount: this.dataForm.publishCount,
         startTime: this.dataForm.useTimeRange[0],

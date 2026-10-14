@@ -254,6 +254,11 @@
       OrderDetail
     },
     activated () {
+      // 从会员列表点「查订单」跳进来时，会员账号由 router 的 query 带过来，直接作为关键字筛出这个人的订单
+      if (this.$route.query.key) {
+        this.dataForm.key = this.$route.query.key
+        this.pageIndex = 1
+      }
       this.getDataList()
       // 选项只在第一次进入页面时拉一次
       if (this.statusOptions.length === 0) {

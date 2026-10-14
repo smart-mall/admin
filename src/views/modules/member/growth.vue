@@ -1,5 +1,19 @@
 <template>
   <div class="mod-config">
+    <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
+      <el-form-item label="会员ID">
+        <el-input
+          v-model="dataForm.memberId"
+          placeholder="不填则看全部会员"
+          clearable
+          style="width: 200px"
+        ></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button @click="getDataList()">查询</el-button>
+        <el-button @click="resetHandle()">重置</el-button>
+      </el-form-item>
+    </el-form>
     <el-table v-loading="dataListLoading" :data="dataList" border style="width: 100%;">
       <el-table-column prop="id" header-align="center" align="center" width="80" label="id"></el-table-column>
       <el-table-column prop="memberId" header-align="center" align="center" width="100" label="会员id"></el-table-column>
@@ -30,6 +44,9 @@
 export default {
   data () {
     return {
+      dataForm: {
+        memberId: ''
+      },
       dataList: [],
       pageIndex: 1,
       pageSize: 10,
@@ -44,13 +61,18 @@ export default {
     // 获取数据列表
     getDataList () {
       this.dataListLoading = true
+      // memberId 留空时不能把它作为空串发给后端，那会被当成一次非法的主键绑定
+      const params = {
+        page: this.pageIndex,
+        limit: this.pageSize
+      }
+      if (this.dataForm.memberId !== '' && this.dataForm.memberId !== null) {
+        params.memberId = this.dataForm.memberId
+      }
       this.$http({
         url: this.$http.adornUrl('/member/growthchangehistory/list'),
         method: 'get',
-        params: this.$http.adornParams({
-          page: this.pageIndex,
-          limit: this.pageSize
-        })
+        params: this.$http.adornParams(params)
       }).then(({ data }) => {
         if (data && data.code === 0) {
           this.dataList = data.data.rows
@@ -61,6 +83,12 @@ export default {
         }
         this.dataListLoading = false
       })
+    },
+    // 重置筛选条件
+    resetHandle () {
+      this.dataForm.memberId = ''
+      this.pageIndex = 1
+      this.getDataList()
     },
     // 每页数
     sizeChangeHandle (val) {

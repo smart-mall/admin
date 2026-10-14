@@ -1,54 +1,63 @@
 <template>
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
-      <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
+      <el-form-item label="关键字">
+        <el-input
+          v-model="dataForm.key"
+          placeholder="用户名 / 昵称 / 手机号 / 邮箱"
+          clearable
+          style="width: 260px"
+        ></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
-        <!-- <el-button v-if="isAuth('member:member:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
-        <el-button v-if="isAuth('member:member:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>-->
+        <el-button @click="resetQuery()">重置</el-button>
       </el-form-item>
     </el-form>
-    <el-table
-      :data="dataList"
-      border
-      v-loading="dataListLoading"
-      @selection-change="selectionChangeHandle"
-      style="width: 100%;"
-    >
-      <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
-      <el-table-column prop="id" header-align="center" align="center" label="id"></el-table-column>
-      <el-table-column prop="levelId" header-align="center" align="center" label="会员等级"></el-table-column>
-      <el-table-column prop="username" header-align="center" align="center" label="用户名"></el-table-column>
-      <el-table-column prop="nickname" header-align="center" align="center" label="昵称"></el-table-column>
-      <el-table-column prop="mobile" header-align="center" align="center" label="手机号码"></el-table-column>
-      <el-table-column prop="email" header-align="center" align="center" label="邮箱"></el-table-column>
-      <el-table-column prop="header" header-align="center" align="center" label="头像"></el-table-column>
-      <el-table-column prop="gender" header-align="center" align="center" label="性别"></el-table-column>
-      <el-table-column prop="birth" header-align="center" align="center" label="生日"></el-table-column>
-      <el-table-column prop="city" header-align="center" align="center" label="所在城市"></el-table-column>
-      <el-table-column prop="job" header-align="center" align="center" label="职业"></el-table-column>
-      <el-table-column prop="sign" header-align="center" align="center" label="个性签名"></el-table-column>
-      <el-table-column prop="sourceType" header-align="center" align="center" label="用户来源"></el-table-column>
-      <el-table-column prop="integration" header-align="center" align="center" label="积分"></el-table-column>
-      <el-table-column prop="growth" header-align="center" align="center" label="成长值"></el-table-column>
-      <el-table-column prop="status" header-align="center" align="center" label="启用状态">
+    <el-table v-loading="dataListLoading" :data="dataList" border style="width: 100%;">
+      <el-table-column prop="id" header-align="center" align="center" width="60" label="id"></el-table-column>
+      <el-table-column header-align="center" align="center" width="110" label="会员等级">
+        <template slot-scope="scope">{{ levelText(scope.row.levelId) }}</template>
+      </el-table-column>
+      <el-table-column prop="username" header-align="center" align="center" min-width="140" label="用户名"></el-table-column>
+      <el-table-column prop="nickname" header-align="center" align="center" min-width="130" label="昵称"></el-table-column>
+      <el-table-column header-align="center" align="center" width="130" label="手机号">
+        <template slot-scope="scope">{{ dashText(scope.row.mobile) }}</template>
+      </el-table-column>
+      <el-table-column header-align="center" align="center" min-width="180" label="邮箱">
+        <template slot-scope="scope">{{ dashText(scope.row.email) }}</template>
+      </el-table-column>
+      <el-table-column header-align="center" align="center" width="70" label="头像">
         <template slot-scope="scope">
-          <el-switch
-            v-model="scope.row.status"
-            active-color="#13ce66"
-            inactive-color="#ff4949"
-            :active-value="1"
-            :inactive-value="0"
-          ></el-switch>
+          <img v-if="scope.row.header" :src="scope.row.header" class="member__avatar" alt="头像">
+          <span v-else class="member__empty">—</span>
         </template>
       </el-table-column>
-      <el-table-column prop="createTime" header-align="center" align="center" label="注册时间"></el-table-column>
-      <el-table-column fixed="right" header-align="center" align="center" width="150" label="操作">
+      <el-table-column header-align="center" align="center" width="70" label="性别">
+        <template slot-scope="scope">{{ genderText(scope.row.gender) }}</template>
+      </el-table-column>
+      <el-table-column header-align="center" align="center" width="115" label="生日">
+        <template slot-scope="scope">{{ dateText(scope.row.birth) }}</template>
+      </el-table-column>
+      <el-table-column header-align="center" align="center" width="90" label="来源">
+        <template slot-scope="scope">{{ sourceText(scope.row.sourceType) }}</template>
+      </el-table-column>
+      <el-table-column header-align="center" align="right" width="100" label="积分">
+        <template slot-scope="scope">{{ numberText(scope.row.integration) }}</template>
+      </el-table-column>
+      <el-table-column header-align="center" align="right" width="100" label="成长值">
+        <template slot-scope="scope">{{ numberText(scope.row.growth) }}</template>
+      </el-table-column>
+      <el-table-column header-align="center" align="center" width="90" label="状态">
         <template slot-scope="scope">
-          <el-button type="text" size="small">送券</el-button>
-          <el-button type="text" size="small">查订单</el-button>
+          <el-tag :type="statusTagType(scope.row.status)" size="mini">{{ statusText(scope.row.status) }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="createTime" header-align="center" align="center" width="160" label="注册时间"></el-table-column>
+      <el-table-column fixed="right" header-align="center" align="center" width="130" label="操作">
+        <template slot-scope="scope">
+          <el-button type="text" size="small" @click="grantHandle(scope.row)">送券</el-button>
+          <el-button type="text" size="small" @click="orderHandle(scope.row)">查订单</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -61,35 +70,56 @@
       :total="totalPage"
       layout="total, sizes, prev, pager, next, jumper"
     ></el-pagination>
-    <!-- 弹窗, 新增 / 修改 -->
-    <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
+    <!-- 送券弹窗：会员是固定的，所以弹窗里选的是券 -->
+    <coupon-grant v-if="grantVisible" ref="grant" @refreshDataList="getDataList"></coupon-grant>
   </div>
 </template>
 
 <script>
-import AddOrUpdate from './member-add-or-update'
+import CouponGrant from './member-coupon-grant'
+// 会员列表是只读名册：会员由注册链路产生，后台不提供新增与删除（后端也没有"后台建会员"这个需求）。
+// 库里存的是取值，页面负责翻成文案；积分与成长值只展示，改动一律走业务链路，不在这里改数。
 export default {
+  components: {
+    CouponGrant
+  },
   data () {
     return {
       dataForm: {
         key: ''
       },
+      // 等级 id → 等级名：会员表只存 levelId，映射从等级下拉接口一次取回，不在前端抄一份等级清单
+      levelNames: {},
       dataList: [],
       pageIndex: 1,
       pageSize: 10,
       totalPage: 0,
       dataListLoading: false,
-      dataListSelections: [],
-      addOrUpdateVisible: false
+      grantVisible: false
     }
   },
-  components: {
-    AddOrUpdate
-  },
   activated () {
+    this.loadLevelNames()
     this.getDataList()
   },
   methods: {
+    // 拉等级名映射；拉不到就退回"未知等级(id=x)"，不影响会员列表本身
+    loadLevelNames () {
+      this.$http({
+        url: this.$http.adornUrl('/member/memberlevel/getMemberSelect'),
+        method: 'get',
+        params: this.$http.adornParams()
+      }).then(({ data }) => {
+        if (!data || data.code !== 0) {
+          return
+        }
+        const names = {}
+        ;(data.data || []).forEach(item => {
+          names[item.id] = item.name
+        })
+        this.levelNames = names
+      })
+    },
     // 获取数据列表
     getDataList () {
       this.dataListLoading = true
@@ -112,6 +142,70 @@ export default {
         this.dataListLoading = false
       })
     },
+    // 清空关键字并回到第一页
+    resetQuery () {
+      this.dataForm.key = ''
+      this.pageIndex = 1
+      this.getDataList()
+    },
+    // 等级名；等级被删或与会员对不上时不假装知道名字，把 id 露出来便于排查
+    levelText (levelId) {
+      if (levelId === null || levelId === undefined) {
+        return '—'
+      }
+      return this.levelNames[levelId] || `未知等级(id=${levelId})`
+    },
+    // 性别取值 [0-未知，1-男，2-女]
+    genderText (gender) {
+      const texts = { 0: '未知', 1: '男', 2: '女' }
+      return texts[gender] || '—'
+    },
+    // 来源取值后台还没定义，库里全是 NULL：只把空值显示成"—"，不猜一套文案
+    sourceText (sourceType) {
+      return sourceType === null || sourceType === undefined ? '—' : String(sourceType)
+    },
+    // 积分与成长值允许为 null，按 0 处理；千分位便于肉眼核对台账
+    numberText (value) {
+      const num = value === null || value === undefined ? 0 : Number(value)
+      return num.toLocaleString('en-US')
+    },
+    // 生日是 datetime，展示只取日期部分
+    dateText (value) {
+      return value ? String(value).slice(0, 10) : '—'
+    },
+    dashText (value) {
+      return value === null || value === undefined || value === '' ? '—' : value
+    },
+    // 状态：注册链路不写该字段，NULL 表示"未设置"，不能当成"禁用"显示出来
+    statusText (status) {
+      if (status === 1) {
+        return '启用'
+      }
+      if (status === 0) {
+        return '禁用'
+      }
+      return '未设置'
+    },
+    statusTagType (status) {
+      if (status === 1) {
+        return 'success'
+      }
+      if (status === 0) {
+        return 'danger'
+      }
+      return 'info'
+    },
+    // 送券：会员固定，弹窗里选券
+    grantHandle (member) {
+      this.grantVisible = true
+      this.$nextTick(() => {
+        this.$refs.grant.init(member)
+      })
+    },
+    // 查订单：订单表存的是 member_username，订单列表的关键字也按它匹配，所以带账号而不是昵称
+    orderHandle (member) {
+      this.$router.push({ path: '/order-order', query: { key: member.username } })
+    },
     // 每页数
     sizeChangeHandle (val) {
       this.pageSize = val
@@ -122,48 +216,21 @@ export default {
     currentChangeHandle (val) {
       this.pageIndex = val
       this.getDataList()
-    },
-    // 多选
-    selectionChangeHandle (val) {
-      this.dataListSelections = val
-    },
-    // 新增 / 修改
-    addOrUpdateHandle (id) {
-      this.addOrUpdateVisible = true
-      this.$nextTick(() => {
-        this.$refs.addOrUpdate.init(id)
-      })
     }
-    // 删除
-    //   deleteHandle (id) {
-    //     var ids = id ? [id] : this.dataListSelections.map(item => {
-    //       return item.id
-    //     })
-    //     this.$confirm(`确定对[id=${ids.join(',')}]进行[${id ? '删除' : '批量删除'}]操作?`, '提示', {
-    //       confirmButtonText: '确定',
-    //       cancelButtonText: '取消',
-    //       type: 'warning'
-    //     }).then(() => {
-    //       this.$http({
-    //         url: this.$http.adornUrl('/member/member/delete'),
-    //         method: 'post',
-    //         data: this.$http.adornData(ids, false)
-    //       }).then(({data}) => {
-    //         if (data && data.code === 0) {
-    //           this.$message({
-    //             message: '操作成功',
-    //             type: 'success',
-    //             duration: 1500,
-    //             onClose: () => {
-    //               this.getDataList()
-    //             }
-    //           })
-    //         } else {
-    //           this.$message.error(data.msg)
-    //         }
-    //       })
-    //     })
-    //   }
   }
 }
 </script>
+
+<style scoped>
+.member__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  vertical-align: middle;
+}
+
+.member__empty {
+  color: #c0c4cc;
+}
+</style>

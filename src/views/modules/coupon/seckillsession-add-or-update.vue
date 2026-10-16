@@ -14,18 +14,18 @@
       <el-form-item label="场次名称" prop="name">
         <el-input v-model="dataForm.name" placeholder="场次名称"></el-input>
       </el-form-item>
-      <el-form-item label="每日开始时间" prop="startTime">
+      <el-form-item label="开始时间" prop="startTime">
         <el-date-picker
           type="datetime"
-          placeholder="每日开始时间"
+          placeholder="开始时间"
           v-model="dataForm.startTime"
           value-format="yyyy-MM-dd HH:mm:ss"
         />
       </el-form-item>
-      <el-form-item label="每日结束时间" prop="endTime">
+      <el-form-item label="结束时间" prop="endTime">
         <el-date-picker
           type="datetime"
-          placeholder="每日结束时间"
+          placeholder="结束时间"
           v-model="dataForm.endTime"
           value-format="yyyy-MM-dd HH:mm:ss"
         />
@@ -59,17 +59,17 @@ export default {
         name: '',
         startTime: '',
         endTime: '',
-        status: '',
+        status: ''
       },
       dataRule: {
         name: [
           { required: true, message: '场次名称不能为空', trigger: 'blur' }
         ],
         startTime: [
-          { required: true, message: '每日开始时间不能为空', trigger: 'blur' }
+          { required: true, message: '开始时间不能为空', trigger: 'blur' }
         ],
         endTime: [
-          { required: true, message: '每日结束时间不能为空', trigger: 'blur' }
+          { required: true, message: '结束时间不能为空', trigger: 'blur' }
         ],
         status: [
           { required: true, message: '启用状态不能为空', trigger: 'blur' }
@@ -115,7 +115,7 @@ export default {
               name: this.dataForm.name,
               startTime: this.dataForm.startTime,
               endTime: this.dataForm.endTime,
-              status: this.dataForm.status,
+              status: this.dataForm.status
             })
           }).then(({ data }) => {
             if (data && data.code === 0) {

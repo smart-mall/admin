@@ -48,7 +48,6 @@ export default {
       visible: false,
       dataForm: {
         id: 0,
-        promotionId: '',
         promotionSessionId: '',
         skuId: '',
         seckillPrice: '',
@@ -97,7 +96,6 @@ export default {
             params: this.$http.adornParams()
           }).then(({ data }) => {
             if (data && data.code === 0) {
-              this.dataForm.promotionId = data.data.promotionId
               this.dataForm.promotionSessionId =
                 data.data.promotionSessionId
               this.dataForm.skuId = data.data.skuId
@@ -123,7 +121,6 @@ export default {
             method: 'post',
             data: this.$http.adornData({
               id: this.dataForm.id || undefined,
-              promotionId: this.dataForm.promotionId,
               promotionSessionId: this.sessionId,
               skuId: this.dataForm.skuId,
               seckillPrice: this.dataForm.seckillPrice,

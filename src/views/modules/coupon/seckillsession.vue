@@ -29,8 +29,8 @@
       <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
       <el-table-column prop="id" header-align="center" align="center" label="id"></el-table-column>
       <el-table-column prop="name" header-align="center" align="center" label="场次名称"></el-table-column>
-      <el-table-column prop="startTime" header-align="center" align="center" label="每日开始时间"></el-table-column>
-      <el-table-column prop="endTime" header-align="center" align="center" label="每日结束时间"></el-table-column>
+      <el-table-column prop="startTime" header-align="center" align="center" label="开始时间"></el-table-column>
+      <el-table-column prop="endTime" header-align="center" align="center" label="结束时间"></el-table-column>
       <el-table-column header-align="center" align="center" label="启用状态">
         <template slot-scope="scope">
           <el-tag :type="scope.row.status === 1 ? 'success' : 'danger'" size="small">

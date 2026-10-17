@@ -17,6 +17,7 @@
           @click="deleteHandle()"
           :disabled="dataListSelections.length <= 0"
         >批量删除</el-button>
+        <el-button type="warning" :loading="uploading" @click="uploadHandle()">手动上架（测试）</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -87,6 +88,7 @@ export default {
       dataListLoading: false,
       dataListSelections: [],
       addOrUpdateVisible: false,
+      uploading: false,
       visible: false,
       currentId: 0
     }
@@ -149,6 +151,29 @@ export default {
       this.currentId = id
       this.$nextTick(() => {
         this.$refs.seckillskuRelation.getDataList()
+      })
+    },
+    // 手动触发一次秒杀上架，与每天 0 点的定时任务走同一条流程
+    uploadHandle () {
+      this.uploading = true
+      this.$http({
+        url: this.$http.adornUrl('/seckill/admin/upload'),
+        method: 'post',
+        data: this.$http.adornData({}, false)
+      }).then(({ data }) => {
+        this.uploading = false
+        if (data && data.code === 0) {
+          const result = data.data || {}
+          if (!result.sessionCount) {
+            this.$message.warning('时间窗口内没有场次：上架只看场次的开始时间是否落在今天到后天，已经开始的场次不会被上架')
+          } else {
+            this.$message.success(`上架完成：场次 ${result.sessionCount} 个，新写入商品 ${result.uploadedSkuCount || 0} 条，跳过已存在 ${result.skippedSkuCount || 0} 条`)
+          }
+        } else {
+          this.$message.error(data.msg)
+        }
+      }).catch(() => {
+        this.uploading = false
       })
     },
     // 删除

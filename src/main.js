@@ -9,6 +9,7 @@ import '@/element-ui-theme'
 import '@/assets/scss/index.scss'
 import httpRequest from '@/utils/httpRequest' // api: https://github.com/axios/axios
 import { isAuth } from '@/utils'
+import listFilter from '@/utils/listFilter'
 import cloneDeep from 'lodash/cloneDeep'
 
 Vue.use(VueCookie)
@@ -22,6 +23,10 @@ if (process.env.NODE_ENV !== 'production') {
 // 挂载全局
 Vue.prototype.$http = httpRequest // ajax请求方法
 Vue.prototype.isAuth = isAuth     // 权限方法
+
+// 列表页筛选即时生效（handleFilterChange / handleFilterInput）。
+// 全局注册的理由见 utils/listFilter.js：35 个列表页都要，逐页 import 只会把同一段代码抄 35 遍
+Vue.mixin(listFilter)
 
 // 保存整站vuex本地储存初始状态
 window.SITE_CONFIG['storeState'] = cloneDeep(store.state)

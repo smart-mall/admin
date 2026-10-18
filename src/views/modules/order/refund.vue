@@ -3,7 +3,7 @@
     <!-- 上半：仅退款的申请单。待审核的要在这里处理 -->
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getApplyList()">
       <el-form-item label="申请状态">
-        <el-select v-model="dataForm.status" placeholder="全部" clearable style="width: 140px">
+        <el-select v-model="dataForm.status" placeholder="全部" clearable style="width: 140px" @change="handleFilterChange">
           <el-option
             v-for="item in statusOptions"
             :key="item.code"
@@ -13,7 +13,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="订单号 / 会员名" clearable></el-input>
+        <el-input v-model="dataForm.key" placeholder="订单号 / 会员名" clearable @input="handleFilterInput"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="getApplyList()">查询</el-button>
@@ -113,6 +113,12 @@
       this.getFlowList()
     },
     methods: {
+      // 本页的列表方法叫 getApplyList，筛选条件（状态/关键字）只作用于申请列表；
+      // 右侧的流程流水不随筛选变化，所以不能走 mixin 默认的 getDataList
+      reloadList () {
+        this.pageIndex = 1
+        this.getApplyList()
+      },
       // 状态选项由服务端下发：文案只在 AfterSaleStatusEnum 里维护一份，前端不抄
       getStatusOptions () {
         this.$http({

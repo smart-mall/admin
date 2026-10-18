@@ -2,7 +2,7 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item label="状态">
-        <el-select style="width:120px" v-model="dataForm.status" placeholder="请选择状态" clearable>
+        <el-select style="width:120px" v-model="dataForm.status" placeholder="请选择状态" clearable @change="handleFilterChange">
           <el-option label="新建" :value="0"></el-option>
           <el-option label="已分配" :value="1"></el-option>
           <el-option label="已领取" :value="2"></el-option>
@@ -11,7 +11,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="关键字">
-        <el-input style="width:160px" v-model="dataForm.key" placeholder="采购单id/采购人名" clearable></el-input>
+        <el-input style="width:160px" v-model="dataForm.key" placeholder="采购单id/采购人名" clearable @input="handleFilterInput"></el-input>
       </el-form-item>
       <el-form-item>
         <!-- 没有"新增"：采购单是合并采购需求单时自动生成的 -->

@@ -4,7 +4,7 @@
          没有一条合法路径需要人工写，所以这里没有新增/修改/删除 -->
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item label="仓库">
-        <el-select style="width:160px;" v-model="dataForm.wareId" placeholder="请选择仓库" clearable>
+        <el-select style="width:160px;" v-model="dataForm.wareId" placeholder="请选择仓库" clearable @change="handleFilterChange">
           <el-option :label="w.name" :value="w.id" v-for="w in wareList" :key="w.id"></el-option>
         </el-select>
       </el-form-item>

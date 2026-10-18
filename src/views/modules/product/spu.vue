@@ -10,14 +10,14 @@
             <brand-select v-model="dataForm.brandId" style="width:160px"></brand-select>
           </el-form-item>
           <el-form-item label="状态">
-            <el-select style="width:160px" v-model="dataForm.status" clearable>
+            <el-select style="width:160px" v-model="dataForm.status" clearable @change="handleFilterChange">
               <el-option label="新建" :value="0"></el-option>
               <el-option label="上架" :value="1"></el-option>
               <el-option label="下架" :value="2"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="检索">
-            <el-input style="width:160px" v-model="dataForm.key" clearable></el-input>
+            <el-input style="width:160px" v-model="dataForm.key" clearable @input="handleFilterInput"></el-input>
           </el-form-item>
           <el-form-item
             <el-button type="primary" @click="searchSpuInfo">查询</el-button>
@@ -62,6 +62,11 @@ export default {
   watch: {},
   // 方法集合
   methods: {
+    // 本页是筛选面板：列表由子组件 <spuinfo> 渲染，筛选变化后靠 PubSub 把条件推过去，
+    // 所以不能走 mixin 默认的 getDataList
+    reloadList () {
+      this.searchSpuInfo()
+    },
     searchSpuInfo () {
       console.log('搜索条件', this.dataForm)
       PubSub.publish('dataForm', this.dataForm)

@@ -6,8 +6,7 @@
           v-model="dataForm.memberId"
           placeholder="不填则看全部会员"
           clearable
-          style="width: 200px"
-        ></el-input>
+          style="width: 200px" @input="handleFilterInput"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>

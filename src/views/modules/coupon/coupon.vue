@@ -2,10 +2,10 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="券名 / 券 ID" clearable></el-input>
+        <el-input v-model="dataForm.key" placeholder="券名 / 券 ID" clearable @input="handleFilterInput"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-select v-model="dataForm.couponType" placeholder="券类型" clearable>
+        <el-select v-model="dataForm.couponType" placeholder="券类型" clearable @change="handleFilterChange">
           <el-option :value="0" label="全场赠券"></el-option>
           <el-option :value="1" label="会员赠券"></el-option>
           <el-option :value="2" label="购物赠券"></el-option>
@@ -13,14 +13,14 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-select v-model="dataForm.useType" placeholder="适用范围" clearable>
+        <el-select v-model="dataForm.useType" placeholder="适用范围" clearable @change="handleFilterChange">
           <el-option :value="0" label="全场通用"></el-option>
           <el-option :value="1" label="指定分类"></el-option>
           <el-option :value="2" label="指定商品"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-select v-model="dataForm.memberLevel" placeholder="会员等级" clearable>
+        <el-select v-model="dataForm.memberLevel" placeholder="会员等级" clearable @change="handleFilterChange">
           <el-option :value="0" label="不限等级"></el-option>
           <el-option
             v-for="level in memberLevels"
@@ -31,7 +31,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-select v-model="dataForm.status" placeholder="券状态" clearable>
+        <el-select v-model="dataForm.status" placeholder="券状态" clearable @change="handleFilterChange">
           <el-option
             v-for="item in statusOptions"
             :key="item.value"
@@ -41,7 +41,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-select v-model="dataForm.publish" placeholder="发布状态" clearable>
+        <el-select v-model="dataForm.publish" placeholder="发布状态" clearable @change="handleFilterChange">
           <el-option :value="1" label="已发布"></el-option>
           <el-option :value="0" label="未发布"></el-option>
         </el-select>
@@ -53,8 +53,7 @@
           range-separator="至"
           start-placeholder="领取窗口起"
           end-placeholder="领取窗口止"
-          value-format="yyyy-MM-dd HH:mm:ss"
-        ></el-date-picker>
+          value-format="yyyy-MM-dd HH:mm:ss" @change="handleFilterChange"></el-date-picker>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>

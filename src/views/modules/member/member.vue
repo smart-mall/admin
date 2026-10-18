@@ -6,8 +6,7 @@
           v-model="dataForm.key"
           placeholder="用户名 / 昵称 / 手机号 / 邮箱"
           clearable
-          style="width: 260px"
-        ></el-input>
+          style="width: 260px" @input="handleFilterInput"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>

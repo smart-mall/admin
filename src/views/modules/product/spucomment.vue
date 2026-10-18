@@ -4,19 +4,19 @@
          所以这里没有新增与删除，只有下架与恢复 -->
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item label="skuId">
-        <el-input style="width:140px" v-model="dataForm.skuId" clearable></el-input>
+        <el-input style="width:140px" v-model="dataForm.skuId" clearable @input="handleFilterInput"></el-input>
       </el-form-item>
       <el-form-item label="spuId">
-        <el-input style="width:140px" v-model="dataForm.spuId" clearable></el-input>
+        <el-input style="width:140px" v-model="dataForm.spuId" clearable @input="handleFilterInput"></el-input>
       </el-form-item>
       <el-form-item label="状态">
-        <el-select style="width:140px" v-model="dataForm.showStatus" placeholder="全部" clearable>
+        <el-select style="width:140px" v-model="dataForm.showStatus" placeholder="全部" clearable @change="handleFilterChange">
           <el-option label="显示" :value="1"></el-option>
           <el-option label="已下架" :value="0"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="关键字">
-        <el-input style="width:160px" v-model="dataForm.key" clearable></el-input>
+        <el-input style="width:160px" v-model="dataForm.key" clearable @input="handleFilterInput"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>

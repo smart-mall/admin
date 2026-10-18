@@ -2,10 +2,10 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="订单号 / 收货人 / 会员名" clearable style="width: 240px"></el-input>
+        <el-input v-model="dataForm.key" placeholder="订单号 / 收货人 / 会员名" clearable style="width: 240px" @input="handleFilterInput"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-select v-model="dataForm.status" placeholder="全部状态" clearable style="width: 140px">
+        <el-select v-model="dataForm.status" placeholder="全部状态" clearable style="width: 140px" @change="handleFilterChange">
           <el-option
             v-for="item in statusOptions"
             :key="item.code"
@@ -16,7 +16,7 @@
       </el-form-item>
       <el-form-item>
         <!-- 删除标记是硬删的准入条件：后台要能一眼看出、也要能单独筛出来 -->
-        <el-select v-model="dataForm.deleteStatus" placeholder="删除标记" clearable style="width: 130px">
+        <el-select v-model="dataForm.deleteStatus" placeholder="删除标记" clearable style="width: 130px" @change="handleFilterChange">
           <el-option label="未删除" :value="0"></el-option>
           <el-option label="已删除" :value="1"></el-option>
         </el-select>
@@ -29,7 +29,7 @@
           start-placeholder="下单开始"
           end-placeholder="下单结束"
           value-format="yyyy-MM-dd"
-          style="width: 260px">
+          style="width: 260px" @change="handleFilterChange">
         </el-date-picker>
       </el-form-item>
       <el-form-item>

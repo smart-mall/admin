@@ -5,7 +5,60 @@
         <el-input v-model="dataForm.key" placeholder="券名 / 券 ID" clearable></el-input>
       </el-form-item>
       <el-form-item>
+        <el-select v-model="dataForm.couponType" placeholder="券类型" clearable>
+          <el-option :value="0" label="全场赠券"></el-option>
+          <el-option :value="1" label="会员赠券"></el-option>
+          <el-option :value="2" label="购物赠券"></el-option>
+          <el-option :value="3" label="注册赠券"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-select v-model="dataForm.useType" placeholder="适用范围" clearable>
+          <el-option :value="0" label="全场通用"></el-option>
+          <el-option :value="1" label="指定分类"></el-option>
+          <el-option :value="2" label="指定商品"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-select v-model="dataForm.memberLevel" placeholder="会员等级" clearable>
+          <el-option :value="0" label="不限等级"></el-option>
+          <el-option
+            v-for="level in memberLevels"
+            :key="level.id"
+            :value="level.id"
+            :label="level.name"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-select v-model="dataForm.status" placeholder="券状态" clearable>
+          <el-option
+            v-for="item in statusOptions"
+            :key="item.value"
+            :value="item.value"
+            :label="item.label"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-select v-model="dataForm.publish" placeholder="发布状态" clearable>
+          <el-option :value="1" label="已发布"></el-option>
+          <el-option :value="0" label="未发布"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-date-picker
+          v-model="dataForm.enableRange"
+          type="datetimerange"
+          range-separator="至"
+          start-placeholder="领取窗口起"
+          end-placeholder="领取窗口止"
+          value-format="yyyy-MM-dd HH:mm:ss"
+        ></el-date-picker>
+      </el-form-item>
+      <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
+        <el-button @click="resetFilter()">重置</el-button>
         <el-button
           v-if="isAuth('coupon:coupon:save')"
           type="primary"
@@ -100,8 +153,30 @@ export default {
   data () {
     return {
       dataForm: {
-        key: ''
+        key: '',
+        couponType: '',
+        useType: '',
+        memberLevel: '',
+        status: '',
+        publish: '',
+        enableRange: []
       },
+      /**
+       * 券状态下拉。
+       *
+       * 值取后端 CouponStatusEnum 的枚举名而不是中文：状态不落库、由后端现算，
+       * 传枚举名才不受文案调整影响。
+       */
+      statusOptions: [
+        { value: 'DRAFT', label: '草稿' },
+        { value: 'NOT_STARTED', label: '未开始' },
+        { value: 'RECEIVING', label: '领取中' },
+        { value: 'SOLD_OUT', label: '已领完' },
+        { value: 'REVOKED', label: '已停发' },
+        { value: 'ENDED', label: '已结束' }
+      ],
+      /** 会员等级下拉，形状 { id, name }；打开页面时从 member 拉一次。 */
+      memberLevels: [],
       dataList: [],
       pageIndex: 1,
       pageSize: 10,
@@ -118,10 +193,28 @@ export default {
     CouponGrant,
     CouponHistory
   },
+  created () {
+    this.loadMemberLevels()
+  },
   activated () {
     this.getDataList()
   },
   methods: {
+    /**
+     * 拉一次会员等级下拉选项。
+     *
+     * 等级清单在 member 侧维护，前端不写死：写死等于同一份清单存在两处，加一档要改两个仓库。
+     */
+    loadMemberLevels () {
+      this.$http({
+        url: this.$http.adornUrl('/member/memberlevel/getMemberSelect'),
+        method: 'get',
+        params: this.$http.adornParams()
+      }).then(({ data }) => {
+        // 拉不到等级就只留"不限等级"一项：等级拉不到不该让整个列表页打不开
+        this.memberLevels = (data && data.code === 0 && data.data) || []
+      })
+    },
     can (row, action) {
       return (row.allowedActions || []).indexOf(action) >= 0
     },
@@ -156,17 +249,58 @@ export default {
       }
       return types[statusText] || ''
     },
+    /**
+     * 组装查询参数。
+     *
+     * 清空下拉后 el-select 会把值置成空串，直接发出去会变成"按空串筛选"；
+     * 这里统一剔掉空值，让后端收到的是"没传这个条件"而不是一个空参数。
+     * 注意 0 是有意义的取值（全场赠券、全场通用、不限等级、未发布），不能被当成空值剔掉。
+     *
+     * @return 只含已填条件的查询参数
+     */
+    buildParams () {
+      const range = this.dataForm.enableRange || []
+      const raw = {
+        page: this.pageIndex,
+        limit: this.pageSize,
+        key: this.dataForm.key,
+        couponType: this.dataForm.couponType,
+        useType: this.dataForm.useType,
+        memberLevel: this.dataForm.memberLevel,
+        status: this.dataForm.status,
+        publish: this.dataForm.publish,
+        enableStartFrom: range[0],
+        enableStartTo: range[1]
+      }
+      const params = {}
+      Object.keys(raw).forEach(key => {
+        const value = raw[key]
+        if (value !== '' && value !== null && value !== undefined) {
+          params[key] = value
+        }
+      })
+      return params
+    },
+    resetFilter () {
+      this.dataForm = {
+        key: '',
+        couponType: '',
+        useType: '',
+        memberLevel: '',
+        status: '',
+        publish: '',
+        enableRange: []
+      }
+      this.pageIndex = 1
+      this.getDataList()
+    },
     // 获取数据列表
     getDataList () {
       this.dataListLoading = true
       this.$http({
         url: this.$http.adornUrl('/coupon/coupon/list'),
         method: 'get',
-        params: this.$http.adornParams({
-          page: this.pageIndex,
-          limit: this.pageSize,
-          key: this.dataForm.key
-        })
+        params: this.$http.adornParams(this.buildParams())
       }).then(({ data }) => {
         if (data && data.code === 0) {
           this.dataList = data.data.rows

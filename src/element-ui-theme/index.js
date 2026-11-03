@@ -3,9 +3,12 @@
  *
  * tips:
  *  1. 此处只包含element-ui组件主题
- *  2. 要达到整站主题修改效果, 请确保[import './element-[#17B3A3]/index.css']当前主题色与[/src/assets/scss/_variables.scss]文件中[$--color-primary]属性值一致
+ *  2. 要达到整站主题修改效果, 请确保[import './element-[#4A90E2]/index.css']当前主题色与[/src/assets/scss/_variables.scss]文件中[$--color-primary]属性值一致
+ *  3. element-#4A90E2 是用 node_modules/element-ui/packages/theme-chalk 源码编译出来的：
+ *     $--color-primary: #4a90e2、$--border-radius-base: 8px、$--border-color-base: #e8e8ec，
+ *     与用户端 user-vue 的配色保持一致
  */
-import './element-#17B3A3/index.css' // 当前主题色
+import './element-#4A90E2/index.css' // 当前主题色
 export default {
   list: [
     '#0BB2D4', // 青色
@@ -19,6 +22,7 @@ export default {
     '#EB6709', // 橙色
     '#F74584', // 粉红色
     '#FCB900', // 黄色
-    '#FF4C52'  // 红色
+    '#FF4C52', // 红色
+    '#4A90E2'  // 淡蓝色（当前）
   ]
 }

@@ -97,7 +97,7 @@
   padding: 28px 32px;
   margin-bottom: 20px;
   border-radius: 6px;
-  background: linear-gradient(135deg, #17b3a3 0%, #12897d 100%);
+  background: linear-gradient(135deg, #4a90e2 0%, #3a78c2 100%);
   color: #fff;
 }
 
@@ -166,8 +166,8 @@
   height: 44px;
   margin-right: 14px;
   border-radius: 50%;
-  background: rgba(23, 179, 163, 0.1);
-  color: #17b3a3;
+  background: rgba(74, 144, 226, 0.08);
+  color: #4a90e2;
   font-size: 22px;
   line-height: 44px;
   text-align: center;
@@ -197,7 +197,7 @@
 .panel__title {
   margin: 0 0 16px;
   padding-left: 10px;
-  border-left: 3px solid #17b3a3;
+  border-left: 3px solid #4a90e2;
   font-size: 15px;
   font-weight: 600;
 }

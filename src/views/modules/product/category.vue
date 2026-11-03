@@ -76,7 +76,7 @@
             <i
               v-else
               :class="node.childNodes.length > 0 ? 'el-icon-menu' : 'el-icon-document'"
-              :style="{ color: node.childNodes.length > 0 ? '#409EFF' : '#67C23A' }"
+              :style="{ color: node.childNodes.length > 0 ? '#B23A2E' : '#67C23A' }"
             ></i>
             <span class="node-name">{{ node.label }}</span>
             <el-tag

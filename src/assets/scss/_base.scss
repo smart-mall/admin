@@ -6,16 +6,16 @@
 body {
   font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
   font-size: 14px;
-  line-height: 1.15;
-  color: #303133;
-  background-color: #fff;
+  line-height: 1.5;
+  color: $mall-text;
+  background-color: $mall-bg;
 }
 a {
-  color: mix(#fff, $--color-primary, 20%);
+  color: $--color-primary;
   text-decoration: none;
   &:focus,
   &:hover {
-    color: $--color-primary;
+    color: $color-primary-dark;
     text-decoration: underline;
   }
 }
@@ -123,8 +123,8 @@ img {
   left: 0;
   z-index: 1030;
   height: 50px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, .08);
   background-color: $navbar--background-color;
+  border-bottom: 1px solid $navbar--border-color;
 
   &--inverse {
     .site-navbar__body {
@@ -173,15 +173,15 @@ img {
     text-align: center;
     text-transform: uppercase;
     white-space: nowrap;
-    color: #fff;
+    color: $mall-text;
 
     &-lg,
     &-mini {
       margin: 0 5px;
-      color: #fff;
+      color: $mall-text;
       &:focus,
       &:hover {
-        color: #fff;
+        color: $mall-text;
         text-decoration: none;
       }
     }
@@ -230,6 +230,16 @@ img {
     .el-submenu > .el-submenu__title {
       height: 50px;
       line-height: 50px;
+      color: $mall-text-secondary;
+      &:focus,
+      &:hover {
+        color: $--color-primary;
+        background-color: transparent;
+      }
+    }
+    .el-menu-item.is-active {
+      color: $--color-primary;
+      border-bottom: 2px solid $--color-primary;
     }
     .el-submenu > .el-menu {
       top: 55px;
@@ -255,6 +265,35 @@ img {
   z-index: 1020;
   width: 230px;
   overflow: hidden;
+
+  &--light,
+  &--light-popper {
+    background-color: $sidebar--background-color;
+    border-right: 1px solid $mall-border;
+    .site-sidebar__menu.el-menu,
+    > .el-menu--popup {
+      background-color: transparent;
+      .el-menu-item,
+      .el-submenu > .el-submenu__title {
+        color: $sidebar--color-text;
+        &:focus,
+        &:hover {
+          color: $--color-primary;
+          background-color: $mall-bg;
+        }
+      }
+      .el-menu,
+      .el-submenu.is-opened {
+        background-color: transparent;
+      }
+      .el-menu-item.is-active,
+      .el-submenu.is-active > .el-submenu__title {
+        color: $sidebar--color-active;
+        background-color: $color-primary-soft;
+        font-weight: 600;
+      }
+    }
+  }
 
   &--dark,
   &--dark-popper {
@@ -307,7 +346,7 @@ img {
 ------------------------------ */
 .site-content {
   position: relative;
-  padding: 15px;
+  padding: 16px;
 
   &__wrapper {
     position: relative;
@@ -361,4 +400,27 @@ img {
   width: 14px;
   vertical-align: middle;
   margin-right: 5px;
+}
+
+
+/* Element 细节对齐（圆角 / 表头 / 边框）
+------------------------------ */
+.el-table {
+  border-radius: $mall-radius-card;
+}
+.el-table th {
+  background-color: #FAFAFA;
+  color: $mall-text;
+  font-weight: 600;
+}
+.el-table th.is-leaf,
+.el-table td {
+  border-bottom-color: $mall-border;
+}
+.el-card {
+  border-radius: $mall-radius-card;
+  border-color: $mall-border;
+}
+.el-dialog {
+  border-radius: $mall-radius-card;
 }

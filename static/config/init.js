@@ -3,7 +3,7 @@
  */
 ;(function() {
   var resList = {
-    icon: window.SITE_CONFIG.cdnUrl + '/static/img/favicon.ico',
+    icon: window.SITE_CONFIG.cdnUrl + '/static/img/logo.svg',
     css: [
       window.SITE_CONFIG.cdnUrl + '/static/css/app.css',
     ],
@@ -26,7 +26,7 @@
   (function () {
     var _icon = document.createElement('link');
     _icon.setAttribute('rel', 'shortcut icon');
-    _icon.setAttribute('type', 'image/x-icon');
+    _icon.setAttribute('type', 'image/svg+xml');
     _icon.setAttribute('href', resList.icon);
     document.getElementsByTagName('head')[0].appendChild(_icon);
   })();

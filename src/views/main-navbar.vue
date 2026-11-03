@@ -2,8 +2,12 @@
   <nav class="site-navbar" :class="'site-navbar--' + navbarLayoutType">
     <div class="site-navbar__header">
       <h1 class="site-navbar__brand" @click="$router.push({ name: 'home' })">
-        <a class="site-navbar__brand-lg" href="javascript:;">人人快速开发平台</a>
-        <a class="site-navbar__brand-mini" href="javascript:;">人人</a>
+        <a class="site-navbar__brand-lg" href="javascript:;">
+          <img class="site-navbar__brand-logo" src="~@/assets/img/logo.svg" alt="">谷粒商城管理后台
+        </a>
+        <a class="site-navbar__brand-mini" href="javascript:;">
+          <img class="site-navbar__brand-logo" src="~@/assets/img/logo.svg" alt="">
+        </a>
       </h1>
     </div>
     <div class="site-navbar__body clearfix">
@@ -111,3 +115,16 @@
     }
   }
 </script>
+
+<style scoped>
+.site-navbar__brand-logo {
+  width: 26px;
+  height: 26px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+.site-navbar__brand-mini .site-navbar__brand-logo {
+  margin-right: 0;
+}
+</style>

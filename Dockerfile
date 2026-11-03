@@ -18,4 +18,8 @@ RUN npm run build
 FROM nginx:alpine
 COPY --from=build /build/dist /usr/share/nginx/html
 
+# 站点图标放根目录：gulp 会把 dist/static 整体挪进带时间戳的版本目录，
+# 根目录 index.html 引用 ./favicon.svg 才有稳定路径（浏览器对 favicon 缓存很重）。
+COPY --from=build /build/static/img/logo.svg /usr/share/nginx/html/favicon.svg
+
 EXPOSE 80

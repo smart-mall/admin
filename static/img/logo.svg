@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="后台管理 Logo">
+  <defs>
+    <linearGradient id="adminBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#6A11CB"/>
+      <stop offset="100%" stop-color="#2575FC"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="64" height="64" rx="16" fill="url(#adminBg)"/>
+
+  <!-- 管理面板 -->
+  <rect x="14" y="18" width="36" height="28" rx="5" fill="#ffffff" opacity="0.96"/>
+
+  <!-- 数据柱状图 -->
+  <rect x="20" y="34" width="5" height="7" rx="1.5" fill="#2575FC"/>
+  <rect x="29" y="28" width="5" height="13" rx="1.5" fill="#6A11CB"/>
+  <rect x="38" y="24" width="5" height="17" rx="1.5" fill="#2575FC"/>
+
+  <!-- 底座 -->
+  <path d="M32 46v4" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M26 50h12" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round"/>
+
+  <!-- 齿轮 / 管理标识 -->
+  <circle cx="48" cy="18" r="6" fill="#FFD166"/>
+  <circle cx="48" cy="18" r="2.5" fill="#6A11CB"/>
+</svg>

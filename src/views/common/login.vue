@@ -3,8 +3,14 @@
     <div class="site-content__wrapper">
       <div class="site-content">
         <div class="brand-info">
-          <h2 class="brand-info__text">renren-fast-vue</h2>
-          <p class="brand-info__intro">renren-fast-vue基于vue、element-ui构建开发，实现renren-fast后台管理前端功能，提供一套更优的前端解决方案。</p>
+          <img class="brand-info__logo" src="~@/assets/img/logo.svg" alt="">
+          <h2 class="brand-info__text">谷粒商城</h2>
+          <p class="brand-info__intro">后台管理端：商品、库存、营销、交易、会员与系统配置统一在一个控制台</p>
+          <ul class="brand-info__list">
+            <li>微服务架构，Nacos 统一注册与配置</li>
+            <li>请求经网关集中路由与鉴权</li>
+            <li>前后端分离，可独立部署</li>
+          </ul>
         </div>
         <div class="login-main">
           <h3 class="login-title">管理员登录</h3>
@@ -106,18 +112,18 @@
     right: 0;
     bottom: 0;
     left: 0;
-    background-color: rgba(38, 50, 56, .6);
+    background-color: #0f3b38;
+    background-image: linear-gradient(135deg, #10312f 0%, #17b3a3 100%);
     overflow: hidden;
     &:before {
       position: fixed;
-      top: 0;
-      left: 0;
+      top: -20%;
+      left: -10%;
       z-index: -1;
-      width: 100%;
-      height: 100%;
+      width: 70%;
+      height: 70%;
       content: "";
-      background-image: url(~@/assets/img/login_bg.jpg);
-      background-size: cover;
+      background: radial-gradient(circle, rgba(255, 255, 255, .12) 0%, rgba(255, 255, 255, 0) 70%);
     }
     .site-content__wrapper {
       position: absolute;
@@ -136,20 +142,50 @@
       padding: 30px 500px 30px 30px;
     }
     .brand-info {
-      margin: 220px 100px 0 90px;
+      margin: 180px 100px 0 90px;
       color: #fff;
     }
+    .brand-info__logo {
+      width: 72px;
+      height: 72px;
+      margin-bottom: 26px;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .25);
+    }
     .brand-info__text {
-      margin:  0 0 22px 0;
-      font-size: 48px;
-      font-weight: 400;
-      text-transform : uppercase;
+      margin:  0 0 18px 0;
+      font-size: 46px;
+      font-weight: 600;
+      letter-spacing: 4px;
     }
     .brand-info__intro {
-      margin: 10px 0;
-      font-size: 16px;
-      line-height: 1.58;
-      opacity: .6;
+      margin: 0 0 30px;
+      max-width: 560px;
+      font-size: 15px;
+      line-height: 1.7;
+      opacity: .78;
+    }
+    .brand-info__list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-size: 14px;
+      opacity: .85;
+      > li {
+        position: relative;
+        margin-bottom: 12px;
+        padding-left: 18px;
+        &:before {
+          position: absolute;
+          top: 9px;
+          left: 0;
+          width: 6px;
+          height: 6px;
+          content: "";
+          border-radius: 50%;
+          background-color: rgba(255, 255, 255, .85);
+        }
+      }
     }
     .login-main {
       position: absolute;
